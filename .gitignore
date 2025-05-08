@@ -1,0 +1,10 @@
+# Ignore objects
+obj/
+*.o
+*.d
+scop
+
+# Ignore external libraries (They are cloned by the Makefile)
+GLFW/
+src/glad/
+includes/glad/
