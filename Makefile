@@ -20,7 +20,8 @@ CPP_FILES :=	main \
 				Window \
 				Terminal \
 				Camera \
-				Shader
+				Shader \
+				Mesh
 
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
 

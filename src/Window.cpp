@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/12 23:12:50 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/13 12:40:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ Window::Window() : _lastFrame(0)
 
 	glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
 	this->center();
 }
 

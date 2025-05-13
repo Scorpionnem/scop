@@ -6,11 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/05 11:52:52 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/13 13:28:53 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Terminal.hpp"
+#include "Camera.hpp"
+#include "Mesh.hpp"
 
 bool		isTerminalOn = false;
 std::string	terminalInput;
@@ -34,6 +36,33 @@ void	terminal_setting_command(std::istringstream	&iss)
 		std::cout << "setting: Not enough arguments.";
 }
 
+void	terminal_culling_command(std::istringstream	&iss)
+{
+	std::string	arg;
+
+	if (iss >> arg)
+	{
+		if (arg == "clockwise" || arg == "cw" || arg == "CW")
+		{
+			glEnable(GL_CULL_FACE);
+			glFrontFace(GL_CW);
+		}
+		if (arg == "counter_clockwise" || arg == "ccw" || arg == "CCW")
+		{
+			glEnable(GL_CULL_FACE);
+			glFrontFace(GL_CCW);
+		}
+		if (arg == "none")
+			glDisable(GL_CULL_FACE);
+		if (arg == "help")
+		{
+			std::cout << "/culling help | none | clockwise | counter_clockwise" << std::endl;
+		}
+	}
+	else
+		std::cout << "setting: Not enough arguments.";
+}
+
 void	terminal_execute_command(std::string str)
 {
 	if (!str.size())
@@ -44,6 +73,8 @@ void	terminal_execute_command(std::string str)
 	iss >> command;
 	if (command == "/setting")
 		terminal_setting_command(iss);
+	else if (command == "/culling")
+		terminal_culling_command(iss);
 	else
 		std::cout << "Command not found." << std::endl;
 }

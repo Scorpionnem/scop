@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/12 22:25:24 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/13 12:47:33 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,6 @@
 
 # include "glad.h"
 # include "glfw3.h"
-
-# include "VBO.hpp"
-# include "EBO.hpp"
-# include "VAO.hpp"
 
 # include "glm.hpp"
 # include "gtc/matrix_transform.hpp"
