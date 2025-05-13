@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:18 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/03 16:49:53 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/12 22:45:42 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ class	Window
 		~Window();
 		bool	up(void);
 		GLFWwindow	*getWindowData(void);
+		float		getDeltaTime(void);
 		void		loopStart(void);
 		void		loopEnd(void);
 		void		setIcon(const char *path);

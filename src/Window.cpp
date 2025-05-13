@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/05 10:26:01 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/12 23:12:50 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ Window::Window() : _lastFrame(0)
 	glfwSetFramebufferSizeCallback(_windowData, resize_hook);
 	glfwSetCharCallback(_windowData, terminal_keyboard_input);
 	glfwSetKeyCallback(_windowData, terminal_special_keys);
-	
+
 	glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -119,4 +119,9 @@ void		Window::center()
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
 	glfwSetWindowPos(_windowData, (mode->width / 2) - (SCREEN_WIDTH / 2), (mode->height / 2) - (SCREEN_HEIGHT / 2));
+}
+
+float		Window::getDeltaTime(void)
+{
+	return (this->_deltaTime);
 }

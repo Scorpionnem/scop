@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/03 12:12:31 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/12 22:25:24 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,17 @@
 # include "glad.h"
 # include "glfw3.h"
 
+# include "VBO.hpp"
+# include "EBO.hpp"
+# include "VAO.hpp"
+
+# include "glm.hpp"
+# include "gtc/matrix_transform.hpp"
+# include "gtc/type_ptr.hpp"
+
 # define WIN_NAME "scop"
-extern int	SCREEN_WIDTH;
-extern int	SCREEN_HEIGHT;
+extern float	SCREEN_WIDTH;
+extern float	SCREEN_HEIGHT;
 
 # include "Window.hpp"
 

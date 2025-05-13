@@ -1,7 +1,7 @@
 NAME := scop
 
 OBJ_DIR := ./obj/
-INCLUDE_DIRS := ./includes/ ./GLFW/include/GLFW ./includes/glad/.
+INCLUDE_DIRS := ./includes/ ./GLFW/include/GLFW/ ./includes/glad/. ./glm/glm/ ./glm/glm/gtc/ ./includes/render
 
 GLFWARCHIVE = GLFW/build/src/libglfw3.a
 
@@ -18,7 +18,9 @@ OBJECTS = $(SOURCES:.cpp=.o)
 CPP_FILES :=	main \
 				glad/glad \
 				Window \
-				Terminal
+				Terminal \
+				Camera \
+				Shader
 
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
 
@@ -31,7 +33,7 @@ CFLAGS = -MP -MMD -Wall -Werror -Wextra -g
 
 GLAD_PATH = libs/glad
 
-all: glfw glad $(NAME)
+all: glfw glad glm $(NAME)
 
 run: all
 	@./$(NAME)
@@ -46,6 +48,15 @@ glfw:
 		echo "\033[31;1mCompiling GLFW\033[0m"; \
 		cmake -S GLFW -B GLFW/build; \
 		cmake --build GLFW/build; \
+	fi
+
+glm:
+	@if ls | grep -q "glm"; then \
+		echo "\033[32;1;4mGLM Found\033[0m"; \
+	else \
+		echo "\033[31;1;4mGLM Not Found\033[0m"; \
+		echo "\033[31;1mCloning GLM from github\033[0m"; \
+		git clone https://github.com/g-truc/glm.git glm; \
 	fi
 
 # pip install glad if it doesnt work
@@ -89,14 +100,15 @@ fclean:
 	@rm -f $(NAME)
 	@echo "\033[0;32mCleaned $(NAME)\033[0m"
 
-deepclean: fclean
+dclean: fclean
 	@rm -rf src/glad
 	@rm -rf includes/glad
 	@rm -rf GLFW
+	@rm -rf glm
 	@echo "\033[0;32mCleaned external libraries\033[0m"
 
 re: fclean all
 
-.PHONY: all clean fclean deepclean re GLFW glad run
+.PHONY: all clean fclean dclean re GLFW glad run glm
 
 -include $(DEPS)
