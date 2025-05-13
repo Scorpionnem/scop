@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/13 15:59:34 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/13 21:55:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,11 @@ void	Mesh::draw(Shader &shader)
 {
 	shader.use();
 	glm::mat4	model(1.0f);
-	
 	model = glm::translate(model, pos);
+	model = glm::translate(model, center);
 	model = glm::rotate(model, glm::radians(20.0f * (float)glfwGetTime()), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, -center);
+
 	shader.setMat4("model", model);
 	
 	glBindVertexArray(VAO);
@@ -118,5 +120,15 @@ void	Mesh::loadOBJ(const std::string &filename)
 			}
 		}
 	}
+	glm::vec3 min = vertices[0].position;
+	glm::vec3 max = vertices[0].position;
+	
+	for (std::vector<Vertex>::iterator it = vertices.begin(); it != vertices.end(); it++)
+	{
+	    min = glm::min(min, it->position);
+	    max = glm::max(max, it->position);
+	}
+	
+	center = (min + max) * 0.5f;
 	this->upload();
 }

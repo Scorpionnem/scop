@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/13 13:56:33 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/13 21:52:25 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class Mesh
 		glm::vec3	pos;
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
+		glm::vec3	center;
 	
 		unsigned int VBO;
 		unsigned int VAO;

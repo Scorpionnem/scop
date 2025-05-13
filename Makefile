@@ -37,7 +37,10 @@ GLAD_PATH = libs/glad
 all: glfw glad glm $(NAME)
 
 run: all
-	@./$(NAME)
+	@./$(NAME) models/teapot.obj
+
+vrun: all
+	@valgrind ./$(NAME) models/teapot.obj
 
 glfw:
 	@if ls | grep -q "GLFW"; then \

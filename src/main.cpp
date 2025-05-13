@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/13 15:54:26 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/13 21:49:26 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,15 @@ void	key_hook(Window &window)
 int	main(int ac, char **av)
 {
 	if (ac != 2)
+	{
+		std::cout << "Wrong argument count." << std::endl;
 		return (1);
+	}
 	Window		window;
 	Camera		camera;
 	Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
 
-	glfwSwapInterval(0);
+	// glfwSwapInterval(0);
 
 	window.setIcon("textures/icon.png");
 
