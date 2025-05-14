@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/13 12:40:43 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/14 11:25:54 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,6 @@ bool	Window::up(void)
 {
 	return (!glfwWindowShouldClose(_windowData));
 }
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 void		Window::setIcon(const char *path)
 {

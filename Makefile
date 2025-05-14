@@ -21,7 +21,8 @@ CPP_FILES :=	main \
 				Terminal \
 				Camera \
 				Shader \
-				Mesh
+				Mesh \
+				stb_image
 
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
 
