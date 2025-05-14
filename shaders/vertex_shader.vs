@@ -7,6 +7,8 @@ out vec3 FragColor;
 out vec3 FragPos;
 out vec3 FragNormal;
 
+out	vec2 texCoord;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -17,4 +19,5 @@ void main()
 	FragColor = aColor;
 	FragPos = aPos;
 	FragNormal = aNormal;
+	texCoord = vec2(FragPos.z, FragPos.y);
 }

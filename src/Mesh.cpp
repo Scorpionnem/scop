@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/13 21:55:43 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:58:01 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	Mesh::loadOBJ(const std::string &filename)
 	std::vector<glm::vec3> positions;
 
 	std::string line;
-	float	color = 0.5f;
+	float	color = 0.0f;
 	while (std::getline(file, line))
 	{
 		std::istringstream iss(line);
@@ -115,8 +115,8 @@ void	Mesh::loadOBJ(const std::string &filename)
 				glm::vec3 v3 = positions[vertexIndices[i + 1]];
 				this->addTriangle(v1, v2, v3, glm::vec3(color, color, color));
 				color += 0.05f;
-				if (color > 1.0)
-					color = 0.5;
+				if (color > 0.5)
+					color = 0.0;
 			}
 		}
 	}
@@ -128,7 +128,7 @@ void	Mesh::loadOBJ(const std::string &filename)
 	    min = glm::min(min, it->position);
 	    max = glm::max(max, it->position);
 	}
-	
 	center = (min + max) * 0.5f;
+	
 	this->upload();
 }

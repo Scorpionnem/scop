@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/14 11:26:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:50:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ extern float	SCREEN_WIDTH;
 extern float	SCREEN_HEIGHT;
 
 # include "Window.hpp"
+# include "Texture.hpp"
 
 #endif

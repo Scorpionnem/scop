@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/14 11:25:54 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/14 11:51:13 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ bool	Window::up(void)
 void		Window::setIcon(const char *path)
 {
 	GLFWimage	image[1];
+	stbi_set_flip_vertically_on_load(false);
 	image[0].pixels = stbi_load(path, &image[0].width, &image[0].height, 0, 4);
 	if (!image[0].pixels)
 	{

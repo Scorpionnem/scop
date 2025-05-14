@@ -22,6 +22,7 @@ CPP_FILES :=	main \
 				Camera \
 				Shader \
 				Mesh \
+				Texture \
 				stb_image
 
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
