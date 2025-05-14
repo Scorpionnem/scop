@@ -65,13 +65,13 @@ glm:
 		git clone https://github.com/g-truc/glm.git glm; \
 	fi
 
-# pip install glad if it doesnt work
 glad:
 	@if ls src | grep -q "glad"; then \
 		echo "\033[32;1;4mglad Found\033[0m"; \
 	else \
 		echo "\033[31;1;4mglad Not Found\033[0m"; \
 		echo "\033[31;1mDownloading glad from github \033[0m"; \
+		pip install glad; \
 		git clone https://github.com/Dav1dde/glad.git glad; \
 		python -m glad --out-path=glad/build --generator=c; \
 		mkdir -p glad2; \
