@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/14 13:58:01 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/15 15:41:21 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	Mesh::loadOBJ(const std::string &filename)
 	}
 
 	std::vector<glm::vec3> positions;
+	// std::vector<glm::vec3> normals;
 
 	std::string line;
 	float	color = 0.0f;
@@ -99,26 +100,48 @@ void	Mesh::loadOBJ(const std::string &filename)
 		else if (prefix == "f")
 		{
 			std::vector<int> vertexIndices;
+			// std::vector<int> normalIndices;
 			std::string token;
 			while (iss >> token)
 			{
 				std::istringstream ss(token);
 				std::string indexStr;
-				std::getline(ss, indexStr, '/');
-				int posIndex = std::stoi(indexStr);
-				vertexIndices.push_back(posIndex - 1);
+				if (std::getline(ss, indexStr, '/'))
+				{
+					int posIndex = std::stoi(indexStr);
+					vertexIndices.push_back(posIndex - 1);
+				}
+				// if (std::getline(ss, indexStr, '/'))
+				// 	;
+				// if (std::getline(ss, indexStr, '/'))
+				// {
+				// 	int posIndex = std::stoi(indexStr);
+				// 	normalIndices.push_back(posIndex - 1);
+				// }
 			}
 			for (size_t i = 1; i + 1 < vertexIndices.size(); ++i)
 			{
 				glm::vec3 v1 = positions[vertexIndices[0]];
 				glm::vec3 v2 = positions[vertexIndices[i]];
 				glm::vec3 v3 = positions[vertexIndices[i + 1]];
+				
+				// glm::vec3 n1 = normals[normalIndices[0]];
+				// glm::vec3 n2 = normals[normalIndices[i]];
+				// glm::vec3 n3 = normals[normalIndices[i + 1]];
+				
+				// this->addTriangle(v1, v2, v3, glm::vec3(color, color, color), n1, n2, n3);
 				this->addTriangle(v1, v2, v3, glm::vec3(color, color, color));
 				color += 0.05f;
 				if (color > 0.5)
 					color = 0.0;
 			}
 		}
+		// else if (prefix == "vn")
+		// {
+		// 	float x, y, z;
+		// 	iss >> x >> y >> z;
+		// 	normals.push_back(glm::vec3(x, y, z));
+		// }
 	}
 	glm::vec3 min = vertices[0].position;
 	glm::vec3 max = vertices[0].position;

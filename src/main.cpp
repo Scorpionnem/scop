@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/14 14:03:57 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/15 15:00:58 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,16 @@ float	SCREEN_HEIGHT = 400;
 
 int	interpolate = 0;
 
-void	key_hook(Window &window)
+void	interpolateTo(float &float1, float &float2, float deltaTime)
+{
+	float1 += (1.0f - float1) * 2.0f * deltaTime;
+	if (float1 > 0.99f)
+		float1 = 1.0f;
+
+	float2 = 1.0f - float1;
+}
+
+void	frame_key_hook(Window &window)
 {
 	if (glfwGetKey(window.getWindowData(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window.getWindowData(), true);
@@ -57,27 +66,23 @@ void	key_hook(Window &window)
 	if (glfwGetKey(window.getWindowData(), GLFW_KEY_DOWN) == GLFW_PRESS)
 		pitch -= (10.0f * cameraSpeed) * 1.f;
 
-	if (glfwGetKey(window.getWindowData(), GLFW_KEY_Q) == GLFW_PRESS)
-		interpolate = !interpolate;	
-
 	if(pitch > 89.0f)
 		pitch = 89.0f;
 	if(pitch < -89.0f)
 		pitch = -89.0f;
 }
 
-void	interpolateTo(float &float1, float &float2, float deltaTime)
+void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	float1 += (1.0f - float1) * 2.0f * deltaTime;
-	if (float1 > 0.99f)
-		float1 = 1.0f;
+	(void)window;(void)key;(void)scancode;(void)action;(void)mods;
 
-	float2 = 1.0f - float1;
+	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+		interpolate = !interpolate;
 }
 
 int	main(int ac, char **av)
 {
-	if (ac != 2)
+	if (ac != 3)
 	{
 		std::cout << "Wrong argument count." << std::endl;
 		return (1);
@@ -85,14 +90,15 @@ int	main(int ac, char **av)
 	Window		window;
 	Camera		camera;
 	Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
-	Texture		texture("textures/texture.png");
 
 	// glfwSwapInterval(0);
 
 	window.setIcon("textures/icon.png");
 
 	Mesh		mesh;
+
 	mesh.loadOBJ(av[1]);
+	Texture		texture(av[2]);
 
 	pos = mesh.center;
 	pos.z += 5.0f;
@@ -101,6 +107,7 @@ int	main(int ac, char **av)
 
 	float	texIntensity = 0.0;
 	float	colorIntensity = 1.0;
+	glm::vec3	lightPos(0.0);
 
 	while (window.up())
 	{
@@ -114,6 +121,11 @@ int	main(int ac, char **av)
 		else
 			interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
 
+		lightPos = glm::vec3(10.0f * cos(glfwGetTime()), 0, 10.0f * sin(glfwGetTime()));
+		// shader.setVec3("lightPos", glm::vec3(5, 0, 0));
+		shader.use();
+		shader.setVec3("lightPos", lightPos);
+		shader.setVec3("lightColor", glm::vec3(1.0, 1.0, 0.9));
 		shader.setFloat("texIntensity", texIntensity);
 		shader.setFloat("colorIntensity", colorIntensity);
 
@@ -123,7 +135,7 @@ int	main(int ac, char **av)
 
 		Texture::reset();
 		
-		key_hook(window);
+		frame_key_hook(window);
 		window.loopEnd();
 	}
 }

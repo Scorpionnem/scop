@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/14 11:51:13 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/15 12:47:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static void resize_hook(GLFWwindow* window, int width, int height)
 	SCREEN_WIDTH = width;
 	SCREEN_HEIGHT = height;
 }
+
+void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 Window::Window() : _lastFrame(0)
 {
@@ -49,6 +51,7 @@ Window::Window() : _lastFrame(0)
 	glfwSetFramebufferSizeCallback(_windowData, resize_hook);
 	glfwSetCharCallback(_windowData, terminal_keyboard_input);
 	glfwSetKeyCallback(_windowData, terminal_special_keys);
+	glfwSetKeyCallback(_windowData, key_hook);
 
 	glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
