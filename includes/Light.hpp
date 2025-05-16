@@ -1,44 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Mesh.hpp                                           :+:      :+:    :+:   */
+/*   Light.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:31:14 by mbatty           ###   ########.fr       */
+/*   Created: 2025/05/16 20:41:21 by mbatty            #+#    #+#             */
+/*   Updated: 2025/05/16 20:42:45 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "libs.hpp"
+#include "Mesh.hpp"
 #include "Shader.hpp"
+#include "Camera.hpp"
 
-struct Vertex
-{
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec3 color;
-};
-
-class Mesh
+class	Light
 {
 	public:
+		Light(){}
+		int	load();
 		glm::vec3	pos;
-		std::vector<Vertex> vertices;
-		std::vector<unsigned int> indices;
-		glm::vec3	center;
-	
-		unsigned int VBO;
-		unsigned int VAO;
-		unsigned int EBO;
-	
-		Mesh();
-	
-		void addTriangle(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& color);	
-		void upload();
-		void	draw(Shader &shader);
-		
-		int	loadOBJ(const std::string &filename);
+		glm::vec3	color;
+		Mesh		mesh;
+		void	update(Shader &shader);
+		void	draw(Shader &shader, Camera &camera);
 };

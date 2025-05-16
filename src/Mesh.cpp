@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 14:11:14 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 20:31:38 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,11 @@ void	Mesh::draw(Shader &shader)
 	glBindVertexArray(0);
 }
 
-void	Mesh::loadOBJ(const std::string &filename)
+int	Mesh::loadOBJ(const std::string &filename)
 {
 	std::ifstream file(filename);
-	if (!file.is_open()) {
-		std::cerr << "Failed to open OBJ file: " << filename << std::endl;
-		return;
-	}
+	if (!file.is_open())
+		return (0);
 
 	std::vector<glm::vec3> positions;
 	// std::vector<glm::vec3> normals;
@@ -154,4 +152,5 @@ void	Mesh::loadOBJ(const std::string &filename)
 	center = (min + max) * 0.5f;
 	
 	this->upload();
+	return (1);
 }

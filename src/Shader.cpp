@@ -6,11 +6,16 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:15:58 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/12 21:38:36 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 20:28:39 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Shader.hpp"
+
+Shader::Shader(void)
+{
+	this->ID = 0;
+}
 
 static int	loadVertexShader(const char *shader)
 {
@@ -25,7 +30,7 @@ static int	loadVertexShader(const char *shader)
 	{
 		glGetShaderInfoLog(res, 512, NULL, infoLog);
 		std::cout << infoLog << std::endl;
-		return (-1);
+		return (0);
 	}
 	return (res);
 }
@@ -43,7 +48,7 @@ static int	loadFragmentShader(const char *shader)
 	{
 		glGetShaderInfoLog(res, 512, NULL, infoLog);
 		std::cout << infoLog << std::endl;
-		return (-1);
+		return (0);
 	}
 	return (res);
 }
@@ -57,10 +62,10 @@ static int	loadShaderProgram(const char *vertex, const char *fragment)
 	int				fragmentShader;
 	
 	vertexShader = loadVertexShader(vertex);
-	if (vertexShader == -1)
+	if (!vertexShader)
 		return (0);
 	fragmentShader = loadFragmentShader(fragment);
-	if (fragmentShader == -1)
+	if (!fragmentShader)
 		return (0);
 
 	res = glCreateProgram();
@@ -79,7 +84,7 @@ static int	loadShaderProgram(const char *vertex, const char *fragment)
 	return (res);
 }
 
-Shader::Shader(const char *vertexPath, const char *fragmentPath)
+int	Shader::load(const char *vertexPath, const char *fragmentPath)
 {
 	std::string	vertexCode;
 	std::string	fragmentCode;
@@ -102,18 +107,14 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 	}
 	catch(std::ifstream::failure e)
 	{
-		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+		return (0);
 	}
 
 	const char	*vShaderCode = vertexCode.c_str();
 	const char	*fShaderCode = fragmentCode.c_str();
 	
 	this->ID = loadShaderProgram(vShaderCode, fShaderCode);
-}
-
-Shader::Shader(unsigned int ID)
-{
-	this->ID = ID;
+	return (this->ID);
 }
 
 void	Shader::use()

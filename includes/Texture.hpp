@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:48:51 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/14 13:49:59 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 20:29:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 class	Texture
 {
 	public:
-		Texture(const char *path);
+		Texture();
+		int	load(const char *path);
 		void	use(void);
 		static void	reset(void);
 		unsigned int	ID;
