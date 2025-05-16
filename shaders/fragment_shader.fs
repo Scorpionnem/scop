@@ -15,17 +15,15 @@ uniform float colorIntensity;
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;
+uniform float ambientStrength;
 
 void main()
 {
 	vec4 finalTexture = texture(tex0, texCoord) * texIntensity;
 	vec4 finalColor = vec4(FragColor, 1.0) * colorIntensity;
-	// outColor = (finalTexture + finalColor) + vec4(FragNormal, 1.0);
 
-	float ambientStrength = 0.2;
 	vec3 ambient = ambientStrength * lightColor;
 
-	//diffuse lighting
 	vec3 norm = normalize(FragNormal);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);

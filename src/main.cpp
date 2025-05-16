@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/15 15:00:58 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 12:09:54 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 
 #include "Mesh.hpp"
 
-float	SCREEN_WIDTH = 400;
-float	SCREEN_HEIGHT = 400;
+float	SCREEN_WIDTH = 800;
+float	SCREEN_HEIGHT = 800;
 
 int	interpolate = 0;
 
@@ -91,7 +91,7 @@ int	main(int ac, char **av)
 	Camera		camera;
 	Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
 
-	// glfwSwapInterval(0);
+	glfwSwapInterval(0);
 
 	window.setIcon("textures/icon.png");
 
@@ -122,12 +122,12 @@ int	main(int ac, char **av)
 			interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
 
 		lightPos = glm::vec3(10.0f * cos(glfwGetTime()), 0, 10.0f * sin(glfwGetTime()));
-		// shader.setVec3("lightPos", glm::vec3(5, 0, 0));
 		shader.use();
 		shader.setVec3("lightPos", lightPos);
-		shader.setVec3("lightColor", glm::vec3(1.0, 1.0, 0.9));
+		shader.setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));
 		shader.setFloat("texIntensity", texIntensity);
 		shader.setFloat("colorIntensity", colorIntensity);
+		shader.setFloat("ambientStrength", 0.2);
 
 		texture.use();
 

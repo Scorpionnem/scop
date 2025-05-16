@@ -23,5 +23,12 @@ void main()
 	
 	FragNormal = vec3(model * vec4(aNormal, 1.0));
 
-	texCoord = vec2(aPos.z, aPos.y);
+	vec3	absNormal = abs(aNormal);
+
+	if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
+		texCoord = vec2(aPos.z, aPos.y);
+	else if (absNormal.y > absNormal.z)
+		texCoord = vec2(aPos.x, aPos.z);
+	else
+		texCoord = vec2(aPos.x, aPos.y);
 }
