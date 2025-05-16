@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/15 12:47:43 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 13:24:31 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ Window::Window() : _lastFrame(0)
 	glfwSetKeyCallback(_windowData, terminal_special_keys);
 	glfwSetKeyCallback(_windowData, key_hook);
 
-	glClearColor(0.2f, 0.2f, 0.5f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	this->center();
 }

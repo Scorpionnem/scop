@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 12:54:37 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 14:44:29 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
+float	FOV = 70;
 
 int	interpolate = 0;
 
@@ -90,16 +91,17 @@ int	main(int ac, char **av)
 	Window		window;
 	Camera		camera;
 	Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
+	Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
 
-	glfwSwapInterval(0);
+	// glfwSwapInterval(0);
 
 	window.setIcon("textures/icon.png");
 
 	Mesh		mesh;
-	Mesh		mesh2;
+	Mesh		light;
 
 	mesh.loadOBJ(av[1]);
-	mesh2.loadOBJ("models/sphere.obj");
+	light.loadOBJ("models/sphere.obj");
 	Texture		texture(av[2]);
 
 	pos = mesh.center;
@@ -110,6 +112,7 @@ int	main(int ac, char **av)
 	float	texIntensity = 0.0;
 	float	colorIntensity = 1.0;
 	glm::vec3	lightPos(0.0);
+	glm::vec3	lightColor(1.0);
 
 	while (window.up())
 	{
@@ -123,11 +126,10 @@ int	main(int ac, char **av)
 		else
 			interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
 
-		lightPos = glm::vec3(10.0f * cos(glfwGetTime()), 0, 10.0f * sin(glfwGetTime()));
-		mesh2.pos = lightPos;
+		lightPos = glm::vec3(10.0f * cos(glfwGetTime()), 10.0f * sin(glfwGetTime()), 10.0f * sin(glfwGetTime()));
 		shader.use();
 		shader.setVec3("lightPos", lightPos);
-		shader.setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));
+		shader.setVec3("lightColor", lightColor);
 		shader.setFloat("texIntensity", texIntensity);
 		shader.setFloat("colorIntensity", colorIntensity);
 		shader.setFloat("ambientStrength", 0.2);
@@ -135,7 +137,11 @@ int	main(int ac, char **av)
 		texture.use();
 
 		mesh.draw(shader);
-		mesh2.draw(shader);
+		
+		camera.setViewMatrix(fb_shader);
+		fb_shader.setVec3("lightColor", lightColor);
+		light.pos = lightPos;
+		light.draw(fb_shader);
 
 		Texture::reset();
 		

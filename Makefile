@@ -42,7 +42,7 @@ run: all
 	@./$(NAME) models/teapot.obj textures/icon.png
 
 vrun: all
-	@valgrind ./$(NAME) models/teapot.obj textures/icon.png
+	@valgrind ./$(NAME) models/runescape.obj textures/cobblestone.png
 
 glfw:
 	@if ls | grep -q "GLFW"; then \
