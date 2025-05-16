@@ -8,5 +8,6 @@ scop
 GLFW/
 src/glad/
 includes/glad/
+glm/
 
 .vscode/

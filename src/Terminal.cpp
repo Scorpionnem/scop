@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:47:08 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 20:59:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,27 @@ void	terminal_culling_command(std::istringstream	&iss)
 		std::cout << "setting: Not enough arguments.";
 }
 
+void	terminal_background_command(std::istringstream &iss)
+{
+	std::string	arg;
+
+	if (iss >> arg)
+	{
+		if (arg == "set")
+		{
+			float r, g, b;
+			if (iss >> r && iss >> g && iss >> b)
+				glClearColor(r, g, b, 1.0f);
+			else
+				std::cout << "Error" << std::endl;
+		}
+		if (arg == "help")
+			std::cout << "/background help | set" << std::endl;
+	}
+	else
+		std::cout << "setting: Not enough arguments.";
+}
+
 void	terminal_execute_command(std::string str)
 {
 	if (!str.size())
@@ -69,6 +90,16 @@ void	terminal_execute_command(std::string str)
 		terminal_setting_command(iss);
 	else if (command == "culling")
 		terminal_culling_command(iss);
+	else if (command == "background")
+		terminal_background_command(iss);
+	else if (command == "help")
+	{
+		std::cout << "Available commands:" << std::endl;
+		std::cout << "- background: edits the background color" << std::endl;
+		std::cout << "- culling: changes culling modes" << std::endl;
+		std::cout << "- help: opens this" << std::endl;
+
+	}
 	else
 		std::cout << "Command not found." << std::endl;
 }
