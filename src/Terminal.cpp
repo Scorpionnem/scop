@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/13 13:28:53 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 20:47:08 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,6 @@ void	terminal_setting_command(std::istringstream	&iss)
 
 	if (iss >> arg)
 	{
-		if (arg == "auto_center")
-		{
-			bool	state;
-			iss >> state;
-			std::cout << "settings, auto_center set to:" << state << std::endl;
-		}
 	}
 	else
 		std::cout << "setting: Not enough arguments.";
@@ -52,11 +46,11 @@ void	terminal_culling_command(std::istringstream	&iss)
 			glEnable(GL_CULL_FACE);
 			glFrontFace(GL_CCW);
 		}
-		if (arg == "none")
+		if (arg == "off")
 			glDisable(GL_CULL_FACE);
 		if (arg == "help")
 		{
-			std::cout << "/culling help | none | clockwise | counter_clockwise" << std::endl;
+			std::cout << "/culling help | off | clockwise | counter_clockwise" << std::endl;
 		}
 	}
 	else
@@ -71,9 +65,9 @@ void	terminal_execute_command(std::string str)
 	std::string	command;
 
 	iss >> command;
-	if (command == "/setting")
+	if (command == "setting")
 		terminal_setting_command(iss);
-	else if (command == "/culling")
+	else if (command == "culling")
 		terminal_culling_command(iss);
 	else
 		std::cout << "Command not found." << std::endl;
@@ -99,15 +93,10 @@ void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action
 				terminalInput.clear();
 			}
 		}
-		else
+		else if (key == GLFW_KEY_T || key == GLFW_KEY_SLASH)
 		{
-			if (key == GLFW_KEY_T)
-			{
-				isTerminalOn = true;
-				_terminalIgnoreNext = true;
-			}
-			else if (key == GLFW_KEY_SLASH)
-				isTerminalOn = true;
+			isTerminalOn = true;
+			_terminalIgnoreNext = true;
 		}
 	}
 }

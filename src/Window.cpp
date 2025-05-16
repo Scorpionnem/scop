@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 13:24:31 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 20:44:17 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@ Window::Window() : _lastFrame(0)
 
 	glfwSetFramebufferSizeCallback(_windowData, resize_hook);
 	glfwSetCharCallback(_windowData, terminal_keyboard_input);
-	glfwSetKeyCallback(_windowData, terminal_special_keys);
 	glfwSetKeyCallback(_windowData, key_hook);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	this->center();
+	this->setIcon("textures/icon.png");
 }
 
 Window::~Window()

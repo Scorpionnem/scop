@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 14:44:29 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 20:44:57 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,16 @@
 #include "Shader.hpp"
 
 #include "Mesh.hpp"
+#include "Light.hpp"
+#include "Terminal.hpp"
 
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
 float	FOV = 70;
 
 int	interpolate = 0;
+
+bool	lock_fps = true;
 
 void	interpolateTo(float &float1, float &float2, float deltaTime)
 {
@@ -79,6 +83,17 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 
 	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
 		interpolate = !interpolate;
+
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+	{
+		lock_fps = !lock_fps;
+		if (lock_fps)
+			glfwSwapInterval(1);
+		else
+			glfwSwapInterval(0);
+	}
+
+	terminal_special_keys(window, key, scancode, action, mods);
 }
 
 int	main(int ac, char **av)
@@ -90,29 +105,30 @@ int	main(int ac, char **av)
 	}
 	Window		window;
 	Camera		camera;
-	Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
-	Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
-
-	// glfwSwapInterval(0);
-
-	window.setIcon("textures/icon.png");
+	Shader		shader;
+	Shader		fb_shader;
+	Texture		texture;
 
 	Mesh		mesh;
-	Mesh		light;
+	Light		light;
 
-	mesh.loadOBJ(av[1]);
-	light.loadOBJ("models/sphere.obj");
-	Texture		texture(av[2]);
+	if (!shader.load("shaders/vertex_shader.vs", "shaders/fragment_shader.fs"))
+		return (0);
+	if (!fb_shader.load("shaders/vertex_shader.vs", "shaders/full_bright.fs"))
+		return (0);
+	if (!texture.load(av[2]))
+		return (0);
+	if (!mesh.loadOBJ(av[1]))
+		return (0);
+	if (!light.load())
+		return (0);
 
-	pos = mesh.center;
-	pos.z += 5.0f;
+	pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
 	shader.setInt("tex0", 0);
 
 	float	texIntensity = 0.0;
 	float	colorIntensity = 1.0;
-	glm::vec3	lightPos(0.0);
-	glm::vec3	lightColor(1.0);
 
 	while (window.up())
 	{
@@ -120,31 +136,21 @@ int	main(int ac, char **av)
 
 		camera.update();
 		camera.setViewMatrix(shader);
+		light.update(shader);
 
 		if (interpolate)
 			interpolateTo(texIntensity, colorIntensity, window.getDeltaTime());	
 		else
 			interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
-
-		lightPos = glm::vec3(10.0f * cos(glfwGetTime()), 10.0f * sin(glfwGetTime()), 10.0f * sin(glfwGetTime()));
+		
 		shader.use();
-		shader.setVec3("lightPos", lightPos);
-		shader.setVec3("lightColor", lightColor);
 		shader.setFloat("texIntensity", texIntensity);
 		shader.setFloat("colorIntensity", colorIntensity);
-		shader.setFloat("ambientStrength", 0.2);
-
+		
 		texture.use();
-
 		mesh.draw(shader);
-		
-		camera.setViewMatrix(fb_shader);
-		fb_shader.setVec3("lightColor", lightColor);
-		light.pos = lightPos;
-		light.draw(fb_shader);
+		light.draw(fb_shader, camera);
 
-		Texture::reset();
-		
 		frame_key_hook(window);
 		window.loopEnd();
 	}
