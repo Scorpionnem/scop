@@ -21,7 +21,7 @@ void main()
 	
 	FragPos = vec3(model * vec4(aPos, 1.0));
 	
-	FragNormal = vec3(model * vec4(aNormal, 1.0));
+	FragNormal = vec3(model * vec4(aNormal, 0.0));
 
 	vec3	absNormal = abs(aNormal);
 

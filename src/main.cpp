@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 12:09:54 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/16 12:54:37 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,10 @@ int	main(int ac, char **av)
 	window.setIcon("textures/icon.png");
 
 	Mesh		mesh;
+	Mesh		mesh2;
 
 	mesh.loadOBJ(av[1]);
+	mesh2.loadOBJ("models/sphere.obj");
 	Texture		texture(av[2]);
 
 	pos = mesh.center;
@@ -122,6 +124,7 @@ int	main(int ac, char **av)
 			interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
 
 		lightPos = glm::vec3(10.0f * cos(glfwGetTime()), 0, 10.0f * sin(glfwGetTime()));
+		mesh2.pos = lightPos;
 		shader.use();
 		shader.setVec3("lightPos", lightPos);
 		shader.setVec3("lightColor", glm::vec3(1.0, 1.0, 1.0));
@@ -132,6 +135,7 @@ int	main(int ac, char **av)
 		texture.use();
 
 		mesh.draw(shader);
+		mesh2.draw(shader);
 
 		Texture::reset();
 		
