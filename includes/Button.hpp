@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:04:30 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 15:25:36 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 15:53:52 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static GLuint buttonVAO = 0, buttonVBO = 0;
 class   Button
 {
     public:
-    Button(float width, float height, glm::vec2 pos, std::function<void()> function)
+    Button(float width, float height, glm::vec2 pos, std::function<void()> function, Texture &texture)
+    : texture(texture)
     {
         this->pos = pos;
         this->width = width;
@@ -71,5 +72,6 @@ class   Button
     float       height;
     glm::vec2   pos;
     std::function<void()>   onClick;
+    Texture &texture;
     private:
 };

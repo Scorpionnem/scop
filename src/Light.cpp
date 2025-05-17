@@ -6,13 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:41:09 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 11:58:41 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 16:30:17 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Light.hpp"
 
-Light::Light() : mesh("models/sphere.obj")
+Light::Light() : mesh("src/assets/models/sphere.obj")
 {
     pos = glm::vec3(0.0f);
     color = glm::vec3(1.0f);
@@ -21,9 +21,9 @@ Light::Light() : mesh("models/sphere.obj")
 void	Light::update(Shader &shader)
 {
 	pos = glm::vec3(
-		10.0f * cos(glfwGetTime()),
-		10.0f * sin(glfwGetTime()),
-		10.0f * sin(glfwGetTime())
+		15.0f * cos(glfwGetTime()),
+		15.0f * sin(glfwGetTime()),
+		15.0f * sin(glfwGetTime())
 	);
     
 	mesh.pos = pos;
@@ -39,4 +39,3 @@ void	Light::draw(Shader &shader, Camera &camera)
 	shader.setVec3("lightColor", color);
 	mesh.draw(shader);
 }
-        

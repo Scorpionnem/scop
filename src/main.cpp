@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 15:30:59 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 16:38:30 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,11 @@ bool isInside(glm::vec2 buttonPos, glm::vec2 mousePos, float width, float height
     return mousePos.x >= buttonPos.x && mousePos.x <= buttonPos.x + width && mousePos.y >= buttonPos.y && mousePos.y <= buttonPos.y + height;
 }
 
-void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &guiShader, Texture &texture)
+void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &guiShader)
 {
 	glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
 	guiShader.use();
 	guiShader.setMat4("projection", projection);
-	texture.use();
 
 	double mouseX, mouseY;
 	glfwGetCursorPos(window, &mouseX, &mouseY);
@@ -143,6 +142,7 @@ void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &gui
 		if (isInside(it->pos, glm::vec2(mouseX, mouseY), it->width, it->height)
 			&& justClicked)
 			it->onClick();
+		it->texture.use();
 		it->draw(guiShader);
 	}
 }
@@ -166,6 +166,10 @@ void	toggle_fpscap()
 		glfwSwapInterval(0);
 }
 
+#define ICON_PATH "src/assets/textures/icon.png"
+#define TEXTURE_BUTTON_PATH "src/assets/textures/button_toggle_texture.png"
+#define CAMERA_BUTTON_PATH "src/assets/textures/button_toggle_camera.png"
+
 int	main(int ac, char **av)
 {
 	if (ac != 3)
@@ -180,24 +184,27 @@ int	main(int ac, char **av)
 		Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
 		Shader		guiShader("shaders/gui_shader.vs", "shaders/gui_shader.fs");
 		Texture		texture(av[2]);
-		Texture		button_texture("textures/button.png");
-	
+
 		Mesh		mesh(av[1]);
 		Light		light;
 		
 		std::vector<Button>	buttons;
 
-		buttons.push_back(Button(100, 50, glm::vec2(0, 0), toggle_camera));
-		buttons.push_back(Button(100, 50, glm::vec2(100, 0), toggle_texture));
-		buttons.push_back(Button(50, 50, glm::vec2(200, 0), toggle_fpscap));
+		Texture		button_texture_icon(ICON_PATH);
+		Texture		button_texture_texture(TEXTURE_BUTTON_PATH);
+		Texture		button_texture_camera(CAMERA_BUTTON_PATH);
+		buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, button_texture_icon));
+		buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, button_texture_camera));
+		buttons.push_back(Button(100, 50, glm::vec2(150, 0), toggle_texture, button_texture_texture));
 
 		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
-	
+
 		shader.setInt("tex0", 0);
-	
+		guiShader.setInt("tex0", 0);
+
 		float	texIntensity = 0.0;
 		float	colorIntensity = 1.0;
-	
+
 		while (window.up())
 		{
 			window.loopStart();
@@ -221,7 +228,7 @@ int	main(int ac, char **av)
 			mesh.draw(shader);
 			light.draw(fb_shader, camera);
 
-			handleButtons(window.getWindowData(), buttons, guiShader, button_texture);
+			handleButtons(window.getWindowData(), buttons, guiShader);
 
 			frame_key_hook(window);
 			window.loopEnd();
