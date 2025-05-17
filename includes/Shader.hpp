@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:16:19 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:26:36 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:07:05 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ class Shader
 {
 	public:
 		unsigned int	ID;
-		Shader();
 
-		int		load(const char *vertexPath, const char *fragmentPath);
+		~Shader();
+		Shader(const char *vertexPath, const char *fragmentPath);
 
 		void	use();
 		void	setBool(const std::string &name, bool value) const;

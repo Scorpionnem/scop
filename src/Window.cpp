@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:44:17 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:32:36 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ Window::Window() : _lastFrame(0)
 
 Window::~Window()
 {
+	glfwDestroyWindow(this->_windowData);
 	glfwTerminate();
 }
 

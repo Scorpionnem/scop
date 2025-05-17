@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:31:14 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:44:39 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,18 @@ class Mesh
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		glm::vec3	center;
+		float		roll;
 	
 		unsigned int VBO;
 		unsigned int VAO;
 		unsigned int EBO;
 	
-		Mesh();
+		~Mesh();
 	
 		void addTriangle(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& color);	
 		void upload();
 		void	draw(Shader &shader);
 		
-		int	loadOBJ(const std::string &filename);
+		Mesh(const std::string &filename);
+		int loadOBJ(const std::string &filename);
 };

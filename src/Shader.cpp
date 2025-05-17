@@ -6,15 +6,15 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:15:58 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:28:39 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:05:18 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Shader.hpp"
 
-Shader::Shader(void)
+Shader::~Shader()
 {
-	this->ID = 0;
+	glDeleteProgram(ID);
 }
 
 static int	loadVertexShader(const char *shader)
@@ -84,7 +84,7 @@ static int	loadShaderProgram(const char *vertex, const char *fragment)
 	return (res);
 }
 
-int	Shader::load(const char *vertexPath, const char *fragmentPath)
+Shader::Shader(const char *vertexPath, const char *fragmentPath)
 {
 	std::string	vertexCode;
 	std::string	fragmentCode;
@@ -107,14 +107,13 @@ int	Shader::load(const char *vertexPath, const char *fragmentPath)
 	}
 	catch(std::ifstream::failure e)
 	{
-		return (0);
+		return ;
 	}
 
 	const char	*vShaderCode = vertexCode.c_str();
 	const char	*fShaderCode = fragmentCode.c_str();
 	
 	this->ID = loadShaderProgram(vShaderCode, fShaderCode);
-	return (this->ID);
 }
 
 void	Shader::use()

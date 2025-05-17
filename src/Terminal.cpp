@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:59:23 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:26:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 bool		isTerminalOn = false;
 std::string	terminalInput;
 
-bool		_terminalIgnoreNext = false;
+bool		terminalIgnoreNext = false;
 
 void	terminal_setting_command(std::istringstream	&iss)
 {
@@ -27,7 +27,7 @@ void	terminal_setting_command(std::istringstream	&iss)
 	{
 	}
 	else
-		std::cout << "setting: Not enough arguments.";
+		std::cout << "setting: Not enough arguments." << std::endl;
 }
 
 void	terminal_culling_command(std::istringstream	&iss)
@@ -48,13 +48,11 @@ void	terminal_culling_command(std::istringstream	&iss)
 		}
 		if (arg == "off")
 			glDisable(GL_CULL_FACE);
-		if (arg == "help")
-		{
+		else
 			std::cout << "/culling help | off | clockwise | counter_clockwise" << std::endl;
-		}
 	}
 	else
-		std::cout << "setting: Not enough arguments.";
+		std::cout << "culling: Not enough arguments." << std::endl;
 }
 
 void	terminal_background_command(std::istringstream &iss)
@@ -71,11 +69,28 @@ void	terminal_background_command(std::istringstream &iss)
 			else
 				std::cout << "Error" << std::endl;
 		}
-		if (arg == "help")
+		else
 			std::cout << "/background help | set" << std::endl;
 	}
 	else
-		std::cout << "setting: Not enough arguments.";
+		std::cout << "background: Not enough arguments." << std::endl;
+}
+
+void	terminal_render_command(std::istringstream &iss)
+{
+	std::string	arg;
+
+	if (iss >> arg)
+	{
+		if (arg == "wireframe")
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		else if (arg == "normal")
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		else
+			std::cout << "/render help | wireframe | normal" << std::endl;
+	}
+	else
+		std::cout << "render: Not enough arguments." << std::endl;
 }
 
 void	terminal_execute_command(std::string str)
@@ -92,11 +107,14 @@ void	terminal_execute_command(std::string str)
 		terminal_culling_command(iss);
 	else if (command == "background")
 		terminal_background_command(iss);
+	else if (command == "render")
+		terminal_render_command(iss);
 	else if (command == "help")
 	{
 		std::cout << "Available commands:" << std::endl;
 		std::cout << "- background: edits the background color" << std::endl;
 		std::cout << "- culling: changes culling modes" << std::endl;
+		std::cout << "- render: changes render modes" << std::endl;
 		std::cout << "- help: opens this" << std::endl;
 
 	}
@@ -127,7 +145,7 @@ void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action
 		else if (key == GLFW_KEY_T || key == GLFW_KEY_SLASH)
 		{
 			isTerminalOn = true;
-			_terminalIgnoreNext = true;
+			terminalIgnoreNext = true;
 		}
 	}
 }
@@ -135,11 +153,11 @@ void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action
 void	terminal_keyboard_input(GLFWwindow *window, unsigned int key)
 {
 	(void)window;
-	if (isTerminalOn && !_terminalIgnoreNext)
+	if (isTerminalOn && !terminalIgnoreNext)
 	{
 		if (key >= 32 && key <= 126)
 			terminalInput += (char)key;
 		std::cout << "\033c\r" << terminalInput << "_" << std::endl;
 	}
-	_terminalIgnoreNext = false;
+	terminalIgnoreNext = false;
 }

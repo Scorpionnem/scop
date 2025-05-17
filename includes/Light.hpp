@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:41:21 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:42:45 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 11:51:13 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
 class	Light
 {
 	public:
-		Light(){}
-		int	load();
+		Light();
 		glm::vec3	pos;
 		glm::vec3	color;
 		Mesh		mesh;

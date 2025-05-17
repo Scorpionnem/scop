@@ -6,18 +6,27 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:31:38 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:47:00 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Mesh.hpp"
 
-Mesh::Mesh()
+Mesh::Mesh(const std::string &filename)
 {
 	this->pos = glm::vec3(0.0);
+	this->roll = 0;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);			
 	glGenBuffers(1, &EBO);
+	this->loadOBJ(filename);
+}
+
+Mesh::~Mesh()
+{
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &VAO);
 }
 
 void	Mesh::addTriangle(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec3& color)
@@ -63,6 +72,7 @@ void	Mesh::draw(Shader &shader)
 	model = glm::translate(model, pos);
 	model = glm::translate(model, center);
 	model = glm::rotate(model, glm::radians(20.0f * (float)glfwGetTime()), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(roll), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::translate(model, -center);
 
 	shader.setMat4("model", model);

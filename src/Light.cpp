@@ -6,19 +6,16 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:41:09 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:42:52 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 11:58:41 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Light.hpp"
 
-int Light::load()
+Light::Light() : mesh("models/sphere.obj")
 {
-    if (!mesh.loadOBJ("models/sphere.obj"))
-    	return (0);
     pos = glm::vec3(0.0f);
     color = glm::vec3(1.0f);
-    return (1);
 }
 
 void	Light::update(Shader &shader)
