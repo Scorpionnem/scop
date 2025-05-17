@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:47:00 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 13:57:12 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,19 +82,21 @@ void	Mesh::draw(Shader &shader)
 	glBindVertexArray(0);
 }
 
-int	Mesh::loadOBJ(const std::string &filename)
+int Mesh::loadOBJ(const std::string &filename)
 {
 	std::ifstream file(filename);
 	if (!file.is_open())
-		return (0);
+		throw std::runtime_error("Failed to open model");
 
 	std::vector<glm::vec3> positions;
-	// std::vector<glm::vec3> normals;
-
 	std::string line;
-	float	color = 0.0f;
+	float color = 0.5f;
+	bool addedAnyFace = false;
+
+	int lineNumber = 0;
 	while (std::getline(file, line))
 	{
+		lineNumber++;
 		std::istringstream iss(line);
 		std::string prefix;
 		iss >> prefix;
@@ -102,13 +104,13 @@ int	Mesh::loadOBJ(const std::string &filename)
 		if (prefix == "v")
 		{
 			float x, y, z;
-			iss >> x >> y >> z;
+			if (!(iss >> x >> y >> z))
+				throw std::runtime_error("Invalid vertex");
 			positions.push_back(glm::vec3(x, y, z));
 		}
 		else if (prefix == "f")
 		{
 			std::vector<int> vertexIndices;
-			// std::vector<int> normalIndices;
 			std::string token;
 			while (iss >> token)
 			{
@@ -116,51 +118,56 @@ int	Mesh::loadOBJ(const std::string &filename)
 				std::string indexStr;
 				if (std::getline(ss, indexStr, '/'))
 				{
-					int posIndex = std::stoi(indexStr);
-					vertexIndices.push_back(posIndex - 1);
+					try {
+						int posIndex = std::stoi(indexStr);
+						if (posIndex <= 0 || static_cast<size_t>(posIndex) > positions.size()) {
+							std::cerr << "Invalid face index on line " << lineNumber << ": " << posIndex << std::endl;
+							throw std::runtime_error("Invalid face");
+						}
+						vertexIndices.push_back(posIndex - 1);
+					} catch (...) {
+						std::cerr << "Invalid integer in face on line " << lineNumber << std::endl;
+						throw std::runtime_error("Invalid face");
+					}
 				}
-				// if (std::getline(ss, indexStr, '/'))
-				// 	;
-				// if (std::getline(ss, indexStr, '/'))
-				// {
-				// 	int posIndex = std::stoi(indexStr);
-				// 	normalIndices.push_back(posIndex - 1);
-				// }
 			}
+
+			if (vertexIndices.size() < 3)
+			{
+				std::cerr << "Invalid face (less than 3 vertices) on line " << lineNumber << std::endl;
+				throw std::runtime_error("Invalid face");
+			}
+
 			for (size_t i = 1; i + 1 < vertexIndices.size(); ++i)
 			{
 				glm::vec3 v1 = positions[vertexIndices[0]];
 				glm::vec3 v2 = positions[vertexIndices[i]];
 				glm::vec3 v3 = positions[vertexIndices[i + 1]];
-				
-				// glm::vec3 n1 = normals[normalIndices[0]];
-				// glm::vec3 n2 = normals[normalIndices[i]];
-				// glm::vec3 n3 = normals[normalIndices[i + 1]];
-				
-				// this->addTriangle(v1, v2, v3, glm::vec3(color, color, color), n1, n2, n3);
-				this->addTriangle(v1, v2, v3, glm::vec3(color, color, color));
+				this->addTriangle(v1, v2, v3, glm::vec3(color));
+				addedAnyFace = true;
+
 				color += 0.05f;
-				if (color > 0.5)
-					color = 0.0;
+				if (color > 0.7f)
+					color = 0.5f;
 			}
 		}
-		// else if (prefix == "vn")
-		// {
-		// 	float x, y, z;
-		// 	iss >> x >> y >> z;
-		// 	normals.push_back(glm::vec3(x, y, z));
-		// }
 	}
+
+	if (positions.empty())
+		throw std::runtime_error("No vertices found in given model");
+	if (!addedAnyFace)
+		throw std::runtime_error("No faces found in given model");
+
 	glm::vec3 min = vertices[0].position;
 	glm::vec3 max = vertices[0].position;
-	
+
 	for (std::vector<Vertex>::iterator it = vertices.begin(); it != vertices.end(); it++)
 	{
-	    min = glm::min(min, it->position);
-	    max = glm::max(max, it->position);
+		min = glm::min(min, it->position);
+		max = glm::max(max, it->position);
 	}
 	center = (min + max) * 0.5f;
-	
+
 	this->upload();
 	return (1);
 }

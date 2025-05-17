@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:48:15 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 13:57:17 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,46 +137,51 @@ int	main(int ac, char **av)
 		std::cout << "Wrong argument count." << std::endl;
 		return (1);
 	}
-	Window		window;
-	Camera		camera;
-	Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
-	Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
-	Texture		texture(av[2]);
-
-	Mesh		mesh(av[1]);
-	Light		light;
-
-	pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
-
-	shader.setInt("tex0", 0);
-
-	float	texIntensity = 0.0;
-	float	colorIntensity = 1.0;
-
-	while (window.up())
-	{
-		window.loopStart();
-
-		camera.update();
-		camera.setViewMatrix(shader);
-		light.update(shader);
-
-		if (interpolate)
-			interpolateTo(texIntensity, colorIntensity, window.getDeltaTime());	
-		else
-			interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
+	try {
+		Window		window;
+		Camera		camera;
+		Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
+		Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
+		Texture		texture(av[2]);
+	
+		Mesh		mesh(av[1]);
+		Light		light;
 		
-		shader.use();
-		shader.setFloat("texIntensity", texIntensity);
-		shader.setFloat("colorIntensity", colorIntensity);
-		
-		texture.use();
-		mesh.pos = mesh_pos;
-		mesh.roll = mesh_roll;
-		mesh.draw(shader);
-		light.draw(fb_shader, camera);
-
-		frame_key_hook(window);
-		window.loopEnd();
+		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
+	
+		shader.setInt("tex0", 0);
+	
+		float	texIntensity = 0.0;
+		float	colorIntensity = 1.0;
+	
+		while (window.up())
+		{
+			window.loopStart();
+	
+			camera.update();
+			camera.setViewMatrix(shader);
+			light.update(shader);
+	
+			if (interpolate)
+				interpolateTo(texIntensity, colorIntensity, window.getDeltaTime());	
+			else
+				interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
+			
+			shader.use();
+			shader.setFloat("texIntensity", texIntensity);
+			shader.setFloat("colorIntensity", colorIntensity);
+			
+			texture.use();
+			mesh.pos = mesh_pos;
+			mesh.roll = mesh_roll;
+			mesh.draw(shader);
+			light.draw(fb_shader, camera);
+	
+			frame_key_hook(window);
+			window.loopEnd();
+		}
+	} catch (const std::exception& e) {
+		std::cerr << "An error occurred: " << e.what() << std::endl;
+		return (1);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:32:36 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 13:52:56 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods);
 Window::Window() : _lastFrame(0)
 {
 	//Inits GLFW settings
-	glfwInit();
+	if (!glfwInit())
+		throw std::runtime_error("Failed to initialize glfw");
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -35,16 +36,14 @@ Window::Window() : _lastFrame(0)
 	_windowData = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WIN_NAME, NULL, NULL);
 	if (!_windowData)
 	{
-		std::cout << "Failed to create window" << std::endl;
 		glfwTerminate();
-		return ;
+		throw std::runtime_error("Failed to create window");
 	}
 	glfwMakeContextCurrent(_windowData);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to init GLAD" << std::endl;
 		glfwTerminate();
-		return ;
+		throw std::runtime_error("Failed to init GLAD");
 	}
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -106,10 +105,7 @@ void		Window::setIcon(const char *path)
 	stbi_set_flip_vertically_on_load(false);
 	image[0].pixels = stbi_load(path, &image[0].width, &image[0].height, 0, 4);
 	if (!image[0].pixels)
-	{
-		std::cout << "Failed to set window icon" << std::endl;
-		return ;
-	}
+		throw std::runtime_error("Failed to set window icon");
 	glfwSetWindowIcon(_windowData, 1, image);
 	stbi_image_free(image[0].pixels);
 }

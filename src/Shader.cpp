@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:15:58 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:05:18 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 13:54:33 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,17 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 		vertexCode = vShaderStream.str();
 		fragmentCode = fShaderStream.str();
 	}
-	catch(std::ifstream::failure e)
+	catch(...)
 	{
-		return ;
+		throw std::runtime_error("Failed to read shader");
 	}
 
 	const char	*vShaderCode = vertexCode.c_str();
 	const char	*fShaderCode = fragmentCode.c_str();
 	
 	this->ID = loadShaderProgram(vShaderCode, fShaderCode);
+	if (!this->ID)
+		throw std::runtime_error("Failed to load shader program");
 }
 
 void	Shader::use()
