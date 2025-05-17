@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 13:57:17 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 15:30:59 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "Mesh.hpp"
 #include "Light.hpp"
 #include "Terminal.hpp"
+#include "Button.hpp"
 
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
@@ -114,20 +115,55 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 	terminal_special_keys(window, key, scancode, action, mods);
 	if (isTerminalOn)
 		return ;
+}
 
-	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
-		interpolate = !interpolate;
+bool isInside(glm::vec2 buttonPos, glm::vec2 mousePos, float width, float height)
+{
+    return mousePos.x >= buttonPos.x && mousePos.x <= buttonPos.x + width && mousePos.y >= buttonPos.y && mousePos.y <= buttonPos.y + height;
+}
 
-	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &guiShader, Texture &texture)
+{
+	glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+	guiShader.use();
+	guiShader.setMat4("projection", projection);
+	texture.use();
+
+	double mouseX, mouseY;
+	glfwGetCursorPos(window, &mouseX, &mouseY);
+	
+	bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	static bool wasPressed = false;
+	
+	bool justClicked = mousePressed && !wasPressed;
+	wasPressed = mousePressed;
+
+	for (std::vector<Button>::iterator it = buttons.begin(); it != buttons.end(); it++)
 	{
-		lock_fps = !lock_fps;
-		if (lock_fps)
-			glfwSwapInterval(1);
-		else
-			glfwSwapInterval(0);
+		if (isInside(it->pos, glm::vec2(mouseX, mouseY), it->width, it->height)
+			&& justClicked)
+			it->onClick();
+		it->draw(guiShader);
 	}
-	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
-		camera_toggle = !camera_toggle;
+}
+
+void	toggle_camera()
+{
+	camera_toggle = !camera_toggle;
+}
+
+void	toggle_texture()
+{
+	interpolate = !interpolate;
+}
+
+void	toggle_fpscap()
+{
+	lock_fps = !lock_fps;
+	if (lock_fps)
+		glfwSwapInterval(1);
+	else
+		glfwSwapInterval(0);
 }
 
 int	main(int ac, char **av)
@@ -142,11 +178,19 @@ int	main(int ac, char **av)
 		Camera		camera;
 		Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
 		Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
+		Shader		guiShader("shaders/gui_shader.vs", "shaders/gui_shader.fs");
 		Texture		texture(av[2]);
+		Texture		button_texture("textures/button.png");
 	
 		Mesh		mesh(av[1]);
 		Light		light;
 		
+		std::vector<Button>	buttons;
+
+		buttons.push_back(Button(100, 50, glm::vec2(0, 0), toggle_camera));
+		buttons.push_back(Button(100, 50, glm::vec2(100, 0), toggle_texture));
+		buttons.push_back(Button(50, 50, glm::vec2(200, 0), toggle_fpscap));
+
 		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 	
 		shader.setInt("tex0", 0);
@@ -176,7 +220,9 @@ int	main(int ac, char **av)
 			mesh.roll = mesh_roll;
 			mesh.draw(shader);
 			light.draw(fb_shader, camera);
-	
+
+			handleButtons(window.getWindowData(), buttons, guiShader, button_texture);
+
 			frame_key_hook(window);
 			window.loopEnd();
 		}

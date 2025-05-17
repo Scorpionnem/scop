@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 20:22:00 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/17 15:24:30 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <cmath>
 # include <unistd.h>
 # include <exception>
+# include <functional>
 
 # include "glad.h"
 # include "glfw3.h"
