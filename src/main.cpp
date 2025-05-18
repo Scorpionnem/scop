@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 15:35:47 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/18 15:40:29 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,9 +234,9 @@ int	main(int ac, char **av)
 			shader.setFloat("texIntensity", texIntensity);
 			shader.setFloat("colorIntensity", colorIntensity);
 			
-			light.color.x = sliders[1].value - 0.25;
-			light.color.y = sliders[2].value - 0.25;
-			light.color.z = sliders[3].value - 0.25;
+			light.color.x = sliders[1].value;
+			light.color.y = sliders[2].value;
+			light.color.z = sliders[3].value;
 
 			texture.use();
 			mesh.pos = mesh_pos;
