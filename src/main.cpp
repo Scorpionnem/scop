@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 16:38:30 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/18 13:53:18 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "Light.hpp"
 #include "Terminal.hpp"
 #include "Button.hpp"
+#include "Slider.hpp"
 
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
@@ -117,12 +118,7 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 		return ;
 }
 
-bool isInside(glm::vec2 buttonPos, glm::vec2 mousePos, float width, float height)
-{
-    return mousePos.x >= buttonPos.x && mousePos.x <= buttonPos.x + width && mousePos.y >= buttonPos.y && mousePos.y <= buttonPos.y + height;
-}
-
-void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &guiShader)
+void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &guiShader, Slider &slider)
 {
 	glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
 	guiShader.use();
@@ -132,19 +128,20 @@ void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &gui
 	glfwGetCursorPos(window, &mouseX, &mouseY);
 	
 	bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-	static bool wasPressed = false;
-	
-	bool justClicked = mousePressed && !wasPressed;
-	wasPressed = mousePressed;
 
+    glDisable(GL_DEPTH_TEST);
 	for (std::vector<Button>::iterator it = buttons.begin(); it != buttons.end(); it++)
 	{
-		if (isInside(it->pos, glm::vec2(mouseX, mouseY), it->width, it->height)
-			&& justClicked)
-			it->onClick();
 		it->texture.use();
+		it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
 		it->draw(guiShader);
 	}
+	slider.checkClick(glm::vec2(mouseX, mouseY), mousePressed);
+	slider.drawBackground(guiShader);
+	slider.drawSlider(guiShader);
+    glEnable(GL_DEPTH_TEST);
+
+	FOV = 80 * slider.value;
 }
 
 void	toggle_camera()
@@ -167,8 +164,11 @@ void	toggle_fpscap()
 }
 
 #define ICON_PATH "src/assets/textures/icon.png"
-#define TEXTURE_BUTTON_PATH "src/assets/textures/button_toggle_texture.png"
-#define CAMERA_BUTTON_PATH "src/assets/textures/button_toggle_camera.png"
+
+#define BUTTON_PATH "src/assets/textures/button.png"
+#define BUTTON_PRESSED_PATH "src/assets/textures/button_pressed.png"
+
+#define SLIDER_BG_PATH "src/assets/textures/slider_background.png"
 
 int	main(int ac, char **av)
 {
@@ -190,12 +190,16 @@ int	main(int ac, char **av)
 		
 		std::vector<Button>	buttons;
 
-		Texture		button_texture_icon(ICON_PATH);
-		Texture		button_texture_texture(TEXTURE_BUTTON_PATH);
-		Texture		button_texture_camera(CAMERA_BUTTON_PATH);
-		buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, button_texture_icon));
-		buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, button_texture_camera));
-		buttons.push_back(Button(100, 50, glm::vec2(150, 0), toggle_texture, button_texture_texture));
+		Texture		icon_texture(ICON_PATH);
+		Texture		button_texture(BUTTON_PATH);
+		Texture		button_pressed_texture(BUTTON_PRESSED_PATH);
+		Texture		sliderbg_texture(SLIDER_BG_PATH);
+		buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, button_pressed_texture));
+		buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, button_texture, button_pressed_texture));
+		buttons.push_back(Button(100, 50, glm::vec2(150, 0), toggle_texture, button_texture, button_pressed_texture));
+
+		Slider slider(150, 50, glm::vec2(250, 0), toggle_texture, button_texture, button_pressed_texture, sliderbg_texture);
+		slider.setSlider(0.875);
 
 		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
@@ -228,7 +232,7 @@ int	main(int ac, char **av)
 			mesh.draw(shader);
 			light.draw(fb_shader, camera);
 
-			handleButtons(window.getWindowData(), buttons, guiShader);
+			handleButtons(window.getWindowData(), buttons, guiShader, slider);
 
 			frame_key_hook(window);
 			window.loopEnd();

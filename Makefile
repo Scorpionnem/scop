@@ -24,6 +24,8 @@ CPP_FILES :=	main \
 				Mesh \
 				Texture \
 				Light \
+				Button \
+				Slider \
 				stb_image
 
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
