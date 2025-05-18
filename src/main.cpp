@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 15:41:22 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/18 20:53:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,15 +121,15 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 
 void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &guiShader, std::vector<Slider> &sliders)
 {
-	glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
-	guiShader.use();
-	guiShader.setMat4("projection", projection);
-
 	double mouseX, mouseY;
+	bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+	
 	glfwGetCursorPos(window, &mouseX, &mouseY);
 	
-	bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-
+	guiShader.use();
+	glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+	guiShader.setMat4("projection", projection);
+	
     glDisable(GL_DEPTH_TEST);
 	for (std::vector<Button>::iterator it = buttons.begin(); it != buttons.end(); it++)
 	{
@@ -144,8 +144,6 @@ void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &gui
 		it->drawSlider(guiShader);
 	}
 	glEnable(GL_DEPTH_TEST);
-
-	FOV = 80 * sliders[0].value;
 }
 
 void	toggle_camera()
@@ -174,6 +172,10 @@ void	toggle_fpscap()
 
 #define SLIDER_BG_PATH "src/assets/textures/slider_background.png"
 
+#define RED_BUTTON_PATH "src/assets/textures/red_button.png"
+#define GREEN_BUTTON_PATH "src/assets/textures/green_button.png"
+#define BLUE_BUTTON_PATH "src/assets/textures/blue_button.png"
+
 int	main(int ac, char **av)
 {
 	if (ac != 3)
@@ -183,31 +185,37 @@ int	main(int ac, char **av)
 	}
 	try {
 		Window		window;
+		
 		Camera		camera;
+		
 		Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
 		Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
 		Shader		guiShader("shaders/gui_shader.vs", "shaders/gui_shader.fs");
+
 		Texture		texture(av[2]);
-
-		Mesh		mesh(av[1]);
-		Light		light;
-		
-		std::vector<Button>	buttons;
-		std::vector<Slider>	sliders;
-
 		Texture		icon_texture(ICON_PATH);
 		Texture		button_texture(BUTTON_PATH);
 		Texture		button_pressed_texture(BUTTON_PRESSED_PATH);
 		Texture		sliderbg_texture(SLIDER_BG_PATH);
+		Texture		red_texture(RED_BUTTON_PATH);
+		Texture		green_texture(GREEN_BUTTON_PATH);
+		Texture		blue_texture(BLUE_BUTTON_PATH);
+
+		Mesh		mesh(av[1]);
+		Light		light;
+
+		std::vector<Button>	buttons;
+		std::vector<Slider>	sliders;		
+
 		buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, button_pressed_texture));
 		buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, button_texture, button_pressed_texture));
 		buttons.push_back(Button(100, 50, glm::vec2(150, 0), toggle_texture, button_texture, button_pressed_texture));
 
 		sliders.push_back(Slider(150, 50, glm::vec2(250, 0), button_texture, button_pressed_texture, sliderbg_texture));
 		sliders.back().setSlider(0.875);
-		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 0), button_texture, button_pressed_texture, sliderbg_texture));
-		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
-		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
+		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 0), red_texture, button_pressed_texture, sliderbg_texture));
+		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
+		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
 
 		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
@@ -224,19 +232,20 @@ int	main(int ac, char **av)
 			camera.update();
 			camera.setViewMatrix(shader);
 			light.update(shader);
-	
+
 			if (interpolate)
 				interpolateTo(texIntensity, colorIntensity, window.getDeltaTime());	
 			else
 				interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
-			
+
 			shader.use();
 			shader.setFloat("texIntensity", texIntensity);
 			shader.setFloat("colorIntensity", colorIntensity);
-			
+
 			light.color.x = sliders[1].value;
 			light.color.y = sliders[2].value;
 			light.color.z = sliders[3].value;
+			FOV = 80 * sliders[0].value;
 
 			texture.use();
 			mesh.pos = mesh_pos;
