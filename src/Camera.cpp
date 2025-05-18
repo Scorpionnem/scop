@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 20:54:38 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/16 13:27:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/18 14:22:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	Camera::update()
 void	Camera::setViewMatrix(Shader &shader)
 {
 	glm::mat4	view = this->getViewMatrix();
-	glm::mat4	projection = glm::perspective(glm::radians(FOV), SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 180.0f);
+	glm::mat4	projection = glm::perspective(glm::radians(FOV), SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, RENDER_DISTANCE);
 
 	shader.use();
 	shader.setMat4("view", view);
