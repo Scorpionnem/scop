@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:25:11 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 13:51:33 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/18 15:16:05 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,16 @@ extern GLuint sliderVBO;
 class Slider
 {
     public:
-        Slider(float width, float height, glm::vec2 pos, std::function<void()> function, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture)
-        :
-        slider(width / 4, height, glm::vec2(pos.x + width / 2, pos.y), function, sliderTexture, sliderTexture),
-        background(width, height, pos, function, sliderTexture, sliderTexture),
-        backgroundTexture(backgroundTexture), sliderTexture(sliderTexture), sliderPressedTexture(sliderPressedTexture)
+        Slider(float width, float height, glm::vec2 pos, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture)
+        : backgroundTexture(backgroundTexture), sliderTexture(sliderTexture), sliderPressedTexture(sliderPressedTexture)
         {
             this->pos = pos;
             this->width = width;
             this->height = height;
+
+            this->sliderWidth = width / 4;
+            this->sliderHeight = height;
+            this->sliderPos = glm::vec2(pos.x + width / 2, pos.y);
             setSlider(0.5);
         }
         void    drawBackground(Shader &shader)
@@ -48,11 +49,21 @@ class Slider
         }
         void    drawSlider(Shader &shader)
         {
+            initSliderModel();
+            shader.use();
             if (isSliderClicked)
                 sliderPressedTexture.use();
             else
                 sliderTexture.use();
-            slider.draw(shader);
+
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(sliderPos.x, sliderPos.y, 0.0f));
+            model = glm::scale(model, glm::vec3(sliderWidth, sliderHeight, 1.0f));
+                
+            shader.setMat4("model", model);
+                
+            glBindVertexArray(sliderVAO);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glBindVertexArray(0);
         }
         void    checkClick(glm::vec2 mousePos, bool mousePressed)
         {
@@ -61,35 +72,35 @@ class Slider
             isSliderClicked = false;
             if (inside && mousePressed)
             {
-                slider.pos.x = mousePos.x - (slider.width / 2);
+                sliderPos.x = mousePos.x - (sliderWidth / 2);
                 isSliderClicked = true;
             }
-            if (slider.pos.x > pos.x + width - (slider.width))
-                slider.pos.x = pos.x + width - (slider.width);
-            if (slider.pos.x < pos.x)
-                slider.pos.x = pos.x;
+            if (sliderPos.x > pos.x + width - (sliderWidth))
+                sliderPos.x = pos.x + width - (sliderWidth);
+            if (sliderPos.x < pos.x)
+                sliderPos.x = pos.x;
 
-            float sliderCenter = slider.pos.x + slider.width * 0.5f;
+            float sliderCenter = sliderPos.x + sliderWidth * 0.5f;
             value = (sliderCenter - pos.x) / width;
         }
         void    setSlider(float value)
         {
-            slider.pos.x = pos.x + value * width - slider.width * 0.5f;
+            sliderPos.x = pos.x + value * width - sliderWidth * 0.5f;
         }
 
         void initSliderModel();
 
-        Button  slider;
-        Button  background;
-
-        float   width;
-        float   height;
         Texture &backgroundTexture;
         Texture &sliderTexture;
         Texture &sliderPressedTexture;
+
+        float   width;
+        float   height;
+        
+        float   sliderWidth;
+        float   sliderHeight;
         bool    isSliderClicked = false;
-
         float   value = 0;
-
         glm::vec2   pos;
+        glm::vec2   sliderPos;
 };
