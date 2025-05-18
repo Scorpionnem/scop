@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 15:40:29 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/18 15:41:22 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,8 +206,8 @@ int	main(int ac, char **av)
 		sliders.push_back(Slider(150, 50, glm::vec2(250, 0), button_texture, button_pressed_texture, sliderbg_texture));
 		sliders.back().setSlider(0.875);
 		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 0), button_texture, button_pressed_texture, sliderbg_texture));
-		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
 		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
+		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
 
 		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
