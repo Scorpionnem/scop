@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 14:46:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 17:42:50 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,9 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 		return ;
 }
 
+int	shaderEffect = 0;
+#define MAX_SHADER_EFFECT 3
+
 void	toggle_camera()
 {
 	camera_toggle = !camera_toggle;
@@ -123,6 +126,13 @@ void	toggle_camera()
 void	toggle_texture()
 {
 	interpolate = !interpolate;
+}
+
+void	change_shader()
+{
+	shaderEffect++;
+	if (shaderEffect > MAX_SHADER_EFFECT)
+		shaderEffect = 0;
 }
 
 void	toggle_fpscap()
@@ -219,7 +229,10 @@ int	main(int ac, char **av)
 		Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
 		Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
 		Shader		guiShader("shaders/gui_shader.vs", "shaders/gui_shader.fs");
-
+		Shader		bw_shader("shaders/vertex_shader.vs", "shaders/bw_frag.fs");
+		Shader		invert_shader("shaders/vertex_shader.vs", "shaders/invert_frag.fs");
+		Shader		wavy_shader("shaders/vertex_shader.vs", "shaders/wavy_frag.fs");
+		
 		Texture		texture(av[2]);
 		Texture		icon_texture(ICON_PATH);
 		Texture		button_texture(BUTTON_PATH);
@@ -236,25 +249,26 @@ int	main(int ac, char **av)
 		Light		light;
 		
 		Interface	mainInterface;
-		mainInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
+		mainInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, lol));
 		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
 		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(125, 0), goto_model_interface, button_texture, button_pressed_texture));
 		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(200, 0), goto_light_interface, button_texture, button_pressed_texture));
 
 		Interface	cameraInterface;
-		cameraInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
-		cameraInterface.buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, camera_texture, button_pressed_texture));
-		cameraInterface.sliders.push_back(Slider(150, 50, glm::vec2(150, 0), button_texture, button_pressed_texture, sliderbg_texture));
+		cameraInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		cameraInterface.buttons.push_back(Button(75, 50, glm::vec2(50, 0), toggle_camera, camera_texture, button_pressed_texture));
+		cameraInterface.sliders.push_back(Slider(150, 50, glm::vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
 
 		Interface	modelInterface;
-		modelInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
-		modelInterface.buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_texture, texture_texture, button_pressed_texture));
-		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(150, 0), button_texture, button_pressed_texture, sliderbg_texture));
-		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(150, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
-		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(150, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button(75, 50, glm::vec2(50, 0), toggle_texture, texture_texture, button_pressed_texture));
+		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(125, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(125, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.buttons.push_back(Button(50, 50, glm::vec2(275, 0), change_shader, button_texture, button_pressed_texture));
 
 		Interface	lightInterface;
-		lightInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
+		lightInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
 		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 0), red_texture, button_pressed_texture, sliderbg_texture));
 		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
 		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
@@ -266,30 +280,33 @@ int	main(int ac, char **av)
 
 		shader.setInt("tex0", 0);
 		guiShader.setInt("tex0", 0);
+		bw_shader.setInt("tex0", 0);
 
 		float	texIntensity = 0.0;
 		float	colorIntensity = 1.0;
 
+		Shader		currentShader(shader);
 		while (window.up())
 		{
 			window.loopStart();
 	
 			camera.update();
-			camera.setViewMatrix(shader);
-			light.update(shader);
+			camera.setViewMatrix(currentShader);
+			light.update(currentShader);
 
 			if (interpolate)
 				interpolateTo(texIntensity, colorIntensity, window.getDeltaTime());	
 			else
 				interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
 
-			shader.use();
-			shader.setFloat("texIntensity", texIntensity);
-			shader.setFloat("colorIntensity", colorIntensity);
+			currentShader.use();
+			currentShader.setFloat("texIntensity", texIntensity);
+			currentShader.setFloat("colorIntensity", colorIntensity);
+			currentShader.setFloat("time", glfwGetTime());
 
 			texture.use();
 			mesh.pos = mesh_pos;
-			mesh.draw(shader);
+			mesh.draw(currentShader);
 			light.draw(fb_shader, camera);
 
 			if (interface == 0)
@@ -300,6 +317,15 @@ int	main(int ac, char **av)
 				modelInterface.update(window.getWindowData(), guiShader);
 			if (interface == 3)
 				lightInterface.update(window.getWindowData(), guiShader);
+
+			if (shaderEffect == 0)
+				currentShader.ID = shader.ID;
+			if (shaderEffect == 1)
+				currentShader.ID = bw_shader.ID;
+			if (shaderEffect == 2)
+				currentShader.ID = invert_shader.ID;
+			if (shaderEffect == 3)
+				currentShader.ID = wavy_shader.ID;
 
 			light.color.x = lightInterface.sliders[0].value;
 			light.color.y = lightInterface.sliders[1].value;

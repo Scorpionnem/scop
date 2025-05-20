@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:16:19 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:07:05 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 16:44:45 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@ class Shader
 		unsigned int	ID;
 
 		~Shader();
+		Shader(const Shader &cpy)
+		{
+			this->ID = cpy.ID;
+		}
+		Shader(unsigned int ID)
+		{
+			this->ID = ID;
+		}
 		Shader(const char *vertexPath, const char *fragmentPath);
 
 		void	use();
