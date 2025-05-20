@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 17:42:50 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 19:57:44 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,15 +244,16 @@ int	main(int ac, char **av)
 		Texture		camera_texture(CAMERA_BUTTON_PATH);
 		Texture		texture_texture(TEXTURE_BUTTON_PATH);
 		Texture		lol("textures/mbatty.png");
+		Texture		camera_interface_texture("src/assets/textures/cam_button.png");
 
 		Mesh		mesh(av[1]);
 		Light		light;
 		
 		Interface	mainInterface;
 		mainInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, lol));
-		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
-		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(125, 0), goto_model_interface, button_texture, button_pressed_texture));
-		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(200, 0), goto_light_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button(100, 50, glm::vec2(50, 0), goto_camera_interface, camera_interface_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button(100, 50, glm::vec2(150, 0), goto_model_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button(100, 50, glm::vec2(250, 0), goto_light_interface, button_texture, button_pressed_texture));
 
 		Interface	cameraInterface;
 		cameraInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
