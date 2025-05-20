@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 20:53:32 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 11:13:46 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,14 @@ void	toggle_fpscap()
 #define GREEN_BUTTON_PATH "src/assets/textures/green_button.png"
 #define BLUE_BUTTON_PATH "src/assets/textures/blue_button.png"
 
+#define CAMERA_BUTTON_PATH "src/assets/textures/button_toggle_camera.png"
+#define TEXTURE_BUTTON_PATH "src/assets/textures/button_toggle_texture.png"
+
+#define FOV_SLIDER 0
+#define RED_SLIDER 1
+#define GREEN_SLIDER 2
+#define BLUE_SLIDER 3
+
 int	main(int ac, char **av)
 {
 	if (ac != 3)
@@ -200,6 +208,9 @@ int	main(int ac, char **av)
 		Texture		red_texture(RED_BUTTON_PATH);
 		Texture		green_texture(GREEN_BUTTON_PATH);
 		Texture		blue_texture(BLUE_BUTTON_PATH);
+		Texture		camera_texture(CAMERA_BUTTON_PATH);
+		Texture		texture_texture(TEXTURE_BUTTON_PATH);
+		Texture		lol("textures/mbatty.png");
 
 		Mesh		mesh(av[1]);
 		Light		light;
@@ -207,15 +218,19 @@ int	main(int ac, char **av)
 		std::vector<Button>	buttons;
 		std::vector<Slider>	sliders;		
 
-		buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, button_pressed_texture));
-		buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, button_texture, button_pressed_texture));
-		buttons.push_back(Button(100, 50, glm::vec2(150, 0), toggle_texture, button_texture, button_pressed_texture));
+		buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, lol));
+		buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, camera_texture, button_pressed_texture));
+		buttons.push_back(Button(100, 50, glm::vec2(150, 0), toggle_texture, texture_texture, button_pressed_texture));
 
 		sliders.push_back(Slider(150, 50, glm::vec2(250, 0), button_texture, button_pressed_texture, sliderbg_texture));
-		sliders.back().setSlider(0.875);
 		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 0), red_texture, button_pressed_texture, sliderbg_texture));
 		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
 		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
+
+		sliders[FOV_SLIDER].setSlider(0.7f);
+		sliders[RED_SLIDER].setSlider(1.0f);
+		sliders[GREEN_SLIDER].setSlider(1.0f);
+		sliders[BLUE_SLIDER].setSlider(1.0f);
 
 		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
@@ -242,11 +257,6 @@ int	main(int ac, char **av)
 			shader.setFloat("texIntensity", texIntensity);
 			shader.setFloat("colorIntensity", colorIntensity);
 
-			light.color.x = sliders[1].value;
-			light.color.y = sliders[2].value;
-			light.color.z = sliders[3].value;
-			FOV = 80 * sliders[0].value;
-
 			texture.use();
 			mesh.pos = mesh_pos;
 			mesh.roll = mesh_roll;
@@ -254,6 +264,13 @@ int	main(int ac, char **av)
 			light.draw(fb_shader, camera);
 
 			handleButtons(window.getWindowData(), buttons, guiShader, sliders);
+
+			light.color.x = sliders[RED_SLIDER].value;
+			light.color.y = sliders[GREEN_SLIDER].value;
+			light.color.z = sliders[BLUE_SLIDER].value;
+			FOV = 100 * sliders[FOV_SLIDER].value;
+			if (FOV <= 0)
+				sliders[FOV_SLIDER].setSlider(0.01f);
 
 			frame_key_hook(window);
 			window.loopEnd();

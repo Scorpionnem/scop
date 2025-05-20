@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:25:11 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 15:16:05 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 10:23:18 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ class Slider
             this->sliderWidth = width / 4;
             this->sliderHeight = height;
             this->sliderPos = glm::vec2(pos.x + width / 2, pos.y);
+            this->minCenter = pos.x + sliderWidth * 0.5f;
+            this->maxCenter = pos.x + width - sliderWidth * 0.5f;
             setSlider(0.5);
         }
         void    drawBackground(Shader &shader)
@@ -80,12 +82,21 @@ class Slider
             if (sliderPos.x < pos.x)
                 sliderPos.x = pos.x;
 
-            float sliderCenter = sliderPos.x + sliderWidth * 0.5f;
-            value = (sliderCenter - pos.x) / width;
+            float sliderCenter = sliderPos.x + (sliderWidth / 2);
+            float normalizedValue = (sliderCenter - minCenter) / (maxCenter - minCenter);
+            normalizedValue = glm::clamp(normalizedValue, 0.0f, 1.0f);
+                    
+            value = normalizedValue;
         }
         void    setSlider(float value)
         {
-            sliderPos.x = pos.x + value * width - sliderWidth * 0.5f;
+            value = glm::clamp(value, 0.0f, 1.0f);
+            
+            float minCenter = pos.x + (sliderWidth / 2);
+            float maxCenter = pos.x + width - (sliderWidth / 2);
+            float centerX = minCenter + value * (maxCenter - minCenter);
+        
+            sliderPos.x = centerX - (sliderWidth / 2);
         }
 
         void initSliderModel();
@@ -101,6 +112,8 @@ class Slider
         float   sliderHeight;
         bool    isSliderClicked = false;
         float   value = 0;
+        float   minCenter;
+        float   maxCenter;
         glm::vec2   pos;
         glm::vec2   sliderPos;
 };
