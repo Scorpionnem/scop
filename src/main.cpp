@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 11:13:46 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 14:46:07 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,6 @@ void	frame_key_hook(Window &window)
 			mesh_pos.z -= cameraSpeed * 1;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_S) == GLFW_PRESS)
 			mesh_pos.z += cameraSpeed * 1;
-		if (glfwGetKey(window.getWindowData(), GLFW_KEY_UP) == GLFW_PRESS)
-			mesh_roll -= cameraSpeed * 4;
-		if (glfwGetKey(window.getWindowData(), GLFW_KEY_DOWN) == GLFW_PRESS)
-			mesh_roll += cameraSpeed * 4;
 	}
 
 	if(pitch > 89.0f)
@@ -117,33 +113,6 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 	terminal_special_keys(window, key, scancode, action, mods);
 	if (isTerminalOn)
 		return ;
-}
-
-void	handleButtons(GLFWwindow *window, std::vector<Button> &buttons, Shader &guiShader, std::vector<Slider> &sliders)
-{
-	double mouseX, mouseY;
-	bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-	
-	glfwGetCursorPos(window, &mouseX, &mouseY);
-	
-	guiShader.use();
-	glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
-	guiShader.setMat4("projection", projection);
-	
-    glDisable(GL_DEPTH_TEST);
-	for (std::vector<Button>::iterator it = buttons.begin(); it != buttons.end(); it++)
-	{
-		it->texture.use();
-		it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
-		it->draw(guiShader);
-	}
-	for (std::vector<Slider>::iterator it = sliders.begin(); it != sliders.end(); it++)
-	{
-		it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
-		it->drawBackground(guiShader);
-		it->drawSlider(guiShader);
-	}
-	glEnable(GL_DEPTH_TEST);
 }
 
 void	toggle_camera()
@@ -179,10 +148,61 @@ void	toggle_fpscap()
 #define CAMERA_BUTTON_PATH "src/assets/textures/button_toggle_camera.png"
 #define TEXTURE_BUTTON_PATH "src/assets/textures/button_toggle_texture.png"
 
-#define FOV_SLIDER 0
-#define RED_SLIDER 1
-#define GREEN_SLIDER 2
-#define BLUE_SLIDER 3
+class	Interface
+{
+	public:
+		Interface(){}
+		void	update(GLFWwindow *window, Shader &guiShader)
+		{
+			double mouseX, mouseY;
+			bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+				
+			glfwGetCursorPos(window, &mouseX, &mouseY);
+				
+			guiShader.use();
+			glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+			guiShader.setMat4("projection", projection);
+				
+    		glDisable(GL_DEPTH_TEST);
+			for (std::vector<Button>::iterator it = buttons.begin(); it != buttons.end(); it++)
+			{
+				it->texture.use();
+				it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
+				it->draw(guiShader);
+			}
+			for (std::vector<Slider>::iterator it = sliders.begin(); it != sliders.end(); it++)
+			{
+				it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
+				it->drawBackground(guiShader);
+				it->drawSlider(guiShader);
+			}
+			glEnable(GL_DEPTH_TEST);
+		}
+		std::vector<Slider>	sliders;
+		std::vector<Button>	buttons;
+};
+
+int	interface = 0;
+
+void	goto_camera_interface()
+{
+	interface = 1;
+}
+
+void	goto_main_interface()
+{
+	interface = 0;
+}
+
+void	goto_model_interface()
+{
+	interface = 2;
+}
+
+void	goto_light_interface()
+{
+	interface = 3;
+}
 
 int	main(int ac, char **av)
 {
@@ -214,23 +234,33 @@ int	main(int ac, char **av)
 
 		Mesh		mesh(av[1]);
 		Light		light;
+		
+		Interface	mainInterface;
+		mainInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
+		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(125, 0), goto_model_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button(75, 50, glm::vec2(200, 0), goto_light_interface, button_texture, button_pressed_texture));
 
-		std::vector<Button>	buttons;
-		std::vector<Slider>	sliders;		
+		Interface	cameraInterface;
+		cameraInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
+		cameraInterface.buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, camera_texture, button_pressed_texture));
+		cameraInterface.sliders.push_back(Slider(150, 50, glm::vec2(150, 0), button_texture, button_pressed_texture, sliderbg_texture));
 
-		buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, lol));
-		buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_camera, camera_texture, button_pressed_texture));
-		buttons.push_back(Button(100, 50, glm::vec2(150, 0), toggle_texture, texture_texture, button_pressed_texture));
+		Interface	modelInterface;
+		modelInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
+		modelInterface.buttons.push_back(Button(100, 50, glm::vec2(50, 0), toggle_texture, texture_texture, button_pressed_texture));
+		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(150, 0), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(150, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(150, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
 
-		sliders.push_back(Slider(150, 50, glm::vec2(250, 0), button_texture, button_pressed_texture, sliderbg_texture));
-		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 0), red_texture, button_pressed_texture, sliderbg_texture));
-		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
-		sliders.push_back(Slider(150, 16.6, glm::vec2(400, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
-
-		sliders[FOV_SLIDER].setSlider(0.7f);
-		sliders[RED_SLIDER].setSlider(1.0f);
-		sliders[GREEN_SLIDER].setSlider(1.0f);
-		sliders[BLUE_SLIDER].setSlider(1.0f);
+		Interface	lightInterface;
+		lightInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, lol));
+		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 0), red_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.sliders[0].setSlider(1.0f);
+		lightInterface.sliders[1].setSlider(1.0f);
+		lightInterface.sliders[2].setSlider(1.0f);
 
 		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
@@ -259,18 +289,27 @@ int	main(int ac, char **av)
 
 			texture.use();
 			mesh.pos = mesh_pos;
-			mesh.roll = mesh_roll;
 			mesh.draw(shader);
 			light.draw(fb_shader, camera);
 
-			handleButtons(window.getWindowData(), buttons, guiShader, sliders);
+			if (interface == 0)
+				mainInterface.update(window.getWindowData(), guiShader);
+			if (interface == 1)
+				cameraInterface.update(window.getWindowData(), guiShader);
+			if (interface == 2)
+				modelInterface.update(window.getWindowData(), guiShader);
+			if (interface == 3)
+				lightInterface.update(window.getWindowData(), guiShader);
 
-			light.color.x = sliders[RED_SLIDER].value;
-			light.color.y = sliders[GREEN_SLIDER].value;
-			light.color.z = sliders[BLUE_SLIDER].value;
-			FOV = 100 * sliders[FOV_SLIDER].value;
+			light.color.x = lightInterface.sliders[0].value;
+			light.color.y = lightInterface.sliders[1].value;
+			light.color.z = lightInterface.sliders[2].value;
+			mesh.rotateX = 360 * modelInterface.sliders[0].value;
+			mesh.rotateY = 360 * modelInterface.sliders[1].value;
+			mesh.rotateZ = 360 * modelInterface.sliders[2].value;
+			FOV = 100 * cameraInterface.sliders[0].value;
 			if (FOV <= 0)
-				sliders[FOV_SLIDER].setSlider(0.01f);
+				cameraInterface.sliders[0].setSlider(0.01f);
 
 			frame_key_hook(window);
 			window.loopEnd();

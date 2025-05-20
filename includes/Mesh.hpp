@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:44:39 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 14:09:05 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ class Mesh
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		glm::vec3	center;
-		float		roll;
+
+		float	rotateX = 0.0;
+		float	rotateY = 1.0;
+		float	rotateZ = 0.0;
 	
 		unsigned int VBO;
 		unsigned int VAO;

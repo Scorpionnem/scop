@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:25:11 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 10:23:18 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/20 14:30:09 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ class Slider
         void    setSlider(float value)
         {
             value = glm::clamp(value, 0.0f, 1.0f);
+            this->value = value;
             
             float minCenter = pos.x + (sliderWidth / 2);
             float maxCenter = pos.x + width - (sliderWidth / 2);
