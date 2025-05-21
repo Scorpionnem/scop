@@ -6,13 +6,14 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:25:11 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 14:30:09 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 22:43:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef SLIDER_HPP
+# define SLIDER_HPP
 
-#include "Button.hpp"
+# include "Button.hpp"
 
 extern GLuint sliderVAO;
 extern GLuint sliderVBO;
@@ -63,9 +64,11 @@ class Slider
                 
             shader.setMat4("model", model);
                 
+			glDisable(GL_DEPTH_TEST);
             glBindVertexArray(sliderVAO);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
+			glEnable(GL_DEPTH_TEST);
         }
         void    checkClick(glm::vec2 mousePos, bool mousePressed)
         {
@@ -118,3 +121,5 @@ class Slider
         glm::vec2   pos;
         glm::vec2   sliderPos;
 };
+
+#endif

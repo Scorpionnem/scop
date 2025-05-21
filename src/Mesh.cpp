@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 14:09:02 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 22:29:16 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ int Mesh::loadOBJ(const std::string &filename)
 
 		if (prefix == "v")
 		{
+			TOTAL_VERTICES++;
+			
 			float x, y, z;
 			if (!(iss >> x >> y >> z))
 				throw std::runtime_error("Invalid vertex");
@@ -113,6 +115,8 @@ int Mesh::loadOBJ(const std::string &filename)
 		}
 		else if (prefix == "f")
 		{
+			TOTAL_FACES++;
+			
 			std::vector<int> vertexIndices;
 			std::string token;
 			while (iss >> token)

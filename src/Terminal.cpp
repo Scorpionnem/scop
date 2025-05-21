@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:26:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 14:35:55 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	terminal_execute_command(std::string str)
 void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
 	(void)window;(void)key;(void)scancode;(void)action;(void)mods;
-	if (action == GLFW_PRESS)
+	if (action == GLFW_PRESS || action == GLFW_REPEAT)
 	{
 		if (isTerminalOn)
 		{

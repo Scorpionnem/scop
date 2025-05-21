@@ -6,14 +6,15 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 14:09:05 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 21:33:07 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef MESH_HPP
+# define MESH_HPP
 
-#include "libs.hpp"
-#include "Shader.hpp"
+# include "libs.hpp"
+# include "Shader.hpp"
 
 struct Vertex
 {
@@ -47,3 +48,5 @@ class Mesh
 		Mesh(const std::string &filename);
 		int loadOBJ(const std::string &filename);
 };
+
+#endif

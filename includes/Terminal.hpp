@@ -6,16 +6,19 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:24:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 12:16:26 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 21:34:03 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef TERMINAL_HPP
+# define TERMINAL_HPP
 
-#include "libs.hpp"
+# include "libs.hpp"
 
 void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action, int mods);
 void	terminal_keyboard_input(GLFWwindow *window, unsigned int key);
 
 extern bool			isTerminalOn;
 extern std::string	terminalInput;
+
+#endif

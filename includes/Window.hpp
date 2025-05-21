@@ -6,13 +6,16 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:18 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/12 22:45:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 21:58:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef WINDOW_HPP
+# define WINDOW_HPP
 
-#include "libs.hpp"
+# include "libs.hpp"
+# include "Shader.hpp"
+# include "Font.hpp"
 
 class	Window
 {
@@ -23,7 +26,7 @@ class	Window
 		GLFWwindow	*getWindowData(void);
 		float		getDeltaTime(void);
 		void		loopStart(void);
-		void		loopEnd(void);
+		void		loopEnd(Font &font, Shader &textShader);
 		void		setIcon(const char *path);
 		void		center();
 	private:
@@ -31,5 +34,7 @@ class	Window
 		float		_deltaTime;
 		float		_lastFrame;
 		float		_currentFrame;
-		void 		displayFPS();
+		std::string displayFPS(Font &font, Shader &textShader);
 };
+
+#endif

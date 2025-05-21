@@ -6,12 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 16:00:37 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 22:59:37 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Window.hpp"
 #include "Terminal.hpp"
+#include "Camera.hpp"
 
 static void resize_hook(GLFWwindow* window, int width, int height)
 {
@@ -51,7 +52,7 @@ Window::Window() : _lastFrame(0)
 	glfwSetCharCallback(_windowData, terminal_keyboard_input);
 	glfwSetKeyCallback(_windowData, key_hook);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.03f, 0.03f, 0.03f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	this->center();
 	this->setIcon("src/assets/textures/icon.png");
@@ -68,12 +69,14 @@ GLFWwindow	*Window::getWindowData(void)
 	return (this->_windowData);
 }
 
-void Window::displayFPS()
+std::string Window::displayFPS(Font &font, Shader &textShader)
 {
+	(void)font;(void)textShader;
 	std::stringstream	strs;
 	strs << (int)(1.0f / _deltaTime) << " fps";
 
-	glfwSetWindowTitle(_windowData, strs.str().c_str());
+	std::string	str = strs.str();
+	return (str);
 }
 
 void		Window::loopStart(void)
@@ -83,14 +86,16 @@ void		Window::loopStart(void)
 	_deltaTime = _currentFrame - _lastFrame;
 }
 
-void		Window::loopEnd(void)
+void		Window::loopEnd(Font &font, Shader &textShader)
 {
+	static std::string	str = "0 fps";
+	if ((int)_lastFrame != (int)_currentFrame)
+		str = displayFPS(font, textShader);
+	font.putString(str.c_str(), textShader, glm::vec2(SCREEN_WIDTH - str.length() * (TERMINAL_CHAR_SIZE / 2), (TERMINAL_CHAR_SIZE / 2) * 0), glm::vec2(str.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+
 	glfwSwapBuffers(_windowData);
 	glfwPollEvents();
-	if ((int)_lastFrame != (int)_currentFrame)
-	{
-		displayFPS();
-	}
+
 	_lastFrame = _currentFrame;
 }
 

@@ -6,13 +6,14 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:16:19 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 16:44:45 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 21:33:10 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef SHADER_HPP
+# define SHADER_HPP
 
-#include "libs.hpp"
+# include "libs.hpp"
 
 class Shader
 {
@@ -37,3 +38,5 @@ class Shader
 		void	setMat4(const std::string &name, glm::mat4 value) const;
 		void	setVec3(const std::string &name, glm::vec3 value) const;
 };
+
+#endif

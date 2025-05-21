@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/20 19:57:44 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 22:55:42 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "Terminal.hpp"
 #include "Button.hpp"
 #include "Slider.hpp"
+#include "Window.hpp"
 
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
@@ -162,7 +163,7 @@ class	Interface
 {
 	public:
 		Interface(){}
-		void	update(GLFWwindow *window, Shader &guiShader)
+		void	update(GLFWwindow *window, Shader &guiShader, Font &font, Shader &textShader)
 		{
 			double mouseX, mouseY;
 			bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
@@ -173,12 +174,11 @@ class	Interface
 			glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
 			guiShader.setMat4("projection", projection);
 				
-    		glDisable(GL_DEPTH_TEST);
 			for (std::vector<Button>::iterator it = buttons.begin(); it != buttons.end(); it++)
 			{
 				it->texture.use();
 				it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
-				it->draw(guiShader);
+				it->draw(guiShader, font, textShader);
 			}
 			for (std::vector<Slider>::iterator it = sliders.begin(); it != sliders.end(); it++)
 			{
@@ -186,7 +186,6 @@ class	Interface
 				it->drawBackground(guiShader);
 				it->drawSlider(guiShader);
 			}
-			glEnable(GL_DEPTH_TEST);
 		}
 		std::vector<Slider>	sliders;
 		std::vector<Button>	buttons;
@@ -214,6 +213,34 @@ void	goto_light_interface()
 	interface = 3;
 }
 
+unsigned int	TOTAL_VERTICES = 0;
+unsigned int	TOTAL_FACES = 0;
+
+static std::string	toString(int nbr)
+{
+	std::stringstream	strs;
+	strs << nbr;
+	return (strs.str());
+}
+
+void	displayDebug(Font &font, Shader &textShader)
+{
+	std::string	tmp;
+
+	tmp = "cam " + toString(pos.x) + " " + toString(pos.y) + " " + toString(pos.z);
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), (TERMINAL_CHAR_SIZE / 2) * 1), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	
+	tmp = "model " + toString(mesh_pos.x) + " " + toString(mesh_pos.y) + " " + toString(mesh_pos.z);
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), (TERMINAL_CHAR_SIZE / 2) * 2), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	
+	tmp = "loaded vertices " + toString(TOTAL_VERTICES);
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE / 2) * 1), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	
+	tmp = "loaded faces " + toString(TOTAL_FACES);
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE / 2) * 2), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+
+}
+
 int	main(int ac, char **av)
 {
 	if (ac != 3)
@@ -229,10 +256,11 @@ int	main(int ac, char **av)
 		Shader		shader("shaders/vertex_shader.vs", "shaders/fragment_shader.fs");
 		Shader		fb_shader("shaders/vertex_shader.vs", "shaders/full_bright.fs");
 		Shader		guiShader("shaders/gui_shader.vs", "shaders/gui_shader.fs");
+		Shader		text_shader("shaders/text_shader.vs", "shaders/text_shader.fs");
 		Shader		bw_shader("shaders/vertex_shader.vs", "shaders/bw_frag.fs");
 		Shader		invert_shader("shaders/vertex_shader.vs", "shaders/invert_frag.fs");
 		Shader		wavy_shader("shaders/vertex_shader.vs", "shaders/wavy_frag.fs");
-		
+
 		Texture		texture(av[2]);
 		Texture		icon_texture(ICON_PATH);
 		Texture		button_texture(BUTTON_PATH);
@@ -248,28 +276,30 @@ int	main(int ac, char **av)
 
 		Mesh		mesh(av[1]);
 		Light		light;
-		
+
+		Font	font;
+
 		Interface	mainInterface;
-		mainInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, lol));
-		mainInterface.buttons.push_back(Button(100, 50, glm::vec2(50, 0), goto_camera_interface, camera_interface_texture, button_pressed_texture));
-		mainInterface.buttons.push_back(Button(100, 50, glm::vec2(150, 0), goto_model_interface, button_texture, button_pressed_texture));
-		mainInterface.buttons.push_back(Button(100, 50, glm::vec2(250, 0), goto_light_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, lol));
+		mainInterface.buttons.push_back(Button("camera", 100, 50, glm::vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button("model", 100, 50, glm::vec2(150, 0), goto_model_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button("light", 100, 50, glm::vec2(250, 0), goto_light_interface, button_texture, button_pressed_texture));
 
 		Interface	cameraInterface;
-		cameraInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
-		cameraInterface.buttons.push_back(Button(75, 50, glm::vec2(50, 0), toggle_camera, camera_texture, button_pressed_texture));
+		cameraInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		cameraInterface.buttons.push_back(Button("movement", 75, 50, glm::vec2(50, 0), toggle_camera, button_texture, button_pressed_texture));
 		cameraInterface.sliders.push_back(Slider(150, 50, glm::vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
 
 		Interface	modelInterface;
-		modelInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
-		modelInterface.buttons.push_back(Button(75, 50, glm::vec2(50, 0), toggle_texture, texture_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button("texture", 75, 50, glm::vec2(50, 0), toggle_texture, button_texture, button_pressed_texture));
 		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
 		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(125, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
 		modelInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(125, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
-		modelInterface.buttons.push_back(Button(50, 50, glm::vec2(275, 0), change_shader, button_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button("shader", 50, 50, glm::vec2(275, 0), change_shader, button_texture, button_pressed_texture));
 
 		Interface	lightInterface;
-		lightInterface.buttons.push_back(Button(50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		lightInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
 		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 0), red_texture, button_pressed_texture, sliderbg_texture));
 		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
 		lightInterface.sliders.push_back(Slider(150, 16.6, glm::vec2(50, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
@@ -281,6 +311,7 @@ int	main(int ac, char **av)
 
 		shader.setInt("tex0", 0);
 		guiShader.setInt("tex0", 0);
+		text_shader.setInt("tex0", 0);
 		bw_shader.setInt("tex0", 0);
 
 		float	texIntensity = 0.0;
@@ -300,6 +331,11 @@ int	main(int ac, char **av)
 			else
 				interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
 
+			text_shader.use();
+			text_shader.setFloat("time", glfwGetTime());
+			text_shader.setFloat("SCREEN_WIDTH", SCREEN_WIDTH);
+			text_shader.setFloat("SCREEN_HEIGHT", SCREEN_HEIGHT);
+			text_shader.setFloat("rainbow", !lock_fps);
 			currentShader.use();
 			currentShader.setFloat("texIntensity", texIntensity);
 			currentShader.setFloat("colorIntensity", colorIntensity);
@@ -311,13 +347,13 @@ int	main(int ac, char **av)
 			light.draw(fb_shader, camera);
 
 			if (interface == 0)
-				mainInterface.update(window.getWindowData(), guiShader);
+				mainInterface.update(window.getWindowData(), guiShader, font, text_shader);
 			if (interface == 1)
-				cameraInterface.update(window.getWindowData(), guiShader);
+				cameraInterface.update(window.getWindowData(), guiShader, font, text_shader);
 			if (interface == 2)
-				modelInterface.update(window.getWindowData(), guiShader);
+				modelInterface.update(window.getWindowData(), guiShader, font, text_shader);
 			if (interface == 3)
-				lightInterface.update(window.getWindowData(), guiShader);
+				lightInterface.update(window.getWindowData(), guiShader, font, text_shader);
 
 			if (shaderEffect == 0)
 				currentShader.ID = shader.ID;
@@ -338,8 +374,11 @@ int	main(int ac, char **av)
 			if (FOV <= 0)
 				cameraInterface.sliders[0].setSlider(0.01f);
 
+			font.putString(terminalInput.c_str(), text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(terminalInput.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+			displayDebug(font, text_shader);
+
 			frame_key_hook(window);
-			window.loopEnd();
+			window.loopEnd(font, text_shader);
 		}
 	} catch (const std::exception& e) {
 		std::cerr << "An error occurred: " << e.what() << std::endl;

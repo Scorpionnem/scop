@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 14:22:18 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 22:45:53 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <unistd.h>
 # include <exception>
 # include <functional>
+# include <array>
 
 # include "glad.h"
 # include "glfw3.h"
@@ -39,8 +40,10 @@ extern float	SCREEN_WIDTH;
 extern float	SCREEN_HEIGHT;
 extern float	FOV;
 extern float	RENDER_DISTANCE;
+extern unsigned int	TOTAL_VERTICES;
+extern unsigned int	TOTAL_FACES;
+extern glm::vec3	mesh_pos;
 
-# include "Window.hpp"
-# include "Texture.hpp"
+#define TERMINAL_CHAR_SIZE 30
 
 #endif

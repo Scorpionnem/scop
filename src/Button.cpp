@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:21:13 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/18 13:34:59 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 22:43:13 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@ bool isInside(glm::vec2 buttonPos, glm::vec2 mousePos, float width, float height
     return mousePos.x >= buttonPos.x && mousePos.x <= buttonPos.x + width && mousePos.y >= buttonPos.y && mousePos.y <= buttonPos.y + height;
 }
 
-Button::Button(float width, float height, glm::vec2 pos, std::function<void()> function, Texture &texture, Texture &pressedTexture)
+Button::Button(std::string str, float width, float height, glm::vec2 pos, std::function<void()> function, Texture &texture, Texture &pressedTexture)
 : texture(texture), pressedTexture(pressedTexture)
 {
     this->pos = pos;
     this->width = width;
     this->height = height;
     onClick = function;
+    this->str = str;
 }
 
-void Button::draw(Shader& shader)
+void Button::draw(Shader& shader, Font &font, Shader &textShader)
 {
     initButtonModel();
     shader.use();
@@ -38,9 +39,12 @@ void Button::draw(Shader& shader)
     
     shader.setMat4("model", model);
     
+    glDisable(GL_DEPTH_TEST);
     glBindVertexArray(buttonVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
+    font.putString(this->str, textShader, glm::vec2(this->pos.x, this->pos.y - 5), glm::vec2(width, height));
+    glEnable(GL_DEPTH_TEST);
 }
 
 void    Button::checkClick(glm::vec2 mousePos, bool mousePressed)

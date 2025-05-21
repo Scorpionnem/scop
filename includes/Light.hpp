@@ -6,16 +6,17 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:41:21 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/17 11:51:13 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/21 21:32:15 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef LIGHT_HPP
+# define LIGHT_HPP
 
-#include "libs.hpp"
-#include "Mesh.hpp"
-#include "Shader.hpp"
-#include "Camera.hpp"
+# include "libs.hpp"
+# include "Mesh.hpp"
+# include "Shader.hpp"
+# include "Camera.hpp"
 
 class	Light
 {
@@ -27,3 +28,5 @@ class	Light
 		void	update(Shader &shader);
 		void	draw(Shader &shader, Camera &camera);
 };
+
+#endif
