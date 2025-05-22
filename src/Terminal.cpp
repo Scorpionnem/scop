@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/22 16:29:08 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 17:03:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ float	terminalReturnTime = -1;
 std::string::iterator	terminalCursor;
 
 bool		terminalIgnoreNext = false;
+
+std::vector<std::string>	history;
+std::vector<std::string>::iterator	historyCursor;
 
 void	setTerminalReturn(std::string str)
 {
@@ -123,7 +126,6 @@ void	terminal_execute_command(std::string str)
 	else if (command == "help")
 	{
 		setTerminalReturn("commands: background, culling, render, help");
-
 	}
 	else
 		setTerminalReturn("command not found.");
@@ -148,12 +150,38 @@ void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action
 			{
 				terminal_execute_command(terminalInput);
 				isTerminalOn = false;
+				history.push_back(terminalInput);
+				historyCursor = history.end();
 				terminalInput.clear();
 			}
 			if (key == GLFW_KEY_LEFT && terminalCursor != terminalInput.begin())
-					terminalCursor--;
+				terminalCursor--;
 			if (key == GLFW_KEY_RIGHT && terminalCursor != terminalInput.end())
-					terminalCursor++;
+				terminalCursor++;
+			if (key == GLFW_KEY_END)
+				terminalCursor = terminalInput.end();
+			if (key == GLFW_KEY_HOME)
+				terminalCursor = terminalInput.begin();
+			if (key == GLFW_KEY_UP && historyCursor != history.begin())
+			{
+				historyCursor--;
+				terminalInput = *historyCursor;
+				terminalCursor = terminalInput.end();
+			}
+			if (key == GLFW_KEY_DOWN)
+			{
+				if (historyCursor != history.end() && historyCursor + 1 != history.end())
+				{
+					historyCursor++;
+					terminalInput = *historyCursor;
+				}
+				else
+				{
+					terminalInput = "";
+					historyCursor = history.end();
+				}
+				terminalCursor = terminalInput.end();
+			}
 		}
 		else if (key == GLFW_KEY_T || key == GLFW_KEY_SLASH)
 		{

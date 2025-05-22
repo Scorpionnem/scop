@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/22 16:28:39 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 17:59:00 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
 float	FOV = 70;
-float	RENDER_DISTANCE = 360;
+float	RENDER_DISTANCE = 500;
 
 bool	F1 = false;
 bool	F3 = false;

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:18 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/22 16:10:30 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 17:09:14 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ class	Window
 		void		loopEnd(Font &font, Shader &textShader);
 		void		setIcon(const char *path);
 		void		center();
-	private:
-		GLFWwindow	*_windowData;
 		float		_deltaTime;
 		float		_lastFrame;
 		float		_currentFrame;
+	private:
+		GLFWwindow	*_windowData;
 		std::string displayFPS(Font &font, Shader &textShader);
 };
 
