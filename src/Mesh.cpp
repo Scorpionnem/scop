@@ -6,11 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 22:29:16 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 15:31:08 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Mesh.hpp"
+
+static	bool countInfos = true;
 
 Mesh::Mesh(const std::string &filename)
 {
@@ -106,7 +108,8 @@ int Mesh::loadOBJ(const std::string &filename)
 
 		if (prefix == "v")
 		{
-			TOTAL_VERTICES++;
+			if (countInfos)
+				TOTAL_VERTICES++;
 			
 			float x, y, z;
 			if (!(iss >> x >> y >> z))
@@ -115,7 +118,8 @@ int Mesh::loadOBJ(const std::string &filename)
 		}
 		else if (prefix == "f")
 		{
-			TOTAL_FACES++;
+			if (countInfos)
+				TOTAL_FACES++;
 			
 			std::vector<int> vertexIndices;
 			std::string token;
@@ -176,5 +180,6 @@ int Mesh::loadOBJ(const std::string &filename)
 	center = (min + max) * 0.5f;
 
 	this->upload();
+	countInfos = false;
 	return (1);
 }

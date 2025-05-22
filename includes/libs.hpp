@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/22 12:41:19 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 16:28:50 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,11 @@ extern float	RENDER_DISTANCE;
 extern unsigned int	TOTAL_VERTICES;
 extern unsigned int	TOTAL_FACES;
 extern glm::vec3	mesh_pos;
+extern bool	rainbow;
 
-#define TERMINAL_CHAR_SIZE 25
+extern bool	F1;
+extern bool	F3;
+
+#define TERMINAL_CHAR_SIZE 15
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 22:55:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 16:28:39 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,22 @@
 #include "Slider.hpp"
 #include "Window.hpp"
 
+#define MAX_FOV 100
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
 float	FOV = 70;
 float	RENDER_DISTANCE = 360;
 
+bool	F1 = false;
+bool	F3 = false;
+
 int	interpolate = 0;
-
-bool	lock_fps = true;
-
-bool	camera_toggle = false;
 glm::vec3	mesh_pos;
 float	mesh_roll;
+
+bool	lock_fps = true;
+bool	rainbow = false;
+bool	camera_toggle = false;
 
 void	interpolateTo(float &float1, float &float2, float deltaTime)
 {
@@ -114,6 +118,11 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 	terminal_special_keys(window, key, scancode, action, mods);
 	if (isTerminalOn)
 		return ;
+	
+	if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
+		F1 = !F1;
+	if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
+		F3 = !F3;
 }
 
 int	shaderEffect = 0;
@@ -127,6 +136,11 @@ void	toggle_camera()
 void	toggle_texture()
 {
 	interpolate = !interpolate;
+}
+
+void	toggle_rainbow()
+{
+	rainbow = !rainbow;
 }
 
 void	change_shader()
@@ -228,16 +242,16 @@ void	displayDebug(Font &font, Shader &textShader)
 	std::string	tmp;
 
 	tmp = "cam " + toString(pos.x) + " " + toString(pos.y) + " " + toString(pos.z);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), (TERMINAL_CHAR_SIZE / 2) * 1), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 1), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 	
 	tmp = "model " + toString(mesh_pos.x) + " " + toString(mesh_pos.y) + " " + toString(mesh_pos.z);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), (TERMINAL_CHAR_SIZE / 2) * 2), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 2), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 	
 	tmp = "loaded vertices " + toString(TOTAL_VERTICES);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE / 2) * 1), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 1), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 	
 	tmp = "loaded faces " + toString(TOTAL_FACES);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * (TERMINAL_CHAR_SIZE / 2), SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE / 2) * 2), glm::vec2(tmp.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 2), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 
 }
 
@@ -269,10 +283,7 @@ int	main(int ac, char **av)
 		Texture		red_texture(RED_BUTTON_PATH);
 		Texture		green_texture(GREEN_BUTTON_PATH);
 		Texture		blue_texture(BLUE_BUTTON_PATH);
-		Texture		camera_texture(CAMERA_BUTTON_PATH);
-		Texture		texture_texture(TEXTURE_BUTTON_PATH);
 		Texture		lol("textures/mbatty.png");
-		Texture		camera_interface_texture("src/assets/textures/cam_button.png");
 
 		Mesh		mesh(av[1]);
 		Light		light;
@@ -335,7 +346,9 @@ int	main(int ac, char **av)
 			text_shader.setFloat("time", glfwGetTime());
 			text_shader.setFloat("SCREEN_WIDTH", SCREEN_WIDTH);
 			text_shader.setFloat("SCREEN_HEIGHT", SCREEN_HEIGHT);
-			text_shader.setFloat("rainbow", !lock_fps);
+			text_shader.setBool("rainbow", rainbow);
+			text_shader.setBool("turbo", !lock_fps);
+			text_shader.setVec3("color", glm::vec3(1.0, 1.0, 1.0));
 			currentShader.use();
 			currentShader.setFloat("texIntensity", texIntensity);
 			currentShader.setFloat("colorIntensity", colorIntensity);
@@ -346,15 +359,18 @@ int	main(int ac, char **av)
 			mesh.draw(currentShader);
 			light.draw(fb_shader, camera);
 
-			if (interface == 0)
-				mainInterface.update(window.getWindowData(), guiShader, font, text_shader);
-			if (interface == 1)
-				cameraInterface.update(window.getWindowData(), guiShader, font, text_shader);
-			if (interface == 2)
-				modelInterface.update(window.getWindowData(), guiShader, font, text_shader);
-			if (interface == 3)
-				lightInterface.update(window.getWindowData(), guiShader, font, text_shader);
-
+			if (!F1)
+			{
+				if (interface == 0)
+					mainInterface.update(window.getWindowData(), guiShader, font, text_shader);
+				if (interface == 1)
+					cameraInterface.update(window.getWindowData(), guiShader, font, text_shader);
+				if (interface == 2)
+					modelInterface.update(window.getWindowData(), guiShader, font, text_shader);
+				if (interface == 3)
+					lightInterface.update(window.getWindowData(), guiShader, font, text_shader);
+			}
+			
 			if (shaderEffect == 0)
 				currentShader.ID = shader.ID;
 			if (shaderEffect == 1)
@@ -370,12 +386,26 @@ int	main(int ac, char **av)
 			mesh.rotateX = 360 * modelInterface.sliders[0].value;
 			mesh.rotateY = 360 * modelInterface.sliders[1].value;
 			mesh.rotateZ = 360 * modelInterface.sliders[2].value;
-			FOV = 100 * cameraInterface.sliders[0].value;
+			FOV = MAX_FOV * cameraInterface.sliders[0].value;
 			if (FOV <= 0)
 				cameraInterface.sliders[0].setSlider(0.01f);
 
-			font.putString(terminalInput.c_str(), text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(terminalInput.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
-			displayDebug(font, text_shader);
+			if (!F1)
+			{
+				if (isTerminalOn)
+				{
+					std::string	tmp = terminalInput;
+					tmp.insert(terminalCursor - terminalInput.begin(), 1, '_');
+					font.putString(tmp, text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(tmp.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+				}
+				else if (glfwGetTime() - terminalReturnTime < 1.5)
+					font.putString(terminalReturn, text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(terminalReturn.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+				else
+					font.putString(std::string("press t to open terminal"), text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(std::string("press t to open terminal").size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+				
+				if (F3)
+					displayDebug(font, text_shader);	
+			}
 
 			frame_key_hook(window);
 			window.loopEnd(font, text_shader);

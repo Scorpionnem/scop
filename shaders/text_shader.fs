@@ -10,6 +10,8 @@ uniform float time;
 uniform float SCREEN_WIDTH;
 uniform float SCREEN_HEIGHT;
 uniform bool rainbow;
+uniform bool turbo;
+uniform vec3 color;
 
 void main() {
     vec4 texColor = texture(tex0, fragPos);
@@ -22,7 +24,9 @@ void main() {
         float screenX = (ndc.x / 2.0f + 0.5f) * SCREEN_WIDTH;
         float screenY = (ndc.y / 2.0f + 0.5f) * SCREEN_HEIGHT;
 
-        float speed = time * 20.0;
+        float speed = time * 4.0;
+        if (turbo)
+            speed = time * 20.0;
         float offset = (screenX + sin(screenY / 8.0 + time / 2) / 20) / 20;
 
         float red   = 0.5 + sin(offset + speed + 0.0) / 2;
@@ -32,5 +36,5 @@ void main() {
         FragColor = vec4(red, green, blue, 1.0);
     }
     else
-        FragColor = texColor;
+        FragColor = vec4(color, 1.0);
 }

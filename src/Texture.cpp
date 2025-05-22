@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:49:15 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 14:22:34 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 15:28:48 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Texture::Texture(const char *path)
 	stbi_set_flip_vertically_on_load(true);
 	data = stbi_load(path, &this->width, &this->height, &this->nrChannels, 4);
 	if (!data)
-		throw std::runtime_error("Failed to load image");
+		throw std::runtime_error(std::string(std::string("Failed to load ") + path));
 	glGenTextures(1, &this->ID);
 	glBindTexture(GL_TEXTURE_2D, this->ID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

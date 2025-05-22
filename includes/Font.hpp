@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 14:45:03 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 22:08:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 12:51:05 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,32 @@ class	Font
 	public:
 		Font()
 		{
-			for (char c = 'a'; c <= 'z'; ++c)
+			std::ifstream	tmpFile;
+			for (unsigned char c = 33; c < 128; ++c)
 			{
 				std::string path = "src/assets/textures/font/" + std::string(1, c) + ".png";
-				Texture	tmp(path.c_str());
-			    font[c - '0'].cut(tmp);
-			}
-			for (char c = '0'; c <= '9'; ++c)
-			{
-				std::string path = "src/assets/textures/font/" + std::string(1, c) + ".png";
-				Texture	tmp(path.c_str());
-			    font[c - '0'].cut(tmp);
+				tmpFile.open(path);
+				if (tmpFile.is_open())
+				{
+					Texture	tmp(path.c_str());
+					font[c].cut(tmp);
+				}
+				tmpFile.close();
 			}
 			Texture	tmp("src/assets/textures/font/?.png");
 			font[127].cut(tmp);
 		}
 		Texture& operator[](char c)
 		{
-			if (c - '0' < 0 || c - '0' > 127 || font[c - '0'].ID <= 0)
+			if (c < 0 || c > 127 || font[c].ID <= 0)
 				return (font[127]);
-			return (font[c - '0']);
+			return (font[c]);
 		}
 		Texture& getChar(char c)
 		{
-			if (c - '0' < 0 || c - '0' > 127 || font[c - '0'].ID <= 0)
+			if (c < 0 || c > 127 || font[c].ID <= 0)
 				return (font[127]);
-			return (font[c - '0']);
+			return (font[c]);
 		}
 		void	initFontModel()
 		{

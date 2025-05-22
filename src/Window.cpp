@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 22:59:37 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 16:10:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void		Window::loopEnd(Font &font, Shader &textShader)
 	static std::string	str = "0 fps";
 	if ((int)_lastFrame != (int)_currentFrame)
 		str = displayFPS(font, textShader);
-	font.putString(str.c_str(), textShader, glm::vec2(SCREEN_WIDTH - str.length() * (TERMINAL_CHAR_SIZE / 2), (TERMINAL_CHAR_SIZE / 2) * 0), glm::vec2(str.length() * (TERMINAL_CHAR_SIZE / 2), TERMINAL_CHAR_SIZE / 2));
+	if (!F1 && F3)
+		font.putString(str.c_str(), textShader, glm::vec2(SCREEN_WIDTH - str.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 0), glm::vec2(str.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 
 	glfwSwapBuffers(_windowData);
 	glfwPollEvents();
