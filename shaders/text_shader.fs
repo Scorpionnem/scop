@@ -20,17 +20,14 @@ void main() {
         vec3 ndc = vec3(clip) / clip.w;
 
         float screenX = (ndc.x / 2.0f + 0.5f) * SCREEN_WIDTH;
+        float screenY = (ndc.y / 2.0f + 0.5f) * SCREEN_HEIGHT;
 
-        float speed = time * 40.0;
-        float offset = (screenX) / 20;
+        float speed = time * 20.0;
+        float offset = (screenX + sin(screenY / 8.0 + time / 2) / 20) / 20;
 
-        float red   = sin(offset + speed + 0.0);
-        float green = sin(offset + speed + 2.0);
-        float blue  = sin(offset + speed + 4.0);
-
-        red = clamp(red, 0.0, 1.0);
-        green = clamp(green, 0.0, 1.0);
-        blue = clamp(blue, 0.0, 1.0);
+        float red   = 0.5 + sin(offset + speed + 0.0) / 2;
+        float green = 0.5 + sin(offset + speed + 2.0) / 2;
+        float blue  = 0.5 + sin(offset + speed + 4.0) / 2;
 
         FragColor = vec4(red, green, blue, 1.0);
     }

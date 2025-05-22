@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 22:45:53 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/22 12:41:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ extern unsigned int	TOTAL_VERTICES;
 extern unsigned int	TOTAL_FACES;
 extern glm::vec3	mesh_pos;
 
-#define TERMINAL_CHAR_SIZE 30
+#define TERMINAL_CHAR_SIZE 25
 
 #endif
