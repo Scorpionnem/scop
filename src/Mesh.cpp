@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/22 15:31:08 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/23 19:41:55 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ void	Mesh::draw(Shader &shader)
 	glm::mat4	model(1.0f);
 	model = glm::translate(model, pos);
 	model = glm::translate(model, center);
-	model = glm::rotate(model, glm::radians(20.0f * (float)glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
+	if (mesh_spin)
+		model = glm::rotate(model, glm::radians(20.0f * (float)glfwGetTime()), glm::vec3(0.0, 1.0, 0.0));
 	
 	model = glm::rotate(model, glm::radians(rotateX), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(rotateY), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -117,10 +118,7 @@ int Mesh::loadOBJ(const std::string &filename)
 			positions.push_back(glm::vec3(x, y, z));
 		}
 		else if (prefix == "f")
-		{
-			if (countInfos)
-				TOTAL_FACES++;
-			
+		{			
 			std::vector<int> vertexIndices;
 			std::string token;
 			while (iss >> token)
@@ -151,6 +149,8 @@ int Mesh::loadOBJ(const std::string &filename)
 
 			for (size_t i = 1; i + 1 < vertexIndices.size(); ++i)
 			{
+				if (countInfos)
+					TOTAL_TRIANGLES++;
 				glm::vec3 v1 = positions[vertexIndices[0]];
 				glm::vec3 v2 = positions[vertexIndices[i]];
 				glm::vec3 v3 = positions[vertexIndices[i + 1]];

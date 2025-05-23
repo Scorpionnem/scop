@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/23 16:25:55 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/23 19:41:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,25 +63,26 @@ void	frame_key_hook(Window &window)
 		window.center();
 
 	float cameraSpeed = 15.0f * window.getDeltaTime();
+	float	speedBoost = 1.0f;
 
 	if (glfwGetKey(window.getWindowData(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		cameraSpeed *= 20;
+		speedBoost = 20.0f;
 	
 	if (camera_toggle)
 	{
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_W) == GLFW_PRESS)
-			pos += cameraSpeed * front;
+			pos += (cameraSpeed * speedBoost) * front;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_S) == GLFW_PRESS)
-			pos -= cameraSpeed * front;
+			pos -= (cameraSpeed * speedBoost) * front;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_SPACE) == GLFW_PRESS)
-			pos += cameraSpeed * up;
+			pos += (cameraSpeed * speedBoost) * up;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			pos -= cameraSpeed * up;
+			pos -= (cameraSpeed * speedBoost) * up;
 			
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_A) == GLFW_PRESS)
-			pos -=  glm::normalize(glm::cross(front, up)) * cameraSpeed;
+			pos -=  glm::normalize(glm::cross(front, up)) * (cameraSpeed * speedBoost);
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_D) == GLFW_PRESS)
-			pos +=  glm::normalize(glm::cross(front, up)) * cameraSpeed;
+			pos +=  glm::normalize(glm::cross(front, up)) * (cameraSpeed * speedBoost);
 			
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_LEFT) == GLFW_PRESS)
 			yaw -= (10.0f * cameraSpeed) * 1.f;
@@ -95,17 +96,17 @@ void	frame_key_hook(Window &window)
 	else
 	{
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_A) == GLFW_PRESS)
-			mesh_pos.x -= cameraSpeed * 1;
+			mesh_pos.x -= (cameraSpeed * speedBoost) * 1;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_D) == GLFW_PRESS)
-			mesh_pos.x += cameraSpeed * 1;
+			mesh_pos.x += (cameraSpeed * speedBoost) * 1;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_SPACE) == GLFW_PRESS)
-			mesh_pos.y += cameraSpeed * 1;
+			mesh_pos.y += (cameraSpeed * speedBoost) * 1;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			mesh_pos.y -= cameraSpeed * 1;
+			mesh_pos.y -= (cameraSpeed * speedBoost) * 1;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_W) == GLFW_PRESS)
-			mesh_pos.z -= cameraSpeed * 1;
+			mesh_pos.z -= (cameraSpeed * speedBoost) * 1;
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_S) == GLFW_PRESS)
-			mesh_pos.z += cameraSpeed * 1;
+			mesh_pos.z += (cameraSpeed * speedBoost) * 1;
 	}
 
 	if(pitch > 89.0f)
@@ -144,6 +145,13 @@ void	toggle_texture()
 void	toggle_rainbow()
 {
 	rainbow = !rainbow;
+}
+
+bool	mesh_spin = true;
+
+void	toggle_mesh_spin()
+{
+	mesh_spin = !mesh_spin;
 }
 
 void	change_shader()
@@ -199,7 +207,7 @@ void	goto_light_interface()
 }
 
 unsigned int	TOTAL_VERTICES = 0;
-unsigned int	TOTAL_FACES = 0;
+unsigned int	TOTAL_TRIANGLES = 0;
 
 static std::string	toString(int nbr)
 {
@@ -221,7 +229,7 @@ void	displayDebug(Font &font, Shader &textShader)
 	tmp = "loaded vertices " + toString(TOTAL_VERTICES);
 	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 1), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 	
-	tmp = "loaded faces " + toString(TOTAL_FACES);
+	tmp = "loaded triangles " + toString(TOTAL_TRIANGLES);
 	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 2), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 
 }
@@ -276,6 +284,7 @@ int	main(int ac, char **av)
 		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, glm::vec2(125, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
 		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, glm::vec2(125, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
 		modelInterface.buttons.push_back(Button("shader", 50, 50, glm::vec2(275, 0), change_shader, button_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button("spin", 50, 50, glm::vec2(325, 0), toggle_mesh_spin, button_texture, button_pressed_texture));
 
 		Interface	lightInterface;
 		lightInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
