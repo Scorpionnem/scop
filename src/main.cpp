@@ -21,6 +21,7 @@
 #include "Button.hpp"
 #include "Slider.hpp"
 #include "Window.hpp"
+#include "Interface.hpp"
 
 #define MAX_FOV 100
 float	SCREEN_WIDTH = 800;
@@ -172,38 +173,6 @@ void	toggle_fpscap()
 
 #define CAMERA_BUTTON_PATH "src/assets/textures/button_toggle_camera.png"
 #define TEXTURE_BUTTON_PATH "src/assets/textures/button_toggle_texture.png"
-
-class	Interface
-{
-	public:
-		Interface(){}
-		void	update(GLFWwindow *window, Shader &guiShader, Font &font, Shader &textShader)
-		{
-			double mouseX, mouseY;
-			bool mousePressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
-				
-			glfwGetCursorPos(window, &mouseX, &mouseY);
-				
-			guiShader.use();
-			glm::mat4 projection = glm::ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
-			guiShader.setMat4("projection", projection);
-				
-			for (std::vector<Button>::iterator it = buttons.begin(); it != buttons.end(); it++)
-			{
-				it->texture.use();
-				it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
-				it->draw(guiShader, font, textShader);
-			}
-			for (std::vector<Slider>::iterator it = sliders.begin(); it != sliders.end(); it++)
-			{
-				it->checkClick(glm::vec2(mouseX, mouseY), mousePressed);
-				it->drawBackground(guiShader);
-				it->drawSlider(guiShader);
-			}
-		}
-		std::vector<Slider>	sliders;
-		std::vector<Button>	buttons;
-};
 
 int	interface = 0;
 

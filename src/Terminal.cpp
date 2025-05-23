@@ -155,9 +155,23 @@ void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action
 				terminalInput.clear();
 			}
 			if (key == GLFW_KEY_LEFT && terminalCursor != terminalInput.begin())
+			{
 				terminalCursor--;
+				if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+				{
+					while (terminalCursor != terminalInput.begin() && std::isalnum(*terminalCursor))
+						terminalCursor--;
+				}
+			}
 			if (key == GLFW_KEY_RIGHT && terminalCursor != terminalInput.end())
+			{
 				terminalCursor++;
+				if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+				{
+					while (terminalCursor != terminalInput.end() && std::isalnum(*terminalCursor))
+						terminalCursor++;
+				}
+			}
 			if (key == GLFW_KEY_END)
 				terminalCursor = terminalInput.end();
 			if (key == GLFW_KEY_HOME)
