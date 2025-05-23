@@ -21,9 +21,10 @@ extern GLuint sliderVBO;
 class Slider
 {
     public:
-        Slider(float width, float height, glm::vec2 pos, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture)
+        Slider(std::string str, float width, float height, glm::vec2 pos, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture)
         : backgroundTexture(backgroundTexture), sliderTexture(sliderTexture), sliderPressedTexture(sliderPressedTexture)
         {
+            this->str = str;
             this->pos = pos;
             this->width = width;
             this->height = height;
@@ -69,6 +70,10 @@ class Slider
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
 			glEnable(GL_DEPTH_TEST);
+        }
+        void    drawStr(Font &font, Shader &textShader)
+        {
+            font.putString(this->str, textShader, glm::vec2(this->pos.x, this->pos.y - height / 8), glm::vec2(width, height));
         }
         void    checkClick(glm::vec2 mousePos, bool mousePressed)
         {
@@ -120,6 +125,7 @@ class Slider
         float   maxCenter;
         glm::vec2   pos;
         glm::vec2   sliderPos;
+        std::string str;
 };
 
 #endif

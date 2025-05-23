@@ -30,7 +30,6 @@ void	Light::update(Shader &shader)
 	shader.use();
 	shader.setVec3("lightPos", pos);
 	shader.setVec3("lightColor", color);
-	shader.setFloat("ambientStrength", 0.2);
 }
 
 void	Light::draw(Shader &shader, Camera &camera)
