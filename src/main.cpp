@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/23 19:41:19 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/24 12:40:22 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,20 +169,6 @@ void	toggle_fpscap()
 	else
 		glfwSwapInterval(0);
 }
-
-#define ICON_PATH "src/assets/textures/icon.png"
-
-#define BUTTON_PATH "src/assets/textures/button.png"
-#define BUTTON_PRESSED_PATH "src/assets/textures/button_pressed.png"
-
-#define SLIDER_BG_PATH "src/assets/textures/slider_background.png"
-
-#define RED_BUTTON_PATH "src/assets/textures/red_button.png"
-#define GREEN_BUTTON_PATH "src/assets/textures/green_button.png"
-#define BLUE_BUTTON_PATH "src/assets/textures/blue_button.png"
-
-#define CAMERA_BUTTON_PATH "src/assets/textures/button_toggle_camera.png"
-#define TEXTURE_BUTTON_PATH "src/assets/textures/button_toggle_texture.png"
 
 int	interface = 0;
 
