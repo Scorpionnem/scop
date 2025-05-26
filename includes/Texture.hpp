@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:48:51 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/24 12:47:18 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/25 16:37:52 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ class	Texture
 			this->ID = cpy.ID;
 			cpy.ID = 0;
 		}
+		std::vector<unsigned char>	LoadImage(const char *path);
 		~Texture();
 		void	use(void);
 		static void	reset(void);
 		unsigned int	ID;
-	private:
-		unsigned char	*data;
+		std::vector<unsigned char>	data;
 		int	width;
 		int	height;
-		int	nrChannels;
+	private:
 };
 
 #endif

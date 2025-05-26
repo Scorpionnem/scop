@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/24 12:40:22 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/26 14:03:55 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
 float	FOV = 70;
-float	RENDER_DISTANCE = 500;
+float	RENDER_DISTANCE = 1000;
 
 bool	F1 = false;
 bool	F3 = false;
 
 int	interpolate = 0;
-glm::vec3	mesh_pos;
+vec3	mesh_pos;
 float	mesh_roll;
 
 float	ambientStrength = 0.2;
@@ -71,18 +71,18 @@ void	frame_key_hook(Window &window)
 	if (camera_toggle)
 	{
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_W) == GLFW_PRESS)
-			pos += (cameraSpeed * speedBoost) * front;
+			pos = pos + front * (cameraSpeed * speedBoost);
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_S) == GLFW_PRESS)
-			pos -= (cameraSpeed * speedBoost) * front;
+			pos = pos - front * (cameraSpeed * speedBoost);
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_SPACE) == GLFW_PRESS)
-			pos += (cameraSpeed * speedBoost) * up;
+			pos = pos + up * (cameraSpeed * speedBoost);
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			pos -= (cameraSpeed * speedBoost) * up;
+			pos = pos - up * (cameraSpeed * speedBoost);
 			
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_A) == GLFW_PRESS)
-			pos -=  glm::normalize(glm::cross(front, up)) * (cameraSpeed * speedBoost);
+			pos = pos -  front.cross(up).normalize() * (cameraSpeed * speedBoost);
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_D) == GLFW_PRESS)
-			pos +=  glm::normalize(glm::cross(front, up)) * (cameraSpeed * speedBoost);
+			pos = pos + front.cross(up).normalize() * (cameraSpeed * speedBoost);
 			
 		if (glfwGetKey(window.getWindowData(), GLFW_KEY_LEFT) == GLFW_PRESS)
 			yaw -= (10.0f * cameraSpeed) * 1.f;
@@ -207,16 +207,16 @@ void	displayDebug(Font &font, Shader &textShader)
 	std::string	tmp;
 
 	tmp = "cam " + toString(pos.x) + " " + toString(pos.y) + " " + toString(pos.z);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 1), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+	font.putString(tmp, textShader, vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 1), vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 	
 	tmp = "model " + toString(mesh_pos.x) + " " + toString(mesh_pos.y) + " " + toString(mesh_pos.z);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 2), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+	font.putString(tmp, textShader, vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 2), vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 	
 	tmp = "loaded vertices " + toString(TOTAL_VERTICES);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 1), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+	font.putString(tmp, textShader, vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 1), vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 	
 	tmp = "loaded triangles " + toString(TOTAL_TRIANGLES);
-	font.putString(tmp, textShader, glm::vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 2), glm::vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+	font.putString(tmp, textShader, vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 2), vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 
 }
 
@@ -245,45 +245,45 @@ int	main(int ac, char **av)
 		Texture		red_texture(RED_BUTTON_PATH);
 		Texture		green_texture(GREEN_BUTTON_PATH);
 		Texture		blue_texture(BLUE_BUTTON_PATH);
-		Texture		lol("textures/mbatty.png");
+		Texture		lol("textures/mbatty.bmp");
 
-		Mesh		mesh(av[1]);
+		Mesh		mesh(av[1], av[2]);
 		Light		light;
 
 		Font	font;
 
 		Interface	mainInterface;
-		mainInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), toggle_fpscap, icon_texture, lol));
-		mainInterface.buttons.push_back(Button("camera", 100, 50, glm::vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
-		mainInterface.buttons.push_back(Button("model", 100, 50, glm::vec2(150, 0), goto_model_interface, button_texture, button_pressed_texture));
-		mainInterface.buttons.push_back(Button("light", 100, 50, glm::vec2(250, 0), goto_light_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button("", 50, 50, vec2(0, 0), toggle_fpscap, icon_texture, lol));
+		mainInterface.buttons.push_back(Button("camera", 100, 50, vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button("model", 100, 50, vec2(150, 0), goto_model_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button("light", 100, 50, vec2(250, 0), goto_light_interface, button_texture, button_pressed_texture));
 
 		Interface	cameraInterface;
-		cameraInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
-		cameraInterface.buttons.push_back(Button("movement", 75, 50, glm::vec2(50, 0), toggle_camera, button_texture, button_pressed_texture));
-		cameraInterface.sliders.push_back(Slider("fov", 150, 50, glm::vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
+		cameraInterface.buttons.push_back(Button("", 50, 50, vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		cameraInterface.buttons.push_back(Button("movement", 75, 50, vec2(50, 0), toggle_camera, button_texture, button_pressed_texture));
+		cameraInterface.sliders.push_back(Slider("fov", 150, 50, vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
 
 		Interface	modelInterface;
-		modelInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
-		modelInterface.buttons.push_back(Button("texture", 75, 50, glm::vec2(50, 0), toggle_texture, button_texture, button_pressed_texture));
-		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, glm::vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
-		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, glm::vec2(125, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
-		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, glm::vec2(125, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
-		modelInterface.buttons.push_back(Button("shader", 50, 50, glm::vec2(275, 0), change_shader, button_texture, button_pressed_texture));
-		modelInterface.buttons.push_back(Button("spin", 50, 50, glm::vec2(325, 0), toggle_mesh_spin, button_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button("", 50, 50, vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button("texture", 75, 50, vec2(50, 0), toggle_texture, button_texture, button_pressed_texture));
+		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, vec2(125, 0), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, vec2(125, 16.6), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.sliders.push_back(Slider("rotation", 150, 16.6, vec2(125, 33.3), button_texture, button_pressed_texture, sliderbg_texture));
+		modelInterface.buttons.push_back(Button("shader", 50, 50, vec2(275, 0), change_shader, button_texture, button_pressed_texture));
+		modelInterface.buttons.push_back(Button("spin", 50, 50, vec2(325, 0), toggle_mesh_spin, button_texture, button_pressed_texture));
 
 		Interface	lightInterface;
-		lightInterface.buttons.push_back(Button("", 50, 50, glm::vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
-		lightInterface.sliders.push_back(Slider("red", 150, 16.6, glm::vec2(50, 0), red_texture, button_pressed_texture, sliderbg_texture));
-		lightInterface.sliders.push_back(Slider("green", 150, 16.6, glm::vec2(50, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
-		lightInterface.sliders.push_back(Slider("blue", 150, 16.6, glm::vec2(50, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
-		lightInterface.sliders.push_back(Slider("ambient", 150, 50, glm::vec2(200, 0), button_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.buttons.push_back(Button("", 50, 50, vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
+		lightInterface.sliders.push_back(Slider("red", 150, 16.6, vec2(50, 0), red_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.sliders.push_back(Slider("green", 150, 16.6, vec2(50, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.sliders.push_back(Slider("blue", 150, 16.6, vec2(50, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.sliders.push_back(Slider("ambient", 150, 50, vec2(200, 0), button_texture, button_pressed_texture, sliderbg_texture));
 		lightInterface.sliders[0].setSlider(1.0f);
 		lightInterface.sliders[1].setSlider(1.0f);
 		lightInterface.sliders[2].setSlider(1.0f);
 		lightInterface.sliders[3].setSlider(0.2f);
 
-		pos = glm::vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
+		pos = vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
 		shader.setInt("tex0", 0);
 		guiShader.setInt("tex0", 0);
@@ -311,11 +311,12 @@ int	main(int ac, char **av)
 			text_shader.setFloat("SCREEN_HEIGHT", SCREEN_HEIGHT);
 			text_shader.setBool("rainbow", rainbow);
 			text_shader.setBool("turbo", !lock_fps);
-			text_shader.setVec3("color", glm::vec3(1.0, 1.0, 1.0));
+			text_shader.setVec3("color", vec3(1.0, 1.0, 1.0));
 			shader.use();
 			shader.setFloat("texIntensity", texIntensity);
 			shader.setFloat("colorIntensity", colorIntensity);
 			shader.setFloat("ambientStrength", ambientStrength);
+			shader.setVec3("viewPos", pos);
 			shader.setFloat("time", glfwGetTime());
 			shader.setInt("shaderEffect", shaderEffect);
 
@@ -353,12 +354,12 @@ int	main(int ac, char **av)
 				{
 					std::string	tmp = terminalInput;
 					tmp.insert(terminalCursor - terminalInput.begin(), 1, '_');
-					font.putString(tmp, text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(tmp.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+					font.putString(tmp, text_shader, vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), vec2(tmp.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 				}
 				else if (glfwGetTime() - terminalReturnTime < 1.5)
-					font.putString(terminalReturn, text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(terminalReturn.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+					font.putString(terminalReturn, text_shader, vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), vec2(terminalReturn.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 				else
-					font.putString(std::string("press t to open terminal"), text_shader, glm::vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), glm::vec2(std::string("press t to open terminal").size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+					font.putString(std::string("press t to open terminal"), text_shader, vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), vec2(std::string("press t to open terminal").size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 				
 				if (F3)
 					displayDebug(font, text_shader);	

@@ -20,18 +20,31 @@ uniform float ambientStrength;
 uniform int shaderEffect;
 uniform float time;
 
+uniform vec3 viewPos;
+
 void main()
 {
 	vec4 finalTexture = texture(tex0, texCoord) * texIntensity;
 	vec4 finalColor = vec4(FragColor, 1.0) * colorIntensity;
 
+	if (finalTexture.rgb == 0 && texIntensity > 0)
+        discard ;
+
 	vec3 ambient = ambientStrength * lightColor;
+	float specularStrength = 0.5;
 
 	vec3 norm = normalize(FragNormal);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * lightColor;
-	vec3 result = (ambient + diffuse);
+
+	vec3 viewDir = normalize(viewPos - FragPos);
+	vec3 reflectDir = reflect(-lightDir, norm);
+
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64);
+	vec3 specular = specularStrength * spec * lightColor;
+
+	vec3 result = (ambient + diffuse + specular);
 	result = clamp(result, 0.0, 1.0);
 
 	if (shaderEffect == 0) // No effect

@@ -1,7 +1,7 @@
 NAME := scop
 
 OBJ_DIR := ./obj/
-INCLUDE_DIRS := ./includes/ ./GLFW/include/GLFW/ ./includes/glad/. ./glm/glm/ ./glm/glm/gtc/ ./includes/render
+INCLUDE_DIRS := ./includes/ ./GLFW/include/GLFW/ ./includes/glad/. ./includes/render
 
 GLFWARCHIVE = GLFW/build/src/libglfw3.a
 
@@ -43,10 +43,10 @@ GLAD_PATH = libs/glad
 all: glfw glad glm $(NAME)
 
 run: all
-	@./$(NAME) models/teapot.obj textures/icon.png
+	@./$(NAME) models/teapot.obj textures/icon.bmp
 
 vrun: all
-	@valgrind ./$(NAME) models/runescape.obj textures/cobblestone.png
+	@valgrind ./$(NAME) models/runescape.obj textures/cobblestone.bmp
 
 glfw:
 	@if ls | grep -q "GLFW"; then \
@@ -58,15 +58,6 @@ glfw:
 		echo "\033[31;1mCompiling GLFW\033[0m"; \
 		cmake -S GLFW -B GLFW/build; \
 		cmake --build GLFW/build; \
-	fi
-
-glm:
-	@if ls | grep -q "glm"; then \
-		echo "\033[32;1;4mGLM Found\033[0m"; \
-	else \
-		echo "\033[31;1;4mGLM Not Found\033[0m"; \
-		echo "\033[31;1mCloning GLM from github\033[0m"; \
-		git clone https://github.com/g-truc/glm.git glm; \
 	fi
 
 glad:

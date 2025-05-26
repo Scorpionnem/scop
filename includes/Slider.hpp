@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:25:11 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 22:43:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/24 15:13:39 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ extern GLuint sliderVBO;
 class Slider
 {
     public:
-        Slider(std::string str, float width, float height, glm::vec2 pos, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture)
+        Slider(std::string str, float width, float height, vec2 pos, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture)
         : backgroundTexture(backgroundTexture), sliderTexture(sliderTexture), sliderPressedTexture(sliderPressedTexture)
         {
             this->str = str;
@@ -31,7 +31,7 @@ class Slider
 
             this->sliderWidth = width / 4;
             this->sliderHeight = height;
-            this->sliderPos = glm::vec2(pos.x + width / 2, pos.y);
+            this->sliderPos = vec2(pos.x + width / 2, pos.y);
             this->minCenter = pos.x + sliderWidth * 0.5f;
             this->maxCenter = pos.x + width - sliderWidth * 0.5f;
             setSlider(0.5);
@@ -42,8 +42,8 @@ class Slider
             shader.use();
             backgroundTexture.use();
 
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0.0f));
-            model = glm::scale(model, glm::vec3(width, height, 1.0f));
+            mat4 model = translate(mat4(1.0f), vec3(pos.x, pos.y, 0.0f));
+            model = scale(model, vec3(width, height, 1.0f));
                 
             shader.setMat4("model", model);
                 
@@ -60,8 +60,8 @@ class Slider
             else
                 sliderTexture.use();
 
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(sliderPos.x, sliderPos.y, 0.0f));
-            model = glm::scale(model, glm::vec3(sliderWidth, sliderHeight, 1.0f));
+            mat4 model = translate(mat4(1.0f), vec3(sliderPos.x, sliderPos.y, 0.0f));
+            model = scale(model, vec3(sliderWidth, sliderHeight, 1.0f));
                 
             shader.setMat4("model", model);
                 
@@ -73,9 +73,9 @@ class Slider
         }
         void    drawStr(Font &font, Shader &textShader)
         {
-            font.putString(this->str, textShader, glm::vec2(this->pos.x, this->pos.y - height / 8), glm::vec2(width, height));
+            font.putString(this->str, textShader, vec2(this->pos.x, this->pos.y - height / 8), vec2(width, height));
         }
-        void    checkClick(glm::vec2 mousePos, bool mousePressed)
+        void    checkClick(vec2 mousePos, bool mousePressed)
         {
             bool inside = isInside(this->pos, mousePos, this->width, this->height);
             
@@ -92,13 +92,13 @@ class Slider
 
             float sliderCenter = sliderPos.x + (sliderWidth / 2);
             float normalizedValue = (sliderCenter - minCenter) / (maxCenter - minCenter);
-            normalizedValue = glm::clamp(normalizedValue, 0.0f, 1.0f);
+            normalizedValue = clamp(normalizedValue, 0.0f, 1.0f);
                     
             value = normalizedValue;
         }
         void    setSlider(float value)
         {
-            value = glm::clamp(value, 0.0f, 1.0f);
+            value = clamp(value, 0.0f, 1.0f);
             this->value = value;
             
             float minCenter = pos.x + (sliderWidth / 2);
@@ -123,8 +123,8 @@ class Slider
         float   value = 0;
         float   minCenter;
         float   maxCenter;
-        glm::vec2   pos;
-        glm::vec2   sliderPos;
+        vec2   pos;
+        vec2   sliderPos;
         std::string str;
 };
 

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/22 16:10:23 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/25 16:58:17 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ Window::Window() : _lastFrame(0)
 	glClearColor(0.03f, 0.03f, 0.03f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	this->center();
-	this->setIcon("src/assets/textures/icon.png");
+	this->setIcon("src/assets/textures/icon_swapped.bmp");
 }
 
 Window::~Window()
@@ -92,7 +92,7 @@ void		Window::loopEnd(Font &font, Shader &textShader)
 	if ((int)_lastFrame != (int)_currentFrame)
 		str = displayFPS(font, textShader);
 	if (!F1 && F3)
-		font.putString(str.c_str(), textShader, glm::vec2(SCREEN_WIDTH - str.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 0), glm::vec2(str.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+		font.putString(str.c_str(), textShader, vec2(SCREEN_WIDTH - str.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE * 0), vec2(str.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 
 	glfwSwapBuffers(_windowData);
 	glfwPollEvents();
@@ -107,13 +107,12 @@ bool	Window::up(void)
 
 void		Window::setIcon(const char *path)
 {
+	Texture	tex(path);
 	GLFWimage	image[1];
-	stbi_set_flip_vertically_on_load(false);
-	image[0].pixels = stbi_load(path, &image[0].width, &image[0].height, 0, 4);
-	if (!image[0].pixels)
-		throw std::runtime_error("Failed to set window icon");
+	image[0].pixels = tex.data.data();
+	image[0].width = tex.width;
+	image[0].height = tex.height;
 	glfwSetWindowIcon(_windowData, 1, image);
-	stbi_image_free(image[0].pixels);
 }
 
 void		Window::center()

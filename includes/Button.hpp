@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:04:30 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/21 21:37:47 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/24 13:21:46 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,19 @@
 extern GLuint buttonVAO;
 extern GLuint buttonVBO;
 
-bool isInside(glm::vec2 buttonPos, glm::vec2 mousePos, float width, float height);
+bool isInside(vec2 buttonPos, vec2 mousePos, float width, float height);
 
 class   Button
 {
     public:
-        Button(std::string str, float width, float height, glm::vec2 pos, std::function<void()> function, Texture &texture, Texture &pressedTexture);
+        Button(std::string str, float width, float height, vec2 pos, std::function<void()> function, Texture &texture, Texture &pressedTexture);
         void draw(Shader& shader, Font &font, Shader &textShader);
         void initButtonModel();
-        void    checkClick(glm::vec2 mousePos, bool mousePressed);
+        void    checkClick(vec2 mousePos, bool mousePressed);
         
         float       width;
         float       height;
-        glm::vec2   pos;
+        vec2   pos;
         std::function<void()>   onClick;
         Texture &texture;
         Texture &pressedTexture;
