@@ -24,10 +24,11 @@ uniform vec3 viewPos;
 
 void main()
 {
-	vec4 finalTexture = texture(tex0, texCoord) * texIntensity;
+	vec4 textureColor = texture(tex0, texCoord);
+	vec4 finalTexture = textureColor * texIntensity;
 	vec4 finalColor = vec4(FragColor, 1.0) * colorIntensity;
 
-	if (finalTexture.rgb == 0 && texIntensity > 0)
+	if (textureColor.r == 1 && textureColor.g == 0 && textureColor.b == 1 && texIntensity != 0)
         discard ;
 
 	vec3 ambient = ambientStrength * lightColor;
