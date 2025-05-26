@@ -26,9 +26,7 @@ CPP_FILES :=	main \
 				Light \
 				Button \
 				Slider \
-				Font \
-				stb_image
-
+				Font
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
 
 SOURCES := $(addprefix $(SOURCE_DIR), $(CPP_FILES))
