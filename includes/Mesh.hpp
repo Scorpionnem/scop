@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/26 13:33:20 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/26 14:20:34 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,6 @@ class Mesh
 		float	rotateX = 0.0;
 		float	rotateY = 1.0;
 		float	rotateZ = 0.0;
-	
-		unsigned int VBO;
-		unsigned int VAO;
-		unsigned int EBO;
 	
 		~Mesh();
 	

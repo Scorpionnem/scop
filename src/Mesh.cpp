@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/26 14:03:44 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/26 14:26:26 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,15 @@ static	bool countInfos = true;
 Mesh::Mesh(const std::string &filename, const std::string &baseTexture)
 {
 	this->pos = vec3(0.0);
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);			
-	glGenBuffers(1, &EBO);
 	this->loadOBJ(filename, baseTexture);
 }
 
 Mesh::~Mesh()
 {
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteVertexArrays(1, &VAO);
+	for (auto it = materialGroups.begin(); it != materialGroups.end(); it++)
+	{
+		delete it->second.texture;
+	}
 }
 
 void Mesh::addTriangle(const vec3& p1, vec2& uv1,
@@ -214,10 +212,7 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 		iss >> prefix;
 
 		if (prefix == "vt")
-		{
-			if (countInfos)
-				TOTAL_VERTICES++;
-			
+		{			
 			float u, v;
 			if (!(iss >> u >> v))
 				throw std::runtime_error("Invalid texture vertex");
@@ -225,6 +220,8 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 		}
 		else if (prefix == "v")
 		{
+			if (countInfos)
+				TOTAL_VERTICES++;
 			float x, y, z;
 			if (!(iss >> x >> y >> z))
 				throw std::runtime_error("Invalid vertex");
