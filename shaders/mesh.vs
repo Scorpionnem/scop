@@ -25,13 +25,4 @@ void main()
 	FragNormal = mat3(transpose(inverse(model))) * aNormal;
 
 	texCoord = aTexPos;
-
-	// vec3	absNormal = abs(aNormal);
-
-	// if (absNormal.x > absNormal.y && absNormal.x > absNormal.z)
-	// 	texCoord = vec2(aPos.z, aPos.y);
-	// else if (absNormal.y > absNormal.z)
-	// 	texCoord = vec2(aPos.x, aPos.z);
-	// else
-	// 	texCoord = vec2(aPos.x, aPos.y);
 }

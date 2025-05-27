@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/26 14:20:34 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:05:41 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,19 @@ struct	MaterialGroup
 	unsigned int EBO;
 };
 
+struct	MTL
+{
+	std::string	texPath;
+};
+
+struct FaceVertex
+{
+	int posIndex;
+	int texIndex;
+};
+
+typedef std::map<std::string, MTL> MTLMap;
+
 class Mesh
 {
 	public:
@@ -56,7 +69,7 @@ class Mesh
                        const vec3& color, const std::string& mtl);
 		void upload();
 		void	draw(Shader &shader);
-		
+		void	calcMeshCenter(void);
 		Mesh(const std::string &filename, const std::string &baseTexture);
 		int loadOBJ(const std::string &filename, const std::string &baseTexture);
 };

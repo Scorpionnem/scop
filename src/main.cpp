@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/26 14:03:55 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:47:12 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ void	goto_light_interface()
 unsigned int	TOTAL_VERTICES = 0;
 unsigned int	TOTAL_TRIANGLES = 0;
 
-static std::string	toString(int nbr)
+std::string	toString(int nbr)
 {
 	std::stringstream	strs;
 	strs << nbr;
@@ -218,6 +218,21 @@ void	displayDebug(Font &font, Shader &textShader)
 	tmp = "loaded triangles " + toString(TOTAL_TRIANGLES);
 	font.putString(tmp, textShader, vec2(SCREEN_WIDTH - tmp.length() * TERMINAL_CHAR_SIZE, SCREEN_HEIGHT - TERMINAL_CHAR_SIZE * 2), vec2(tmp.length() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 
+}
+
+void	MyDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+{
+	if (type == GL_DEBUG_TYPE_PERFORMANCE || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+    	return;
+	std::cout << "---ERROR---" << std::endl;
+	std::cout << "source: " << source << std::endl;
+	std::cout << "type: " << type << std::endl;
+	std::cout << "id: " << id << std::endl;
+	std::cout << "severity: " << severity << std::endl;
+	std::cout << "length: " << length << std::endl;
+	std::cout << "message: " << message << std::endl;
+	std::cout << "-----------" << std::endl;
+	(void)userParam;
 }
 
 int	main(int ac, char **av)
@@ -249,6 +264,9 @@ int	main(int ac, char **av)
 
 		Mesh		mesh(av[1], av[2]);
 		Light		light;
+
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(MyDebugCallback, nullptr);
 
 		Font	font;
 
@@ -285,8 +303,11 @@ int	main(int ac, char **av)
 
 		pos = vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
+		shader.use();
 		shader.setInt("tex0", 0);
+		guiShader.use();
 		guiShader.setInt("tex0", 0);
+		text_shader.use();
 		text_shader.setInt("tex0", 0);
 
 		float	texIntensity = 0.0;

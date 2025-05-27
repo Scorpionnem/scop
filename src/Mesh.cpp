@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/26 14:26:26 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/27 13:03:51 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ Mesh::~Mesh()
 	for (auto it = materialGroups.begin(); it != materialGroups.end(); it++)
 	{
 		delete it->second.texture;
+		glDeleteBuffers(1, &it->second.VBO);
+		glDeleteBuffers(1, &it->second.EBO);
+		glDeleteVertexArrays(1, &it->second.VAO);
 	}
 }
 
@@ -133,18 +136,21 @@ void	Mesh::draw(Shader &shader)
 	}
 }
 
-struct	MTL
+void	Mesh::calcMeshCenter(void)
 {
-	std::string	texPath;
-};
+	vec3 min = materialGroups.begin()->second.vertices[0].position;
+	vec3 max = materialGroups.begin()->second.vertices[0].position;
 
-struct FaceVertex
-{
-	int posIndex;
-	int texIndex;
-};
-
-typedef std::map<std::string, MTL> MTLMap;
+	for (auto it = materialGroups.begin(); it != materialGroups.end(); it++)
+	{
+		for (std::vector<Vertex>::iterator itt = it->second.vertices.begin(); itt != it->second.vertices.end(); itt++)
+		{
+			min = minvec3(min, itt->position);
+			max = maxvec3(max, itt->position);
+		}
+	}
+	center = (min + max) / 2;
+}
 
 void	loadMTL(MTLMap &mtl, const std::string &filename, const std::string currentDir)
 {
@@ -181,8 +187,6 @@ void	loadMTL(MTLMap &mtl, const std::string &filename, const std::string current
 			mtl[currentKey].texPath = texPath;
 		}
 	}
-
-	return ;
 }
 
 int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
@@ -197,13 +201,15 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 	std::string line;
 	std::string	stdFilename = filename;
 	std::string	objPath = filename.substr(0, filename.find_last_of("/"));
-	float color = 0.5f;
+	
+	float colorOffset = 0.5f;
+	
 	bool addedAnyFace = false;
+	int lineNumber = 0;
 
 	MTLMap mtl;
 	MTL	currentMTL = {baseTexture};
-
-	int lineNumber = 0;
+	
 	while (std::getline(file, line))
 	{
 		lineNumber++;
@@ -266,27 +272,24 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 				std::string posStr, texStr;
 			
 				std::getline(ss, posStr, '/');
-				std::getline(ss, texStr, '/'); // may be empty if no vt
+				std::getline(ss, texStr, '/');
 			
 				FaceVertex fv = { -1, -1 };
-			
+
 				try {
 					fv.posIndex = std::stoi(posStr) - 1;
 					if (!texStr.empty())
 						fv.texIndex = std::stoi(texStr) - 1;
-				} catch (...) {
-					std::cerr << "Invalid face entry on line " << lineNumber << std::endl;
-					throw std::runtime_error("Invalid face");
 				}
-			
+				catch (...) {
+					throw std::runtime_error("Invalid face entry on line " + toString(lineNumber));
+				}
+
 				faceVertices.push_back(fv);
 			}
 
 			if (faceVertices.size() < 3)
-			{
-				std::cerr << "Invalid face (less than 3 vertices) on line " << lineNumber << std::endl;
-				throw std::runtime_error("Invalid face");
-			}
+				throw std::runtime_error("Invalid face (less than 3 vertices) on line " + toString(lineNumber));
 
 			for (size_t i = 1; i + 1 < faceVertices.size(); ++i)
 			{
@@ -295,7 +298,7 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 				const FaceVertex& fv1 = faceVertices[0];
 				const FaceVertex& fv2 = faceVertices[i];
 				const FaceVertex& fv3 = faceVertices[i + 1];
-							
+
 				vec3 v1 = positions[fv1.posIndex];
 				vec3 v2 = positions[fv2.posIndex];
 				vec3 v3 = positions[fv3.posIndex];
@@ -304,34 +307,22 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 				vec2 uv2 = (fv2.texIndex >= 0 && fv2.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv2.texIndex].x, texPositions[fv2.texIndex].y) : vec2(-1);
 				vec2 uv3 = (fv3.texIndex >= 0 && fv3.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv3.texIndex].x, texPositions[fv3.texIndex].y) : vec2(-1);
 
-				this->addTriangle(v1, uv1, v2, uv2, v3, uv3, vec3(color), currentMTL.texPath);
+				this->addTriangle(v1, uv1, v2, uv2, v3, uv3, vec3(colorOffset), currentMTL.texPath);
 				addedAnyFace = true;
 
-				color += 0.05f;
-				if (color > 0.7f)
-					color = 0.5f;
+				colorOffset += 0.05f;
+				if (colorOffset > 0.7f)
+					colorOffset = 0.5f;
 			}
 		}
 	}
 
 	if (positions.empty())
-		throw std::runtime_error("No vertices found in given model");
+		throw std::runtime_error("No vertices found in " + filename);
 	if (!addedAnyFace)
-		throw std::runtime_error("No faces found in given model");
+		throw std::runtime_error("No faces found in " + filename);
 
-	vec3 min = materialGroups[currentMTL.texPath].vertices[0].position;
-	vec3 max = materialGroups[currentMTL.texPath].vertices[0].position;
-
-	for (auto it = materialGroups.begin(); it != materialGroups.end(); it++)
-	{
-		for (std::vector<Vertex>::iterator itt = it->second.vertices.begin(); itt != it->second.vertices.end(); itt++)
-		{
-			min = minvec3(min, itt->position);
-			max = maxvec3(max, itt->position);
-		}
-	}
-	center = (min + max) / 2;
-
+	this->calcMeshCenter();
 	this->upload();
 	countInfos = false;
 	return (1);

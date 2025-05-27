@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/25 16:36:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:01:10 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@
 # include "glad.h"
 # include "glfw3.h"
 
+std::string	toString(int nbr);
+
 # define WIN_NAME "scop"
+
 extern float	SCREEN_WIDTH;
 extern float	SCREEN_HEIGHT;
 extern float	FOV;

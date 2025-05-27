@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 14:45:03 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/24 18:12:45 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/27 12:45:49 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ class	Font
             mat4 model = translate(mat4(1.0f), vec3(pos.x, pos.y, 0.0f));
             model = scale(model, vec3(size.x, size.y, 1.0f));
 			mat4 projection = ortho(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+			
 			shader.setMat4("projection", projection);
-
             shader.setMat4("model", model);
 
 			glDisable(GL_DEPTH_TEST);
