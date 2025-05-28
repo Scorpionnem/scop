@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 12:39:25 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 15:59:58 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,13 @@ void	interpolateTo(float &float1, float &float2, float deltaTime)
 	float2 = 1.0f - float1;
 }
 
+std::string	toString(int nbr)
+{
+	std::stringstream	strs;
+	strs << nbr;
+	return (strs.str());
+}
+
 void	frame_key_hook(Window &window)
 {
 	if (glfwGetKey(window.getWindowData(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -194,13 +201,6 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 		F3 = !F3;
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
 		toggle_texture();
-}
-
-std::string	toString(int nbr)
-{
-	std::stringstream	strs;
-	strs << nbr;
-	return (strs.str());
 }
 
 void	displayDebug(Font &font, Shader &textShader)

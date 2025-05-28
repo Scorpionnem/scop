@@ -3,6 +3,7 @@
 in vec3 FragColor;
 in vec3 FragPos;
 in vec3 FragNormal;
+in vec3 FragAbsNormal;
 
 out vec4 outColor;
 
@@ -26,7 +27,9 @@ void main()
 {
 	vec4 textureColor = texture(tex0, texCoord);
 	vec4 finalTexture = textureColor * texIntensity;
-	vec4 finalColor = vec4(FragColor, 1.0) * colorIntensity;
+	
+	vec3 tempColor = FragColor + FragAbsNormal;
+	vec4 finalColor = vec4(tempColor, 1.0) * colorIntensity;
 
 	if (textureColor.r == 1 && textureColor.g == 0 && textureColor.b == 1 && texIntensity != 0)
         discard ;
@@ -55,7 +58,7 @@ void main()
 	else if (shaderEffect == 1) //Black and white effect
 	{
 		outColor = vec4(result, 1.0) * (finalTexture + finalColor);
-		float maxColor = max(max(outColor.x, outColor.y), outColor.z);
+		float maxColor = min(min(outColor.x, outColor.y), outColor.z);
 		outColor = vec4(maxColor, maxColor, maxColor, 1.0);
 	}
 	else if (shaderEffect == 2) // Inverted color effect

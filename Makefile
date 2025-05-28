@@ -45,10 +45,10 @@ GLAD_PATH = libs/glad
 all: glfw glad glm $(NAME)
 
 run: all
-	@./$(NAME) models/teapot.obj textures/icon.bmp
+	@./$(NAME) models/subject/teapot.obj textures/icon.bmp
 
 vrun: all
-	@valgrind ./$(NAME) models/42.obj textures/cobblestone.bmp
+	@valgrind ./$(NAME) models/subject/42.obj textures/cobblestone.bmp
 
 glfw:
 	@if ls | grep -q "GLFW"; then \

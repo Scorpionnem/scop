@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/27 13:03:51 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 15:58:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,109 @@ void	loadMTL(MTLMap &mtl, const std::string &filename, const std::string current
 	}
 }
 
+void	parseMTLLib(std::istringstream &iss, const std::string &objPath, MTLMap &mtl)
+{
+	std::string	mtlFilename;
+	
+	if (!(iss >> mtlFilename))
+		throw std::runtime_error("Invalid mtllib");
+	
+	std::string currentDir;
+	if (objPath.size())
+		currentDir = objPath + "/";
+	else
+		currentDir = "";
+	
+	mtlFilename = currentDir + mtlFilename;
+	loadMTL(mtl, mtlFilename, objPath + "/");
+}
+
+void	parseUseMTL(std::istringstream &iss, MTL &currentMTL, MTLMap &mtl)
+{
+	std::string	mtlKey;
+	
+	if (!(iss >> mtlKey))
+		throw std::runtime_error("Invalid mtlkey");
+	auto finder = mtl.find(mtlKey);
+	if (finder == mtl.end())
+		throw std::runtime_error("Invalid mtlkey, not set");
+	
+	currentMTL = finder->second;
+}
+
+void	parseVertice(std::istringstream &iss, std::vector<vec3> &positions)
+{
+	if (countInfos)
+		TOTAL_VERTICES++;
+	float x, y, z;
+	if (!(iss >> x >> y >> z))
+		throw std::runtime_error("Invalid vertex");
+	positions.push_back(vec3(x, y, z));
+}
+
+void	parseVerticeTexture(std::istringstream &iss, std::vector<vec2> &texPositions)
+{			
+	float u, v;
+	if (!(iss >> u >> v))
+		throw std::runtime_error("Invalid texture vertex");
+	texPositions.push_back(vec2(u, v));
+}
+
+void	Mesh::parseFace(std::istringstream &iss, int &lineNumber, float &colorOffset, bool &addedAnyFace, std::vector<vec3> &positions, std::vector<vec2> &texPositions, MTL &currentMTL)
+{
+	std::vector<FaceVertex> faceVertices;
+		
+	std::string token;
+	while (iss >> token)
+	{
+		std::istringstream ss(token);
+		std::string posStr, texStr;
+		
+		std::getline(ss, posStr, '/');
+		std::getline(ss, texStr, '/');
+		
+		FaceVertex fv = { -1, -1 };
+		
+		try {
+			fv.posIndex = std::stoi(posStr) - 1;
+			if (!texStr.empty())
+				fv.texIndex = std::stoi(texStr) - 1;
+		}
+		catch (...) {
+			throw std::runtime_error("Invalid face entry on line " + toString(lineNumber));
+		}
+		
+		faceVertices.push_back(fv);
+	}
+	
+	if (faceVertices.size() < 3)
+		throw std::runtime_error("Invalid face (less than 3 vertices) on line " + toString(lineNumber));
+	
+	for (size_t i = 1; i + 1 < faceVertices.size(); ++i)
+	{
+		if (countInfos)
+			TOTAL_TRIANGLES++;
+		const FaceVertex& fv1 = faceVertices[0];
+		const FaceVertex& fv2 = faceVertices[i];
+		const FaceVertex& fv3 = faceVertices[i + 1];
+		
+		vec3 v1 = positions[fv1.posIndex];
+		vec3 v2 = positions[fv2.posIndex];
+		vec3 v3 = positions[fv3.posIndex];
+		
+		vec2 uv1 = (fv1.texIndex >= 0 && fv1.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv1.texIndex].x, texPositions[fv1.texIndex].y) : vec2(-1);
+		vec2 uv2 = (fv2.texIndex >= 0 && fv2.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv2.texIndex].x, texPositions[fv2.texIndex].y) : vec2(-1);
+		vec2 uv3 = (fv3.texIndex >= 0 && fv3.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv3.texIndex].x, texPositions[fv3.texIndex].y) : vec2(-1);
+		
+		this->addTriangle(v1, uv1, v2, uv2, v3, uv3, vec3(colorOffset), currentMTL.texPath);
+		addedAnyFace = true;
+		
+		colorOffset += 0.05f;
+		if (colorOffset > 0.7f)
+			colorOffset = 0.5f;
+	}
+}
+
 int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 {
 	std::ifstream file(filename);
@@ -202,10 +305,9 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 	std::string	stdFilename = filename;
 	std::string	objPath = filename.substr(0, filename.find_last_of("/"));
 	
-	float colorOffset = 0.5f;
-	
-	bool addedAnyFace = false;
 	int lineNumber = 0;
+	float colorOffset = 0.5f;
+	bool addedAnyFace = false;
 
 	MTLMap mtl;
 	MTL	currentMTL = {baseTexture};
@@ -218,103 +320,15 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 		iss >> prefix;
 
 		if (prefix == "vt")
-		{			
-			float u, v;
-			if (!(iss >> u >> v))
-				throw std::runtime_error("Invalid texture vertex");
-			texPositions.push_back(vec2(u, v));
-		}
+			parseVerticeTexture(iss, texPositions);
 		else if (prefix == "v")
-		{
-			if (countInfos)
-				TOTAL_VERTICES++;
-			float x, y, z;
-			if (!(iss >> x >> y >> z))
-				throw std::runtime_error("Invalid vertex");
-			positions.push_back(vec3(x, y, z));
-		}
+			parseVertice(iss, positions);
 		else if (prefix == "mtllib")
-		{
-			std::string	mtlFilename;
-
-			if (!(iss >> mtlFilename))
-				throw std::runtime_error("Invalid mtllib");
-
-			std::string currentDir;
-			if (objPath.size())
-				currentDir = objPath + "/";
-			else
-				currentDir = "";
-			
-			mtlFilename = currentDir + mtlFilename;
-			loadMTL(mtl, mtlFilename, objPath + "/");
-		}
+			parseMTLLib(iss, objPath, mtl);
 		else if (prefix == "usemtl")
-		{
-			std::string	mtlKey;
-			
-			if (!(iss >> mtlKey))
-				throw std::runtime_error("Invalid mtlkey");
-			auto finder = mtl.find(mtlKey);
-			if (finder == mtl.end())
-				throw std::runtime_error("Invalid mtlkey, not set");
-
-			currentMTL = finder->second;
-		}
+			parseUseMTL(iss, currentMTL, mtl);
 		else if (prefix == "f")
-		{
-			std::vector<FaceVertex> faceVertices;
-			
-			std::string token;
-			while (iss >> token)
-			{
-				std::istringstream ss(token);
-				std::string posStr, texStr;
-			
-				std::getline(ss, posStr, '/');
-				std::getline(ss, texStr, '/');
-			
-				FaceVertex fv = { -1, -1 };
-
-				try {
-					fv.posIndex = std::stoi(posStr) - 1;
-					if (!texStr.empty())
-						fv.texIndex = std::stoi(texStr) - 1;
-				}
-				catch (...) {
-					throw std::runtime_error("Invalid face entry on line " + toString(lineNumber));
-				}
-
-				faceVertices.push_back(fv);
-			}
-
-			if (faceVertices.size() < 3)
-				throw std::runtime_error("Invalid face (less than 3 vertices) on line " + toString(lineNumber));
-
-			for (size_t i = 1; i + 1 < faceVertices.size(); ++i)
-			{
-				if (countInfos)
-					TOTAL_TRIANGLES++;
-				const FaceVertex& fv1 = faceVertices[0];
-				const FaceVertex& fv2 = faceVertices[i];
-				const FaceVertex& fv3 = faceVertices[i + 1];
-
-				vec3 v1 = positions[fv1.posIndex];
-				vec3 v2 = positions[fv2.posIndex];
-				vec3 v3 = positions[fv3.posIndex];
-				
-				vec2 uv1 = (fv1.texIndex >= 0 && fv1.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv1.texIndex].x, texPositions[fv1.texIndex].y) : vec2(-1);
-				vec2 uv2 = (fv2.texIndex >= 0 && fv2.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv2.texIndex].x, texPositions[fv2.texIndex].y) : vec2(-1);
-				vec2 uv3 = (fv3.texIndex >= 0 && fv3.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv3.texIndex].x, texPositions[fv3.texIndex].y) : vec2(-1);
-
-				this->addTriangle(v1, uv1, v2, uv2, v3, uv3, vec3(colorOffset), currentMTL.texPath);
-				addedAnyFace = true;
-
-				colorOffset += 0.05f;
-				if (colorOffset > 0.7f)
-					colorOffset = 0.5f;
-			}
-		}
+			parseFace(iss, lineNumber, colorOffset, addedAnyFace, positions, texPositions, currentMTL);
 	}
 
 	if (positions.empty())

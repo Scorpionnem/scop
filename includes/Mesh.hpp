@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/27 12:05:41 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 15:56:14 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,10 @@ class Mesh
 		void	calcMeshCenter(void);
 		Mesh(const std::string &filename, const std::string &baseTexture);
 		int loadOBJ(const std::string &filename, const std::string &baseTexture);
+		void	parseFace(std::istringstream &iss,
+					int &lineNumber, float &colorOffset, bool &addedAnyFace,
+					std::vector<vec3> &positions, std::vector<vec2> &texPositions,
+					MTL &currentMTL);
 };
 
 #endif
