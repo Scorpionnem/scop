@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 17:35:16 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 17:36:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,8 +193,6 @@ void	loadMTL(MTLMap &mtl, const std::string &filename, const std::string current
 			texPath.erase(texPath.find_last_not_of(" \t\r\n") + 1);
 			
 			texPath = currentDir + texPath;
-			std::cout << "currentkey " << currentKey << std::endl;
-			std::cout << "texpath " << texPath << std::endl;
 			mtl[currentKey].texPath = texPath;
 		}
 	}
