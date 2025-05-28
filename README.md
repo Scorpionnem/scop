@@ -1,6 +1,6 @@
 execute ```make run``` and enjoy...
 
-Model loaded using the .mtl
+Model loaded using the .mtl:
 
 ![image](https://github.com/user-attachments/assets/f96174f0-0fa1-441d-b7c6-30b4e6402960)
 
