@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:11:45 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/25 16:58:17 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 16:41:22 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 Window::Window() : _lastFrame(0)
 {
+	if (DEBUG)
+		std::cout << "Creating window: " << WIN_NAME << std::endl;
 	//Inits GLFW settings
 	if (!glfwInit())
 		throw std::runtime_error("Failed to initialize glfw");
@@ -60,6 +62,8 @@ Window::Window() : _lastFrame(0)
 
 Window::~Window()
 {
+	if (DEBUG)
+		std::cout << "Destroying window: " << WIN_NAME << std::endl;
 	glfwDestroyWindow(this->_windowData);
 	glfwTerminate();
 }

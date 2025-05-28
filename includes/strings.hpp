@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:15:48 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 12:17:56 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 16:31:05 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@
 # define ERROR_WRONG_AC "Wrong argument count. (Please provide a .obj and a .bmp)"
 
 # define TERMINAL_POPUP "press t to open terminal"
+# define MISSING_TEXTURE "src/assets/textures/missing.bmp"
 
 #endif

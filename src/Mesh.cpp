@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 15:58:19 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 17:35:16 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,15 @@ Mesh::Mesh(const std::string &filename, const std::string &baseTexture)
 	this->loadOBJ(filename, baseTexture);
 }
 
+Mesh::Mesh()
+{
+	this->pos = vec3(0.0);
+}
+
 Mesh::~Mesh()
 {
+	if (DEBUG)
+		std::cout << "Destroying mesh: " << this->path << std::endl;
 	for (auto it = materialGroups.begin(); it != materialGroups.end(); it++)
 	{
 		delete it->second.texture;
@@ -154,16 +161,15 @@ void	Mesh::calcMeshCenter(void)
 
 void	loadMTL(MTLMap &mtl, const std::string &filename, const std::string currentDir)
 {
+	if (DEBUG)
+		std::cout << "Loading mtl: " << filename << std::endl;
+
 	std::ifstream file(filename);
 	std::string line;
 	std::string currentKey;
 
 	if (!file.is_open())
-	{
-		if (countInfos)
-			std::cout << "Failed to open mtl file " << filename << std::endl;
-		return ;
-	}
+		throw std::runtime_error("Failed to open mtl file " + filename);
 
 	while (std::getline(file, line))
 	{
@@ -173,17 +179,22 @@ void	loadMTL(MTLMap &mtl, const std::string &filename, const std::string current
 
 		if (prefix == "newmtl")
 		{
-			if (!(iss >> currentKey))
-				throw std::runtime_error("Invalid newmtl");
-			mtl[currentKey].texPath = "textures/mbatty.bmp";
+			std::getline(iss, currentKey);
+			currentKey.erase(0, currentKey.find_first_not_of(" \t\r\n"));
+			currentKey.erase(currentKey.find_last_not_of(" \t\r\n") + 1);
+
+			mtl[currentKey].texPath = MISSING_TEXTURE;
 		}
 		else if (prefix == "map_Kd")
 		{
 			std::string	texPath;
-			if (!(iss >> texPath))
-				throw std::runtime_error("Invalid map_Kd");
+			std::getline(iss, texPath);
+			texPath.erase(0, texPath.find_first_not_of(" \t\r\n"));
+			texPath.erase(texPath.find_last_not_of(" \t\r\n") + 1);
 			
 			texPath = currentDir + texPath;
+			std::cout << "currentkey " << currentKey << std::endl;
+			std::cout << "texpath " << texPath << std::endl;
 			mtl[currentKey].texPath = texPath;
 		}
 	}
@@ -193,8 +204,9 @@ void	parseMTLLib(std::istringstream &iss, const std::string &objPath, MTLMap &mt
 {
 	std::string	mtlFilename;
 	
-	if (!(iss >> mtlFilename))
-		throw std::runtime_error("Invalid mtllib");
+	std::getline(iss, mtlFilename);
+	mtlFilename.erase(0, mtlFilename.find_first_not_of(" \t\r\n"));
+	mtlFilename.erase(mtlFilename.find_last_not_of(" \t\r\n") + 1);
 	
 	std::string currentDir;
 	if (objPath.size())
@@ -210,8 +222,9 @@ void	parseUseMTL(std::istringstream &iss, MTL &currentMTL, MTLMap &mtl)
 {
 	std::string	mtlKey;
 	
-	if (!(iss >> mtlKey))
-		throw std::runtime_error("Invalid mtlkey");
+	std::getline(iss, mtlKey);
+	mtlKey.erase(0, mtlKey.find_first_not_of(" \t\r\n"));
+	mtlKey.erase(mtlKey.find_last_not_of(" \t\r\n") + 1);
 	auto finder = mtl.find(mtlKey);
 	if (finder == mtl.end())
 		throw std::runtime_error("Invalid mtlkey, not set");
@@ -294,6 +307,9 @@ void	Mesh::parseFace(std::istringstream &iss, int &lineNumber, float &colorOffse
 
 int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 {
+	if (DEBUG)
+		std::cout << "Loading obj: " << filename << std::endl;
+
 	std::ifstream file(filename);
 	if (!file.is_open())
 		throw std::runtime_error("Failed to open model");
@@ -339,5 +355,6 @@ int Mesh::loadOBJ(const std::string &filename, const std::string &baseTexture)
 	this->calcMeshCenter();
 	this->upload();
 	countInfos = false;
+	this->path = filename;
 	return (1);
 }

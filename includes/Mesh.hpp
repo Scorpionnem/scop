@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 15:56:14 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 16:52:40 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ class Mesh
 		std::vector<unsigned int> indices;
 		std::map<std::string, MaterialGroup> materialGroups;
 		vec3	center;
+		std::string	path;
 
 		float	rotateX = 0.0;
 		float	rotateY = 1.0;
@@ -71,6 +72,7 @@ class Mesh
 		void	draw(Shader &shader);
 		void	calcMeshCenter(void);
 		Mesh(const std::string &filename, const std::string &baseTexture);
+		Mesh();
 		int loadOBJ(const std::string &filename, const std::string &baseTexture);
 		void	parseFace(std::istringstream &iss,
 					int &lineNumber, float &colorOffset, bool &addedAnyFace,

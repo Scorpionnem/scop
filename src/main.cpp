@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 15:59:58 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 16:31:17 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,7 +238,7 @@ void	MyDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLs
 
 int	main(int ac, char **av)
 {
-	if (ac != 3)
+	if (ac != 3 && ac != 2)
 	{
 		std::cerr << ERROR_WRONG_AC << std::endl;
 		return (1);
@@ -253,7 +253,6 @@ int	main(int ac, char **av)
 		Shader		guiShader(GUI_VERT_SHADER, GUI_FRAG_SHADER);
 		Shader		text_shader(TEXT_VERT_SHADER, TEXT_FRAG_SHADER);
 
-		Texture		texture(av[2]);
 		Texture		icon_texture(ICON_PATH);
 		Texture		button_texture(BUTTON_PATH);
 		Texture		button_pressed_texture(BUTTON_PRESSED_PATH);
@@ -263,7 +262,11 @@ int	main(int ac, char **av)
 		Texture		blue_texture(BLUE_BUTTON_PATH);
 		Texture		mbatty_texture(MBATTY_TX_PATH);
 
-		Mesh		mesh(av[1], av[2]);
+		Mesh	mesh;
+		if (ac == 3)
+			mesh.loadOBJ(av[1], av[2]);
+		else
+			mesh.loadOBJ(av[1], MISSING_TEXTURE);
 		Light		light;
 
 		glEnable(GL_DEBUG_OUTPUT);
@@ -342,7 +345,6 @@ int	main(int ac, char **av)
 			shader.setFloat("time", glfwGetTime());
 			shader.setInt("shaderEffect", shaderEffect);
 
-			texture.use();
 			mesh.pos = mesh_pos;
 			mesh.draw(shader);
 			light.draw(fb_shader, camera);

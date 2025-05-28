@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 12:16:19 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/24 13:21:38 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 16:43:20 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ class Shader
 {
 	public:
 		unsigned int	ID;
+		std::string		vertPath;
+		std::string		fragPath;
 
 		~Shader();
 		Shader(const Shader &cpy)

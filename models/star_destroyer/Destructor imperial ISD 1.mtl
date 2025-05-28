@@ -1,0 +1,1034 @@
+# 
+# Wavefront material file
+# Converted by 3D Exploration 1.71
+# XDimension Software, LLC
+# http://www.xdsoft.com/explorer/
+# 
+newmtl Material_1
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_hull_01_d.bmp
+newmtl Material_2
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_hull_02_d.bmp
+newmtl Material_3
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_tower_d.bmp
+newmtl Material_4
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_engines_d.bmp
+newmtl Material_5
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_side_d.bmp
+newmtl Material_6
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_superstructure_d.bmp
+newmtl Material_7
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd point_defense_array_d.bmp
+newmtl Material_8
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd mc_i.bmp
+newmtl Material_9
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd hicq_tower.bmp
+newmtl Material_10
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_11
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_12
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_13
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_14
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_15
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_16
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_17
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_hull_01_d.bmp
+newmtl Material_18
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tractorbeam_tower_diffuse.bmp
+newmtl Material_19
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd point_defense_array_d.bmp
+newmtl Material_141
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_142
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_143
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_144
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_145
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_146
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_147
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_148
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_149
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_150
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_151
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_152
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_153
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_154
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_155
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_156
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_157
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_158
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_159
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_160
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_161
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_162
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_163
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_164
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_165
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_166
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_167
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_168
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_169
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_170
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_171
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_172
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_173
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_174
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_175
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_176
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_177
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_178
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_179
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_180
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_181
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_182
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_183
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_184
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_185
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_186
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_187
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd tltower.bmp
+newmtl Material_188
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_189
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_190
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_191
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_192
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_193
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_194
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_195
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_196
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_197
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_198
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_199
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_200
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_201
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_202
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_203
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_204
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_205
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_206
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_207
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_208
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_209
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_210
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_211
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_212
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_213
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_214
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_215
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_216
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_217
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_218
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_219
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_220
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_221
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_222
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_223
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_224
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_225
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_226
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_227
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_228
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_229
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_230
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_231
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_232
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_233
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_235
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_236
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_237
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_238
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_239
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_240
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_241
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_242
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_tower_d.bmp
+newmtl Material_243
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd isd_side_d.bmp
+newmtl Material_244
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_245
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_246
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_247
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_248
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_249
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_250
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_251
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_252
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_253
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_254
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_255
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_256
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_257
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_258
+	 Ka 0.2 0.2 0.2
+	 Kd 0 0 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl Material_259
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 1 1 1
+	 illum 2
+	 Ns 32
+	 map_Kd MTLT_diffuse1.bmp
+newmtl Material_260
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_261
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_262
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_263
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_264
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_265
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_266
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_267
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_268
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_269
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_270
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp
+newmtl Material_271
+	 Ka 0.2 0.2 0.2
+	 Kd 1 1 1
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd BlastMark1.bmp

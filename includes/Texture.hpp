@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:48:51 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 11:48:09 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 16:41:52 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class	Texture
 		std::vector<unsigned char>	data;
 		int	width;
 		int	height;
+		std::string	path;
 	private:
 };
 

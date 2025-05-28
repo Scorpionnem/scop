@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:49:15 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 11:49:14 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 16:56:09 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,17 @@
 Texture::~Texture()
 {
 	if (ID > 0)
+	{
+		if (DEBUG)
+			std::cout << "Destroying texture: " << this->path << std::endl;
 		glDeleteTextures(1, &ID);
+	}
 }
 
 void	Texture::cut(Texture &cpy)
 {
 	this->ID = cpy.ID;
+	this->path = cpy.path;
 	cpy.ID = 0;
 }
 
@@ -118,6 +123,8 @@ std::vector<unsigned char>	Texture::LoadImage(const char *path)
 
 Texture::Texture(const char *path)
 {
+	if (DEBUG)
+		std::cout << "Loading texture: " << path << std::endl;	
 	data = LoadImage(path);
 	glGenTextures(1, &this->ID);
 	glBindTexture(GL_TEXTURE_2D, this->ID);
@@ -128,6 +135,8 @@ Texture::Texture(const char *path)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	this->path = path;
 }
 
 void	Texture::use(void)
