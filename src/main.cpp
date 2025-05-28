@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/27 12:47:12 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 12:39:25 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,89 @@
 #include "Window.hpp"
 #include "Interface.hpp"
 
+float	FOV = 70;
 #define MAX_FOV 100
 float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
-float	FOV = 70;
 float	RENDER_DISTANCE = 1000;
 
-bool	F1 = false;
-bool	F3 = false;
-
-int	interpolate = 0;
 vec3	mesh_pos;
 float	mesh_roll;
 
+int		interpolate = 0;
 float	ambientStrength = 0.2;
 
+bool	F1 = false;
+bool	F3 = false;
 bool	lock_fps = true;
 bool	rainbow = false;
 bool	camera_toggle = false;
+
+unsigned int	TOTAL_VERTICES = 0;
+unsigned int	TOTAL_TRIANGLES = 0;
+
+int	shaderEffect = 0;
+#define MAX_SHADER_EFFECT 3
+
+void	toggle_camera()
+{
+	camera_toggle = !camera_toggle;
+}
+
+void	toggle_texture()
+{
+	interpolate = !interpolate;
+}
+
+void	toggle_rainbow()
+{
+	rainbow = !rainbow;
+}
+
+bool	mesh_spin = true;
+
+void	toggle_mesh_spin()
+{
+	mesh_spin = !mesh_spin;
+}
+
+void	change_shader()
+{
+	shaderEffect++;
+	if (shaderEffect > MAX_SHADER_EFFECT)
+		shaderEffect = 0;
+}
+
+void	toggle_fpscap()
+{
+	lock_fps = !lock_fps;
+	if (lock_fps)
+		glfwSwapInterval(1);
+	else
+		glfwSwapInterval(0);
+}
+
+int	interface = 0;
+
+void	goto_camera_interface()
+{
+	interface = 1;
+}
+
+void	goto_main_interface()
+{
+	interface = 0;
+}
+
+void	goto_model_interface()
+{
+	interface = 2;
+}
+
+void	goto_light_interface()
+{
+	interface = 3;
+}
 
 void	interpolateTo(float &float1, float &float2, float deltaTime)
 {
@@ -109,9 +174,9 @@ void	frame_key_hook(Window &window)
 			mesh_pos.z += (cameraSpeed * speedBoost) * 1;
 	}
 
-	if(pitch > 89.0f)
+	if (pitch > 89.0f)
 		pitch = 89.0f;
-	if(pitch < -89.0f)
+	if (pitch < -89.0f)
 		pitch = -89.0f;
 }
 
@@ -127,73 +192,9 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 		F1 = !F1;
 	if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
 		F3 = !F3;
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+		toggle_texture();
 }
-
-int	shaderEffect = 0;
-#define MAX_SHADER_EFFECT 3
-
-void	toggle_camera()
-{
-	camera_toggle = !camera_toggle;
-}
-
-void	toggle_texture()
-{
-	interpolate = !interpolate;
-}
-
-void	toggle_rainbow()
-{
-	rainbow = !rainbow;
-}
-
-bool	mesh_spin = true;
-
-void	toggle_mesh_spin()
-{
-	mesh_spin = !mesh_spin;
-}
-
-void	change_shader()
-{
-	shaderEffect++;
-	if (shaderEffect > MAX_SHADER_EFFECT)
-		shaderEffect = 0;
-}
-
-void	toggle_fpscap()
-{
-	lock_fps = !lock_fps;
-	if (lock_fps)
-		glfwSwapInterval(1);
-	else
-		glfwSwapInterval(0);
-}
-
-int	interface = 0;
-
-void	goto_camera_interface()
-{
-	interface = 1;
-}
-
-void	goto_main_interface()
-{
-	interface = 0;
-}
-
-void	goto_model_interface()
-{
-	interface = 2;
-}
-
-void	goto_light_interface()
-{
-	interface = 3;
-}
-
-unsigned int	TOTAL_VERTICES = 0;
-unsigned int	TOTAL_TRIANGLES = 0;
 
 std::string	toString(int nbr)
 {
@@ -239,7 +240,7 @@ int	main(int ac, char **av)
 {
 	if (ac != 3)
 	{
-		std::cout << "Wrong argument count." << std::endl;
+		std::cerr << ERROR_WRONG_AC << std::endl;
 		return (1);
 	}
 	try {
@@ -247,10 +248,10 @@ int	main(int ac, char **av)
 		
 		Camera		camera;
 		
-		Shader		shader("shaders/mesh.vs", "shaders/mesh.fs");
-		Shader		fb_shader("shaders/mesh.vs", "shaders/full_bright.fs");
-		Shader		guiShader("shaders/gui_shader.vs", "shaders/gui_shader.fs");
-		Shader		text_shader("shaders/text_shader.vs", "shaders/text_shader.fs");
+		Shader		shader(MESH_VERT_SHADER, MESH_FRAG_SHADER);
+		Shader		fb_shader(MESH_VERT_SHADER, MESH_FULLBRIGHT_SHADER);
+		Shader		guiShader(GUI_VERT_SHADER, GUI_FRAG_SHADER);
+		Shader		text_shader(TEXT_VERT_SHADER, TEXT_FRAG_SHADER);
 
 		Texture		texture(av[2]);
 		Texture		icon_texture(ICON_PATH);
@@ -260,7 +261,7 @@ int	main(int ac, char **av)
 		Texture		red_texture(RED_BUTTON_PATH);
 		Texture		green_texture(GREEN_BUTTON_PATH);
 		Texture		blue_texture(BLUE_BUTTON_PATH);
-		Texture		lol("textures/mbatty.bmp");
+		Texture		mbatty_texture(MBATTY_TX_PATH);
 
 		Mesh		mesh(av[1], av[2]);
 		Light		light;
@@ -271,7 +272,7 @@ int	main(int ac, char **av)
 		Font	font;
 
 		Interface	mainInterface;
-		mainInterface.buttons.push_back(Button("", 50, 50, vec2(0, 0), toggle_fpscap, icon_texture, lol));
+		mainInterface.buttons.push_back(Button("", 50, 50, vec2(0, 0), toggle_fpscap, icon_texture, mbatty_texture));
 		mainInterface.buttons.push_back(Button("camera", 100, 50, vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
 		mainInterface.buttons.push_back(Button("model", 100, 50, vec2(150, 0), goto_model_interface, button_texture, button_pressed_texture));
 		mainInterface.buttons.push_back(Button("light", 100, 50, vec2(250, 0), goto_light_interface, button_texture, button_pressed_texture));
@@ -380,7 +381,7 @@ int	main(int ac, char **av)
 				else if (glfwGetTime() - terminalReturnTime < 1.5)
 					font.putString(terminalReturn, text_shader, vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), vec2(terminalReturn.size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 				else
-					font.putString(std::string("press t to open terminal"), text_shader, vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), vec2(std::string("press t to open terminal").size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
+					font.putString(std::string(TERMINAL_POPUP), text_shader, vec2(5, SCREEN_HEIGHT - (TERMINAL_CHAR_SIZE + 5)), vec2(std::string(TERMINAL_POPUP).size() * TERMINAL_CHAR_SIZE, TERMINAL_CHAR_SIZE));
 				
 				if (F3)
 					displayDebug(font, text_shader);	

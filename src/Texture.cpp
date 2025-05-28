@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:49:15 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/26 14:03:48 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 11:49:14 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,11 @@ Texture::~Texture()
 		glDeleteTextures(1, &ID);
 }
 
-// #define FILE_HEADER_SIZE 14
-// #define INFORMATION_HEADER_SIZE 40
-
-class	Color
+void	Texture::cut(Texture &cpy)
 {
-	public:
-		float r, g, b;
-	
-		Color()
-		{
-			this->r = 0;
-			this->g = 0;
-			this->b = 0;
-		}
-		Color(float r, float g, float b)
-		{
-			this->r = r;
-			this->g = g;
-			this->b = b;
-		}
-};
+	this->ID = cpy.ID;
+	cpy.ID = 0;
+}
 
 typedef struct s_bmp_header
 {

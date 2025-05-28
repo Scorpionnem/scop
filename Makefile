@@ -18,6 +18,8 @@ OBJECTS = $(SOURCES:.cpp=.o)
 CPP_FILES :=	main \
 				glad/glad \
 				Window \
+				vec3 \
+				mat4 \
 				Terminal \
 				Camera \
 				Shader \
@@ -26,7 +28,9 @@ CPP_FILES :=	main \
 				Light \
 				Button \
 				Slider \
+				Interface \
 				Font
+
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
 
 SOURCES := $(addprefix $(SOURCE_DIR), $(CPP_FILES))

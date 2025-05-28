@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:48:51 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/25 16:37:52 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/05/28 11:48:09 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,7 @@ class	Texture
 			this->ID = ID;
 		}
 		//Takes ID from cpy (rendering it useless) its pretty much a moove assignor
-		void	cut(Texture &cpy)
-		{
-			this->ID = cpy.ID;
-			cpy.ID = 0;
-		}
+		void	cut(Texture &cpy);
 		std::vector<unsigned char>	LoadImage(const char *path);
 		~Texture();
 		void	use(void);
