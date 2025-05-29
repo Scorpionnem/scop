@@ -221,20 +221,20 @@ void	displayDebug(Font &font, Shader &textShader)
 
 }
 
-void	MyDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
-{
-	if (type == GL_DEBUG_TYPE_PERFORMANCE || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
-    	return;
-	std::cout << "---ERROR---" << std::endl;
-	std::cout << "source: " << source << std::endl;
-	std::cout << "type: " << type << std::endl;
-	std::cout << "id: " << id << std::endl;
-	std::cout << "severity: " << severity << std::endl;
-	std::cout << "length: " << length << std::endl;
-	std::cout << "message: " << message << std::endl;
-	std::cout << "-----------" << std::endl;
-	(void)userParam;
-}
+// void	MyDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+// {
+// 	if (type == GL_DEBUG_TYPE_PERFORMANCE || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+//     	return;
+// 	std::cout << "---ERROR---" << std::endl;
+// 	std::cout << "source: " << source << std::endl;
+// 	std::cout << "type: " << type << std::endl;
+// 	std::cout << "id: " << id << std::endl;
+// 	std::cout << "severity: " << severity << std::endl;
+// 	std::cout << "length: " << length << std::endl;
+// 	std::cout << "message: " << message << std::endl;
+// 	std::cout << "-----------" << std::endl;
+// 	(void)userParam;
+// }
 
 int	main(int ac, char **av)
 {
@@ -261,6 +261,8 @@ int	main(int ac, char **av)
 		Texture		green_texture(GREEN_BUTTON_PATH);
 		Texture		blue_texture(BLUE_BUTTON_PATH);
 		Texture		mbatty_texture(MBATTY_TX_PATH);
+		Texture		normal_test("textures/154_norm.bmp");
+
 
 		Mesh	mesh;
 		if (ac == 3)
@@ -269,8 +271,8 @@ int	main(int ac, char **av)
 			mesh.loadOBJ(av[1], MISSING_TEXTURE);
 		Light		light;
 
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(MyDebugCallback, nullptr);
+		// glEnable(GL_DEBUG_OUTPUT);
+		// glDebugMessageCallback(MyDebugCallback, nullptr);
 
 		Font	font;
 
@@ -309,6 +311,7 @@ int	main(int ac, char **av)
 
 		shader.use();
 		shader.setInt("tex0", 0);
+		shader.setInt("tex1", 1);
 		guiShader.use();
 		guiShader.setInt("tex0", 0);
 		text_shader.use();
@@ -344,6 +347,9 @@ int	main(int ac, char **av)
 			shader.setVec3("viewPos", pos);
 			shader.setFloat("time", glfwGetTime());
 			shader.setInt("shaderEffect", shaderEffect);
+
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, normal_test.ID);
 
 			mesh.pos = mesh_pos;
 			mesh.draw(shader);

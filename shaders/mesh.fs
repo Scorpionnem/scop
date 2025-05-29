@@ -9,7 +9,11 @@ out vec4 outColor;
 
 in vec2 texCoord;
 
+uniform mat4 model;
+
+
 uniform sampler2D tex0;
+uniform sampler2D tex1;
 
 uniform float texIntensity;
 uniform float colorIntensity;
@@ -25,6 +29,9 @@ uniform vec3 viewPos;
 
 void main()
 {
+	vec3 FragNormalMap = texture(tex1, texCoord).xyz;
+	FragNormalMap = FragNormalMap * FragNormal;
+
 	vec4 textureColor = texture(tex0, texCoord);
 	vec4 finalTexture = textureColor * texIntensity;
 	
@@ -37,7 +44,7 @@ void main()
 	vec3 ambient = ambientStrength * lightColor;
 	float specularStrength = 0.5;
 
-	vec3 norm = normalize(FragNormal);
+	vec3 norm = normalize(FragNormalMap);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * lightColor;

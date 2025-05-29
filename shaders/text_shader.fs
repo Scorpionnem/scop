@@ -15,7 +15,7 @@ uniform vec3 color;
 
 void main() {
     vec4 texColor = texture(tex0, fragPos);
-    if (texColor.rgb == 0)
+    if (texColor.r == 0, texColor.g == 0 && texColor.b == 0)
         discard ;
     if (rainbow)
     {
