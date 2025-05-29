@@ -38,7 +38,7 @@ SOURCES := $(addprefix $(SOURCE_DIR), $(CPP_FILES))
 OBJECTS := $(addprefix $(OBJ_DIR), $(CPP_FILES:.cpp=.o))
 DEPS := $(addprefix $(OBJ_DIR), $(CPP_FILES:.cpp=.d))
 
-CFLAGS = -MP -MMD
+CFLAGS = -MP -MMD -Wall -Wextra -Werror -g
 
 GLAD_PATH = libs/glad
 
