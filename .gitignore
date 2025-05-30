@@ -10,4 +10,6 @@ src/glad/
 includes/glad/
 glm/
 
+# Ignore useless things
+*.png
 .vscode/
