@@ -27,6 +27,7 @@ class	Light
 		Mesh		mesh;
 		void	update(Shader &shader);
 		void	draw(Shader &shader, Camera &camera);
+		bool	move = true;
 };
 
 #endif

@@ -29,10 +29,13 @@ float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
 float	RENDER_DISTANCE = 1000;
 
+vec3	backgroundColor(0, 0, 0);
+
 vec3	mesh_pos;
 float	mesh_roll;
 
 int		interpolate = 0;
+int		skybox_interpolate = 0;
 float	ambientStrength = 0.2;
 
 bool	F1 = false;
@@ -40,6 +43,7 @@ bool	F3 = false;
 bool	lock_fps = true;
 bool	rainbow = false;
 bool	camera_toggle = false;
+bool	light_move = true;
 
 unsigned int	TOTAL_VERTICES = 0;
 unsigned int	TOTAL_TRIANGLES = 0;
@@ -57,6 +61,11 @@ void	toggle_texture()
 	interpolate = !interpolate;
 }
 
+void	toggle_skybox()
+{
+	skybox_interpolate = !skybox_interpolate;
+}
+
 void	toggle_rainbow()
 {
 	rainbow = !rainbow;
@@ -67,6 +76,11 @@ bool	mesh_spin = true;
 void	toggle_mesh_spin()
 {
 	mesh_spin = !mesh_spin;
+}
+
+void	toggle_light_move()
+{
+	light_move = !light_move;
 }
 
 void	change_shader()
@@ -236,6 +250,107 @@ void	displayDebug(Font &font, Shader &textShader)
 // 	(void)userParam;
 // }
 
+class	Skybox
+{
+	public:
+		~Skybox()
+		{
+			glDeleteTextures(1, &ID);
+			glDeleteBuffers(1, &VBO);
+			glDeleteVertexArrays(1, &VAO);
+		}
+		Skybox(const std::vector<std::string> &faces)
+		{
+			float skyboxVertices[] = {
+    		    // positions          
+    		    -1.0f,  1.0f, -1.0f,
+    		    -1.0f, -1.0f, -1.0f,
+    		     1.0f, -1.0f, -1.0f,
+    		     1.0f, -1.0f, -1.0f,
+    		     1.0f,  1.0f, -1.0f,
+    		    -1.0f,  1.0f, -1.0f,
+
+    		    -1.0f, -1.0f,  1.0f,
+    		    -1.0f, -1.0f, -1.0f,
+    		    -1.0f,  1.0f, -1.0f,
+    		    -1.0f,  1.0f, -1.0f,
+    		    -1.0f,  1.0f,  1.0f,
+    		    -1.0f, -1.0f,  1.0f,
+
+    		     1.0f, -1.0f, -1.0f,
+    		     1.0f, -1.0f,  1.0f,
+    		     1.0f,  1.0f,  1.0f,
+    		     1.0f,  1.0f,  1.0f,
+    		     1.0f,  1.0f, -1.0f,
+    		     1.0f, -1.0f, -1.0f,
+
+    		    -1.0f, -1.0f,  1.0f,
+    		    -1.0f,  1.0f,  1.0f,
+    		     1.0f,  1.0f,  1.0f,
+    		     1.0f,  1.0f,  1.0f,
+    		     1.0f, -1.0f,  1.0f,
+    		    -1.0f, -1.0f,  1.0f,
+
+    		    -1.0f,  1.0f, -1.0f,
+    		     1.0f,  1.0f, -1.0f,
+    		     1.0f,  1.0f,  1.0f,
+    		     1.0f,  1.0f,  1.0f,
+    		    -1.0f,  1.0f,  1.0f,
+    		    -1.0f,  1.0f, -1.0f,
+
+    		    -1.0f, -1.0f, -1.0f,
+    		    -1.0f, -1.0f,  1.0f,
+    		     1.0f, -1.0f, -1.0f,
+    		     1.0f, -1.0f, -1.0f,
+    		    -1.0f, -1.0f,  1.0f,
+    		     1.0f, -1.0f,  1.0f
+    		};
+
+    		glGenTextures(1, &ID);
+    		glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
+
+    		for (unsigned int i = 0; i < faces.size(); i++)
+    		{
+				Texture	tmp(faces[i].c_str());
+
+        		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, tmp.width, tmp.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp.data.data());
+    		}
+    		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		    glGenVertexArrays(1, &VAO);
+		    glGenBuffers(1, &VBO);
+		    glBindVertexArray(VAO);
+		    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+		    glEnableVertexAttribArray(0);
+		    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		}
+		void	draw(Camera &camera, Shader &shader)
+		{
+			glDisable(GL_DEPTH_TEST);
+        	shader.use();
+			camera.setViewMatrix(shader);
+        	mat4 view = camera.getViewMatrix();
+			view.data[12] = 0.0f;
+			view.data[13] = 0.0f;
+			view.data[14] = 0.0f;
+        	shader.setMat4("view", view);
+        	glBindVertexArray(VAO);
+        	glActiveTexture(GL_TEXTURE0);
+        	glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
+        	glDrawArrays(GL_TRIANGLES, 0, 36);
+        	glBindVertexArray(0);
+        	glEnable(GL_DEPTH_TEST);
+		}
+		unsigned int	ID;
+		unsigned int	VAO;
+		unsigned int	VBO;
+};
+
 int	main(int ac, char **av)
 {
 	if (ac != 3 && ac != 2)
@@ -261,7 +376,7 @@ int	main(int ac, char **av)
 		Texture		green_texture(GREEN_BUTTON_PATH);
 		Texture		blue_texture(BLUE_BUTTON_PATH);
 		Texture		mbatty_texture(MBATTY_TX_PATH);
-		Texture		normal_test("textures/154_norm.bmp");
+		Texture		normal_test("textures/165_norm.bmp");
 
 
 		Mesh	mesh;
@@ -281,6 +396,7 @@ int	main(int ac, char **av)
 		mainInterface.buttons.push_back(Button("camera", 100, 50, vec2(50, 0), goto_camera_interface, button_texture, button_pressed_texture));
 		mainInterface.buttons.push_back(Button("model", 100, 50, vec2(150, 0), goto_model_interface, button_texture, button_pressed_texture));
 		mainInterface.buttons.push_back(Button("light", 100, 50, vec2(250, 0), goto_light_interface, button_texture, button_pressed_texture));
+		mainInterface.buttons.push_back(Button("skybox", 100, 50, vec2(350, 0), toggle_skybox, button_texture, button_pressed_texture));
 
 		Interface	cameraInterface;
 		cameraInterface.buttons.push_back(Button("", 50, 50, vec2(0, 0), goto_main_interface, icon_texture, button_pressed_texture));
@@ -302,12 +418,28 @@ int	main(int ac, char **av)
 		lightInterface.sliders.push_back(Slider("green", 150, 16.6, vec2(50, 16.6), green_texture, button_pressed_texture, sliderbg_texture));
 		lightInterface.sliders.push_back(Slider("blue", 150, 16.6, vec2(50, 33.3), blue_texture, button_pressed_texture, sliderbg_texture));
 		lightInterface.sliders.push_back(Slider("ambient", 150, 50, vec2(200, 0), button_texture, button_pressed_texture, sliderbg_texture));
+		lightInterface.buttons.push_back(Button("move", 50, 50, vec2(350, 0), toggle_light_move, button_texture, button_pressed_texture));
 		lightInterface.sliders[0].setSlider(1.0f);
 		lightInterface.sliders[1].setSlider(1.0f);
 		lightInterface.sliders[2].setSlider(1.0f);
 		lightInterface.sliders[3].setSlider(0.2f);
 
 		pos = vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
+
+		std::vector<std::string> faces
+    	{
+    	    "textures/skybox/right.bmp",
+    	    "textures/skybox/left.bmp",
+    	    "textures/skybox/top.bmp",
+    	    "textures/skybox/bottom.bmp",
+    	    "textures/skybox/front.bmp",
+    	    "textures/skybox/back.bmp"
+    	};
+
+		Skybox	skybox(faces);
+		Shader	skybox_shader("shaders/skybox.vs", "shaders/skybox.fs");
+		skybox_shader.use();
+		skybox_shader.setInt("skybox", 0);
 
 		shader.use();
 		shader.setInt("tex0", 0);
@@ -319,6 +451,9 @@ int	main(int ac, char **av)
 
 		float	texIntensity = 0.0;
 		float	colorIntensity = 1.0;
+
+		float	skyboxIntensity = 0.0;
+		float	backgroundIntensity = 1.0;
 
 		while (window.up())
 		{
@@ -333,6 +468,15 @@ int	main(int ac, char **av)
 			else
 				interpolateTo(colorIntensity, texIntensity, window.getDeltaTime());	
 
+			if (skybox_interpolate)
+				interpolateTo(skyboxIntensity, backgroundIntensity, window.getDeltaTime());	
+			else
+				interpolateTo(backgroundIntensity, skyboxIntensity, window.getDeltaTime());	
+
+			skybox_shader.use();
+			skybox_shader.setFloat("skyboxIntensity", skyboxIntensity);
+			skybox_shader.setFloat("backgroundIntensity", backgroundIntensity);
+			skybox_shader.setVec3("background", backgroundColor);
 			text_shader.use();
 			text_shader.setFloat("time", glfwGetTime());
 			text_shader.setFloat("SCREEN_WIDTH", SCREEN_WIDTH);
@@ -350,6 +494,8 @@ int	main(int ac, char **av)
 
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, normal_test.ID);
+
+			skybox.draw(camera, skybox_shader);
 
 			mesh.pos = mesh_pos;
 			mesh.draw(shader);
@@ -374,6 +520,7 @@ int	main(int ac, char **av)
 			mesh.rotateX = 360 * modelInterface.sliders[0].value;
 			mesh.rotateY = 360 * modelInterface.sliders[1].value;
 			mesh.rotateZ = 360 * modelInterface.sliders[2].value;
+			light.move = light_move;
 			FOV = MAX_FOV * cameraInterface.sliders[0].value;
 			if (FOV <= 0)
 				cameraInterface.sliders[0].setSlider(0.01f);

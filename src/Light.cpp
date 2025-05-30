@@ -20,11 +20,14 @@ Light::Light() : mesh("src/assets/models/sphere.obj", "src/assets/textures/icon.
 
 void	Light::update(Shader &shader)
 {
-	pos = vec3(
-		15.0f * cos(glfwGetTime()),
-		15.0f * sin(glfwGetTime()),
-		15.0f * sin(glfwGetTime())
-	);
+	if (move)
+	{
+		pos = vec3(
+			15.0f * cos(glfwGetTime()),
+			15.0f * sin(glfwGetTime()),
+			15.0f * sin(glfwGetTime())
+		);
+	}
 	
 	mesh.pos = pos;
 	shader.use();
