@@ -21,6 +21,7 @@ extern GLuint sliderVBO;
 class Slider
 {
     public:
+        ~Slider();
         Slider(std::string str, float width, float height, vec2 pos, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture);
         void    drawBackground(Shader &shader);
         void    drawSlider(Shader &shader);

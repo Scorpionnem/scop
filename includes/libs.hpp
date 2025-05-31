@@ -13,7 +13,7 @@
 #ifndef LIBS_HPP
 # define LIBS_HPP
 
-# define DEBUG 0
+# define DEBUG 1
 
 # include <iostream>
 # include <string>

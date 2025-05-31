@@ -26,19 +26,22 @@ bool isInside(vec2 buttonPos, vec2 mousePos, float width, float height);
 class   Button
 {
     public:
+        ~Button();
         Button(std::string str, float width, float height, vec2 pos, std::function<void()> function, Texture &texture, Texture &pressedTexture);
-        void draw(Shader& shader, Font &font, Shader &textShader);
-        void initButtonModel();
+        void    draw(Shader& shader, Font &font, Shader &textShader);
         void    checkClick(vec2 mousePos, bool mousePressed);
         
-        float       width;
-        float       height;
-        vec2   pos;
+        void    initButtonModel();
+        
+        float                   width;
+        float                   height;
+        float                   wasPressedInside = false;
         std::function<void()>   onClick;
+
+        vec2   pos;
+        std::string str;
         Texture &texture;
         Texture &pressedTexture;
-        float   wasPressedInside = false;
-        std::string str;
     private:
 };
 

@@ -86,11 +86,10 @@ void	check_header(bmp_header *header)
 		throw std::runtime_error(std::string("Invalid texture format"));
 }
 
-std::vector<unsigned char>	Texture::LoadImage(const char *path)
+void	Texture::LoadImage(const char *path)
 {
 	std::ifstream	file;
 	bmp_header informationHeader;
-	std::vector<unsigned char>	pixels;
 
 	file.open(path);
 	if (!file.is_open())
@@ -102,7 +101,7 @@ std::vector<unsigned char>	Texture::LoadImage(const char *path)
 	width = informationHeader.dib_width;
 	height = informationHeader.dib_height;
 	
-	pixels.resize((width * height) * 4);
+	data.resize((width * height) * 4);
 	
 	for (int y = 0; y < height * 4; y += 4)
 	{
@@ -111,21 +110,20 @@ std::vector<unsigned char>	Texture::LoadImage(const char *path)
 			char	color[3];
 			file.read(color, 3);
 
-			pixels[(y * width + x)] = color[2];
-			pixels[(y * width + x) + 1] = color[1];
-			pixels[(y * width + x) + 2] = color[0];
-			pixels[(y * width + x) + 3] = 255;
+			data[(y * width + x)] = color[2];
+			data[(y * width + x) + 1] = color[1];
+			data[(y * width + x) + 2] = color[0];
+			data[(y * width + x) + 3] = 255;
 		}
 	}
 	file.close();
-	return (pixels);
 }
 
 Texture::Texture(const char *path)
 {
 	if (DEBUG)
 		std::cout << "Loading texture: " << path << std::endl;	
-	data = LoadImage(path);
+	this->LoadImage(path);
 	glGenTextures(1, &this->ID);
 	glBindTexture(GL_TEXTURE_2D, this->ID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

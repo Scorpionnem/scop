@@ -14,6 +14,19 @@
 
 GLuint sliderVAO = 0, sliderVBO = 0;
 
+Slider::~Slider()
+{
+    if (sliderVAO != 0)
+    {
+        if (DEBUG)
+            std::cout << "Destroying slider quad" << std::endl;
+        glDeleteBuffers(1, &sliderVBO);
+        glDeleteVertexArrays(1, &sliderVAO);
+        sliderVBO = 0;
+        sliderVAO = 0;
+    }
+}
+
 Slider::Slider(std::string str, float width, float height, vec2 pos, Texture &sliderTexture, Texture &sliderPressedTexture, Texture &backgroundTexture)
 : backgroundTexture(backgroundTexture), sliderTexture(sliderTexture), sliderPressedTexture(sliderPressedTexture)
 {
@@ -34,6 +47,9 @@ void Slider::initSliderModel()
 {
     if (sliderVAO != 0) return;
     
+    if (DEBUG)
+        std::cout << "Loading slider quad" << std::endl;
+
     float vertices[] = {
         0.0f, 0.0f,
         1.0f, 1.0f,

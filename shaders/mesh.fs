@@ -23,6 +23,8 @@ uniform vec3 lightPos;
 uniform float ambientStrength;
 
 uniform int shaderEffect;
+uniform bool applyNormal;
+
 uniform float time;
 
 uniform vec3 viewPos;
@@ -30,7 +32,9 @@ uniform vec3 viewPos;
 void main()
 {
 	vec3 FragNormalMap = texture(tex1, texCoord).xyz;
-	FragNormalMap = FragNormalMap * FragNormal;
+	vec3 FragFinalNormal = FragNormal;
+	if (applyNormal)
+		FragFinalNormal *= FragNormalMap;
 
 	vec4 textureColor = texture(tex0, texCoord);
 	vec4 finalTexture = textureColor * texIntensity;
@@ -44,7 +48,7 @@ void main()
 	vec3 ambient = ambientStrength * lightColor;
 	float specularStrength = 0.5;
 
-	vec3 norm = normalize(FragNormalMap);
+	vec3 norm = normalize(FragFinalNormal);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * lightColor;
@@ -56,7 +60,7 @@ void main()
 	vec3 specular = specularStrength * spec * lightColor;
 
 	vec3 result = (ambient + diffuse + specular);
-	result = clamp(result, 0.0, 1.0);
+	// result = clamp(result, 0.0, 1.0);
 
 	if (shaderEffect == 0) // No effect
 	{

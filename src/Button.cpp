@@ -19,6 +19,19 @@ bool isInside(vec2 buttonPos, vec2 mousePos, float width, float height)
     return mousePos.x >= buttonPos.x && mousePos.x <= buttonPos.x + width && mousePos.y >= buttonPos.y && mousePos.y <= buttonPos.y + height;
 }
 
+Button::~Button()
+{
+    if (buttonVAO != 0)
+    {
+        if (DEBUG)
+            std::cout << "Destroying button quad" << std::endl;
+        glDeleteBuffers(1, &buttonVBO);
+        glDeleteVertexArrays(1, &buttonVAO);
+        buttonVBO = 0;
+        buttonVAO = 0;
+    }
+}
+
 Button::Button(std::string str, float width, float height, vec2 pos, std::function<void()> function, Texture &texture, Texture &pressedTexture)
 : texture(texture), pressedTexture(pressedTexture)
 {
@@ -69,6 +82,9 @@ void Button::initButtonModel()
 {
     if (buttonVAO != 0) return;
     
+    if (DEBUG)
+        std::cout << "Loading button quad" << std::endl;
+
     float vertices[] = {
         0.0f, 0.0f,
         1.0f, 1.0f,

@@ -33,7 +33,7 @@ class	Texture
 		}
 		//Takes ID from cpy (rendering it useless) its pretty much a moove assignor
 		void	cut(Texture &cpy);
-		std::vector<unsigned char>	LoadImage(const char *path);
+		void	LoadImage(const char *path);
 		~Texture();
 		void	use(void);
 		static void	reset(void);
