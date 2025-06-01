@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 17:36:32 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:10:29 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ Mesh::~Mesh()
 	}
 }
 
-void Mesh::addTriangle(const vec3& p1, vec2& uv1,
-                       const vec3& p2, vec2& uv2,
-                       const vec3& p3, vec2& uv3,
-                       const vec3& color, const std::string& mtl)
+void Mesh::addTriangle(const vec3 &p1, vec2 &uv1,
+                       const vec3 &p2, vec2 &uv2,
+                       const vec3 &p3, vec2 &uv3,
+                       const vec3 &color, const std::string &mtl)
 {
 	vec3 normal = (p2 - p1).cross(p3 - p1).normalize();
 	unsigned int startIndex = materialGroups[mtl].vertices.size();
@@ -282,9 +282,9 @@ void	Mesh::parseFace(std::istringstream &iss, int &lineNumber, float &colorOffse
 	{
 		if (countInfos)
 			TOTAL_TRIANGLES++;
-		const FaceVertex& fv1 = faceVertices[0];
-		const FaceVertex& fv2 = faceVertices[i];
-		const FaceVertex& fv3 = faceVertices[i + 1];
+		const FaceVertex &fv1 = faceVertices[0];
+		const FaceVertex &fv2 = faceVertices[i];
+		const FaceVertex &fv3 = faceVertices[i + 1];
 		
 		vec3 v1 = positions[fv1.posIndex];
 		vec3 v2 = positions[fv2.posIndex];

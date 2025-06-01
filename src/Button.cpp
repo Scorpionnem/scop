@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:21:13 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/24 13:31:05 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:09:45 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ Button::Button(std::string str, float width, float height, vec2 pos, std::functi
     this->str = str;
 }
 
-void Button::draw(Shader& shader, Font &font, Shader &textShader)
+void Button::draw(Shader &shader, Font &font, Shader &textShader)
 {
     initButtonModel();
     shader.use();

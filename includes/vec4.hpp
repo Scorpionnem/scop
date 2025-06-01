@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 11:52:39 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 11:57:08 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:09:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ class vec4
         vec4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w)
 	    {}
     
-        vec4 operator+(const vec4& v) const
+        vec4 operator+(const vec4 &v) const
 	    {
 	    	return vec4(x + v.x, y + v.y, z + v.z, w + v.w);
 	    }
-        vec4 operator-(const vec4& v) const
+        vec4 operator-(const vec4 &v) const
 	    {
 	    	return vec4(x - v.x, y - v.y, z - v.z, w - v.w);
 	    }
@@ -45,7 +45,7 @@ class vec4
 	    	return vec4(x / s, y / s, z / s, w / s);
 	    }
     
-        float dot(const vec4& v) const
+        float dot(const vec4 &v) const
 	    {
 	    	return (x * v.x + y * v.y + z * v.z + w * v.w);
 	    }

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 12:47:38 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 12:55:09 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:10:03 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ mat4 ortho(float left, float right, float bottom, float top)
     return (m);
 }
 
-vec4 getCol(const mat4& m, int col)
+vec4 getCol(const mat4 &m, int col)
 {
     return vec4(m(col, 0), m(col, 1), m(col, 2), m(col, 3));
 }
 
-void setCol(mat4& m, int col, const vec4& v)
+void setCol(mat4 &m, int col, const vec4 &v)
 {
     m(col, 0) = v.x;
     m(col, 1) = v.y;
@@ -57,7 +57,7 @@ mat4 perspective(float fovDeg, float aspect, float near, float far)
     return (m);
 }
 
-mat4 lookAt(const vec3& eye, const vec3& center, const vec3& up)
+mat4 lookAt(const vec3 &eye, const vec3 &center, const vec3 &up)
 {
     vec3 f = (center - eye).normalize();
     vec3 s = f.cross(up).normalize();
@@ -73,7 +73,7 @@ mat4 lookAt(const vec3& eye, const vec3& center, const vec3& up)
     return (m);
 }
 
-mat4 translate(const vec3& t)
+mat4 translate(const vec3 &t)
 {
     mat4 m = mat4::identity();
     m(0, 3) = t.x;
@@ -82,7 +82,7 @@ mat4 translate(const vec3& t)
     return (m);
 }
 
-mat4 translate(const mat4& m, const vec3& v)
+mat4 translate(const mat4 &m, const vec3 &v)
 {
     mat4 result = m;
 
@@ -98,7 +98,7 @@ mat4 translate(const mat4& m, const vec3& v)
     return (result);
 }
 
-mat4 scale(const vec3& s)
+mat4 scale(const vec3 &s)
 {
     mat4 m = mat4::identity();
     m(0, 0) = s.x;
@@ -107,18 +107,18 @@ mat4 scale(const vec3& s)
     return (m);
 }
 
-mat4 scale(mat4 &mat, const vec3& s)
+mat4 scale(mat4 &mat, const vec3 &s)
 {
     (void)mat;
     return (mat * scale(s));
 }
 
-mat4 rotate(mat4 &mat, float angleRad, const vec3& axis)
+mat4 rotate(mat4 &mat, float angleRad, const vec3 &axis)
 {
     return (mat * rotate(angleRad, axis));
 }
 
-mat4 rotate(float angleRad, const vec3& axis)
+mat4 rotate(float angleRad, const vec3 &axis)
 {
     vec3 a = axis.normalize();
     float c = std::cos(angleRad);

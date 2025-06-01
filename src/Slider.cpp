@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 13:04:21 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 11:47:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 17:19:04 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,11 @@ void Slider::initSliderModel()
 
 void    Slider::checkClick(vec2 mousePos, bool mousePressed)
 {
+    this->sliderPos.y = pos.y;
+    this->setSlider(this->value);
+    this->minCenter = pos.x + sliderWidth * 0.5f;
+    this->maxCenter = pos.x + width - sliderWidth * 0.5f;
+    
     bool inside = isInside(this->pos, mousePos, this->width, this->height);
     
     isSliderClicked = false;

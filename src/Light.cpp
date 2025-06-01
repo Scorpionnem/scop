@@ -6,13 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:41:09 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/26 13:33:58 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:20:55 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Light.hpp"
 
-Light::Light() : mesh("src/assets/models/sphere.obj", "src/assets/textures/icon.bmp")
+Light::Light() : mesh("src/assets/models/sphere.obj", MISSING_TEXTURE)
 {
     pos = vec3(0.0f);
     color = vec3(1.0f);

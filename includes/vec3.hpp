@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 11:50:41 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 12:00:41 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:09:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ class	vec3
 		vec3	normalize(void) const;
 };
 
-vec3 minvec3(const vec3& a, const vec3& b);
+vec3 minvec3(const vec3 &a, const vec3 &b);
 
-vec3 maxvec3(const vec3& a, const vec3& b);
+vec3 maxvec3(const vec3 &a, const vec3 &b);
 
 #endif

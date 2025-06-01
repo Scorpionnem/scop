@@ -31,37 +31,43 @@ uniform vec3 viewPos;
 
 void main()
 {
+	//Gets normals values from normal map
 	vec3 FragNormalMap = texture(tex1, texCoord).xyz;
 	vec3 FragFinalNormal = FragNormal;
 	if (applyNormal)
 		FragFinalNormal *= FragNormalMap;
 
+	//Gets texture's colors
 	vec4 textureColor = texture(tex0, texCoord);
 	vec4 finalTexture = textureColor * texIntensity;
 	
+	//Gets untextured colors
 	vec3 tempColor = FragColor + FragAbsNormal;
 	vec4 finalColor = vec4(tempColor, 1.0) * colorIntensity;
 
+	//Discards magenta pixels to have transparency
 	if (textureColor.r == 1 && textureColor.g == 0 && textureColor.b == 1 && texIntensity != 0)
         discard ;
 
+	//Calculates all the phong lighting
 	vec3 ambient = ambientStrength * lightColor;
 	float specularStrength = 0.5;
 
+	//Diffuse light
 	vec3 norm = normalize(FragFinalNormal);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * lightColor;
 
+	//Specular light
 	vec3 viewDir = normalize(viewPos - FragPos);
 	vec3 reflectDir = reflect(-lightDir, norm);
-
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64);
 	vec3 specular = specularStrength * spec * lightColor;
 
 	vec3 result = (ambient + diffuse + specular);
-	// result = clamp(result, 0.0, 1.0);
 
+	//The different shader effects (Yes I did put a bunch of if/else in a shader)
 	if (shaderEffect == 0) // No effect
 	{
 		outColor = vec4(result, 1.0) * (finalTexture + finalColor);

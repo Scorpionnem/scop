@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/22 17:03:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 17:09:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	terminal_background_command(std::istringstream &iss)
 		{
 			float r, g, b;
 			if (iss >> r && iss >> g && iss >> b)
-				glClearColor(r, g, b, 1.0f);
+				backgroundColor = vec3(r, g, b);
 			else
 				setTerminalReturn("Error");
 		}
@@ -209,6 +209,8 @@ void	terminal_special_keys(GLFWwindow *window, int key, int scancode, int action
 void	terminal_keyboard_input(GLFWwindow *window, unsigned int key)
 {
 	(void)window;
+	if (paused)
+		return ;
 	if (isTerminalOn && !terminalIgnoreNext)
 	{
 		if (key >= 32 && key <= 126)

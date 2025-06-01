@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 16:31:17 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 17:39:11 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "Window.hpp"
 #include "Interface.hpp"
 #include "Skybox.hpp"
+#include "InterfaceFunctions.hpp"
 
 float	FOV = 70;
 #define MAX_FOV 100
@@ -30,7 +31,7 @@ float	SCREEN_WIDTH = 800;
 float	SCREEN_HEIGHT = 800;
 float	RENDER_DISTANCE = 1000;
 
-vec3	backgroundColor(0, 0, 0);
+vec3	backgroundColor(0.05, 0.05, 0.05);
 
 vec3	mesh_pos;
 float	mesh_roll;
@@ -46,87 +47,16 @@ bool	rainbow = false;
 bool	camera_toggle = false;
 bool	light_move = true;
 bool	apply_normal = false;
+bool	mesh_spin = true;
 
 unsigned int	TOTAL_VERTICES = 0;
 unsigned int	TOTAL_TRIANGLES = 0;
 
+bool	paused = false;
+double	pause_time = 0;
+
 int	shaderEffect = 0;
-#define MAX_SHADER_EFFECT 3
-
-void	toggle_camera()
-{
-	camera_toggle = !camera_toggle;
-}
-
-void	toggle_texture()
-{
-	interpolate = !interpolate;
-}
-
-void	toggle_skybox()
-{
-	skybox_interpolate = !skybox_interpolate;
-}
-
-void	toggle_rainbow()
-{
-	rainbow = !rainbow;
-}
-
-bool	mesh_spin = true;
-
-void	toggle_mesh_spin()
-{
-	mesh_spin = !mesh_spin;
-}
-
-void	toggle_apply_normal()
-{
-	apply_normal = !apply_normal;
-}
-
-void	toggle_light_move()
-{
-	light_move = !light_move;
-}
-
-void	change_shader()
-{
-	shaderEffect++;
-	if (shaderEffect > MAX_SHADER_EFFECT)
-		shaderEffect = 0;
-}
-
-void	toggle_fpscap()
-{
-	lock_fps = !lock_fps;
-	if (lock_fps)
-		glfwSwapInterval(1);
-	else
-		glfwSwapInterval(0);
-}
-
 int	interface = 0;
-
-void	goto_camera_interface()
-{
-	interface = 1;
-}
-
-void	goto_main_interface()
-{
-	interface = 0;
-}
-
-void	goto_model_interface()
-{
-	interface = 2;
-}
-
-void	goto_light_interface()
-{
-	interface = 3;
-}
 
 void	interpolateTo(float &float1, float &float2, float deltaTime)
 {
@@ -146,9 +76,6 @@ std::string	toString(int nbr)
 
 void	frame_key_hook(Window &window)
 {
-	if (glfwGetKey(window.getWindowData(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window.getWindowData(), true);
-	
 	if (isTerminalOn)
 		return ;
 	
@@ -157,6 +84,9 @@ void	frame_key_hook(Window &window)
 
 	float cameraSpeed = 15.0f * window.getDeltaTime();
 	float	speedBoost = 1.0f;
+
+	if (paused)
+		return ;
 
 	if (glfwGetKey(window.getWindowData(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 		speedBoost = 20.0f;
@@ -208,10 +138,35 @@ void	frame_key_hook(Window &window)
 		pitch = -89.0f;
 }
 
+void	pause_render()
+{
+	if (!paused)
+	{
+		F1 = false;
+		pause_time = glfwGetTime();
+		paused = true;
+		goto_pause_interface();
+	}
+	else
+	{
+		paused = false;
+		goto_main_interface();
+	}
+}
+
 void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
 	(void)window;(void)key;(void)scancode;(void)action;(void)mods;
 
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
+		if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, true);
+		pause_render();
+	}
+	if (paused)
+		return ;
+		
 	terminal_special_keys(window, key, scancode, action, mods);
 	if (isTerminalOn)
 		return ;
@@ -242,20 +197,42 @@ void	displayDebug(Font &font, Shader &textShader)
 
 }
 
-// void	MyDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
-// {
-// 	if (type == GL_DEBUG_TYPE_PERFORMANCE || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
-//     	return;
-// 	std::cout << "---ERROR---" << std::endl;
-// 	std::cout << "source: " << source << std::endl;
-// 	std::cout << "type: " << type << std::endl;
-// 	std::cout << "id: " << id << std::endl;
-// 	std::cout << "severity: " << severity << std::endl;
-// 	std::cout << "length: " << length << std::endl;
-// 	std::cout << "message: " << message << std::endl;
-// 	std::cout << "-----------" << std::endl;
-// 	(void)userParam;
-// }
+void	MyDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+{
+	(void)userParam;
+	
+	if (!DEBUG)
+		return ;
+	if (type == GL_DEBUG_TYPE_PERFORMANCE || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+		std::cout << "---WARNING---" << std::endl;
+	else
+		std::cout << "---ERROR---" << std::endl;
+	std::cout << "source: " << source << std::endl;
+	std::cout << "type: " << type << std::endl;
+	std::cout << "id: " << id << std::endl;
+	std::cout << "severity: " << severity << std::endl;
+	std::cout << "length: " << length << std::endl;
+	std::cout << "message: " << message << std::endl;
+	std::cout << "-----------" << std::endl;
+}
+
+Window	*g_window;
+
+void	close_window()
+{
+	glfwSetWindowShouldClose(g_window->getWindowData(), true);
+}
+
+void	resume_render()
+{
+	paused = false;
+	interface = 0;
+	glfwSetTime(pause_time);
+}
+
+void	do_nothing()
+{
+}
 
 int	main(int ac, char **av)
 {
@@ -266,6 +243,7 @@ int	main(int ac, char **av)
 	}
 	try {
 		Window		window;
+		g_window = &window;
 		
 		Camera		camera;
 		
@@ -273,7 +251,7 @@ int	main(int ac, char **av)
 		Shader		fb_shader(MESH_VERT_SHADER, MESH_FULLBRIGHT_SHADER);
 		Shader		guiShader(GUI_VERT_SHADER, GUI_FRAG_SHADER);
 		Shader		text_shader(TEXT_VERT_SHADER, TEXT_FRAG_SHADER);
-		Shader	skybox_shader("shaders/skybox.vs", "shaders/skybox.fs");
+		Shader		skybox_shader(SKYBOX_VERT_SHADER, SKYBOX_FRAG_SHADER);
 
 		Texture		icon_texture(ICON_PATH);
 		Texture		button_texture(BUTTON_PATH);
@@ -283,8 +261,7 @@ int	main(int ac, char **av)
 		Texture		green_texture(GREEN_BUTTON_PATH);
 		Texture		blue_texture(BLUE_BUTTON_PATH);
 		Texture		mbatty_texture(MBATTY_TX_PATH);
-		Texture		normal_test("textures/154_norm.bmp");
-
+		Texture		normal_test(NORMAL_TX_PATH);
 
 		Mesh	mesh;
 		if (ac == 3)
@@ -293,8 +270,8 @@ int	main(int ac, char **av)
 			mesh.loadOBJ(av[1], MISSING_TEXTURE);
 		Light		light;
 
-		// glEnable(GL_DEBUG_OUTPUT);
-		// glDebugMessageCallback(MyDebugCallback, nullptr);
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(MyDebugCallback, NULL);
 
 		Font	font;
 
@@ -332,6 +309,18 @@ int	main(int ac, char **av)
 		lightInterface.sliders[2].setSlider(1.0f);
 		lightInterface.sliders[3].setSlider(0.2f);
 
+		Interface	pauseInterface;
+		pauseInterface.buttons.push_back(Button("", 200, 200, vec2((SCREEN_WIDTH / 2) - 100, 50), do_nothing, icon_texture, icon_texture));
+		pauseInterface.buttons.push_back(Button("resume", 250, 75, vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2) - 80), resume_render, button_texture, button_pressed_texture));
+		pauseInterface.buttons.push_back(Button("settings", 250, 75, vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2)), goto_settings_interface, button_texture, button_pressed_texture));
+		pauseInterface.buttons.push_back(Button("quit", 250, 75, vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2) + 80), close_window, button_texture, button_pressed_texture));
+
+		Interface	settingsInterface;
+		settingsInterface.buttons.push_back(Button("", 200, 200, vec2((SCREEN_WIDTH / 2) - 100, 50), do_nothing, icon_texture, icon_texture));
+		settingsInterface.sliders.push_back(Slider("render distance", 250, 75, vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2) - 80), button_texture, button_pressed_texture, sliderbg_texture));
+		settingsInterface.buttons.push_back(Button("done", 250, 75, vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2)), goto_pause_interface, button_texture, button_pressed_texture));
+		settingsInterface.sliders[0].setSlider(0.5f);
+
 		pos = vec3(mesh.center.x, mesh.center.y, mesh.center.z + 5.0f);
 
 		Skybox	skybox({
@@ -363,6 +352,9 @@ int	main(int ac, char **av)
 		{
 			window.loopStart();
 	
+			if (paused)
+				glfwSetTime(pause_time);
+
 			camera.update();
 			camera.setViewMatrix(shader);
 			light.update(shader);
@@ -407,6 +399,7 @@ int	main(int ac, char **av)
 
 			if (!F1)
 			{
+				//Positive interfaces are in render interfaces and negative ones are in the pause menu
 				if (interface == 0)
 					mainInterface.update(window.getWindowData(), guiShader, font, text_shader);
 				if (interface == 1)
@@ -415,6 +408,23 @@ int	main(int ac, char **av)
 					modelInterface.update(window.getWindowData(), guiShader, font, text_shader);
 				if (interface == 3)
 					lightInterface.update(window.getWindowData(), guiShader, font, text_shader);
+				
+				if (interface == -1)
+					pauseInterface.update(window.getWindowData(), guiShader, font, text_shader);
+				if (interface == -2)
+					settingsInterface.update(window.getWindowData(), guiShader, font, text_shader);
+			}
+
+			//center settings and pause menu (im too lazy to make it automatic)
+			if (paused)
+			{
+				pauseInterface.buttons[0].pos = vec2((SCREEN_WIDTH / 2) - 100, 50);
+				pauseInterface.buttons[1].pos = vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2) - 80);
+				pauseInterface.buttons[2].pos = vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2));
+				pauseInterface.buttons[3].pos = vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2) + 80);
+				settingsInterface.buttons[0].pos = vec2((SCREEN_WIDTH / 2) - 100, 50);
+				settingsInterface.buttons[1].pos = vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2));
+				settingsInterface.sliders[0].pos = vec2((SCREEN_WIDTH / 2) - 125, (SCREEN_HEIGHT / 2) - 80);
 			}
 
 			light.color.x = lightInterface.sliders[0].value;
@@ -424,13 +434,12 @@ int	main(int ac, char **av)
 			mesh.rotateX = 360 * modelInterface.sliders[0].value;
 			mesh.rotateY = 360 * modelInterface.sliders[1].value;
 			mesh.rotateZ = 360 * modelInterface.sliders[2].value;
+			RENDER_DISTANCE = (2000 * settingsInterface.sliders[0].value) + 10;
+			FOV = (MAX_FOV * cameraInterface.sliders[0].value) + 1;
+			
 			light.move = light_move;
 			shader.use();
 			shader.setBool("applyNormal", apply_normal);
-			FOV = MAX_FOV * cameraInterface.sliders[0].value;
-			if (FOV <= 0)
-				cameraInterface.sliders[0].setSlider(0.01f);
-
 			if (!F1)
 			{
 				if (isTerminalOn)
@@ -451,7 +460,7 @@ int	main(int ac, char **av)
 			frame_key_hook(window);
 			window.loopEnd(font, text_shader);
 		}
-	} catch (const std::exception& e) {
+	} catch (const std::exception &e) {
 		std::cerr << "An error occurred: " << e.what() << std::endl;
 		return (1);
 	}

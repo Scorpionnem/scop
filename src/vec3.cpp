@@ -6,13 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 11:54:24 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 12:00:49 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:10:53 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libs.hpp"
 
-vec3 minvec3(const vec3& a, const vec3& b)
+vec3 minvec3(const vec3 &a, const vec3 &b)
 {
     return vec3(
         (a.x < b.x) ? a.x : b.x,
@@ -21,7 +21,7 @@ vec3 minvec3(const vec3& a, const vec3& b)
     );
 }
 
-vec3 maxvec3(const vec3& a, const vec3& b)
+vec3 maxvec3(const vec3 &a, const vec3 &b)
 {
     return vec3(
         (a.x > b.x) ? a.x : b.x,

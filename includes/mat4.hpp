@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 12:28:21 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 12:55:19 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:09:02 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,17 @@ class mat4
     	    m.data[0] = m.data[5] = m.data[10] = m.data[15] = 1.0f;
     	    return (m);
     	}
-    	float& operator()(int col, int row)
+    	float &operator()(int col, int row)
 		{
 			return (data[col * 4 + row]);
 		}
-    	const float& operator()(int col, int row) const
+    	const float &operator()(int col, int row) const
 		{
 			return (data[col * 4 + row]);
 		}
 };
 
-inline mat4 operator*(const mat4& a, const mat4& b)
+inline mat4 operator*(const mat4 &a, const mat4 &b)
 {
     mat4 result;
     for (int col = 0; col < 4; ++col)
@@ -72,26 +72,26 @@ inline mat4 operator*(const mat4& a, const mat4& b)
     return (result);
 }
 
-vec4 getCol(const mat4& m, int col);
+vec4 getCol(const mat4 &m, int col);
 
-void setCol(mat4& m, int col, const vec4& v);
+void setCol(mat4 &m, int col, const vec4 &v);
 
 mat4 perspective(float fovDeg, float aspect, float near, float far);
 
-mat4 lookAt(const vec3& eye, const vec3& center, const vec3& up);
+mat4 lookAt(const vec3 &eye, const vec3 &center, const vec3 &up);
 
-mat4 translate(const vec3& t);
+mat4 translate(const vec3 &t);
 
-mat4 translate(const mat4& m, const vec3& v);
+mat4 translate(const mat4 &m, const vec3 &v);
 
-mat4 scale(const vec3& s);
+mat4 scale(const vec3 &s);
 
-mat4 scale(mat4 &mat, const vec3& s);
+mat4 scale(mat4 &mat, const vec3 &s);
 
 mat4 ortho(float left, float right, float bottom, float top);
 
-mat4 rotate(float angleRad, const vec3& axis);
+mat4 rotate(float angleRad, const vec3 &axis);
 
-mat4 rotate(mat4 &mat, float angleRad, const vec3& axis);
+mat4 rotate(mat4 &mat, float angleRad, const vec3 &axis);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 11:50:03 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 11:53:03 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:09:18 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ class vec2
         vec2(float x, float y) : x(x), y(y)
 	    {}
     
-        vec2 operator+(const vec2& op) const
+        vec2 operator+(const vec2 &op) const
 	    {
 	    	return (vec2(x + op.x, y + op.y));
 	    }
-        vec2 operator-(const vec2& op) const
+        vec2 operator-(const vec2 &op) const
 	    {
 	    	return (vec2(x - op.x, y - op.y));
 	    }
@@ -45,7 +45,7 @@ class vec2
 	    	return (vec2(x / s, y / s));
 	    }
     
-        float dot(const vec2& op) const
+        float dot(const vec2 &op) const
 	    {
 	    	return (x * op.x + y * op.y);
 	    }
@@ -58,7 +58,7 @@ class vec2
             float len = length();
             return (len > 0.0f ? *this / len : vec2(0, 0));
         }
-        float cross(const vec2& v) const
+        float cross(const vec2 &v) const
         {
             return (x * v.y - y * v.x);
         }

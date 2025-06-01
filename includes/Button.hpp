@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:04:30 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/24 13:21:46 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:08:46 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class   Button
     public:
         ~Button();
         Button(std::string str, float width, float height, vec2 pos, std::function<void()> function, Texture &texture, Texture &pressedTexture);
-        void    draw(Shader& shader, Font &font, Shader &textShader);
+        void    draw(Shader &shader, Font &font, Shader &textShader);
         void    checkClick(vec2 mousePos, bool mousePressed);
         
         void    initButtonModel();

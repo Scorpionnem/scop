@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:47:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 16:52:40 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 15:09:11 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ class Mesh
 	
 		~Mesh();
 	
-		void addTriangle(const vec3& p1, vec2& uv1,
-                       const vec3& p2, vec2& uv2,
-                       const vec3& p3, vec2& uv3,
-                       const vec3& color, const std::string& mtl);
+		void addTriangle(const vec3 &p1, vec2 &uv1,
+                       const vec3 &p2, vec2 &uv2,
+                       const vec3 &p3, vec2 &uv3,
+                       const vec3 &color, const std::string &mtl);
 		void upload();
 		void	draw(Shader &shader);
 		void	calcMeshCenter(void);

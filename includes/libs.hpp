@@ -6,14 +6,14 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:10 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 17:41:57 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 17:35:59 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBS_HPP
 # define LIBS_HPP
 
-# define DEBUG 1
+# define DEBUG 0
 
 # include <iostream>
 # include <string>
@@ -57,7 +57,21 @@ extern bool	F3;
 
 extern bool	mesh_spin;
 
+extern bool paused;
+extern vec3	backgroundColor;
+
+extern bool	lock_fps;
+extern int	interface;
+extern int	shaderEffect;
+extern bool	light_move;
+extern bool	apply_normal;
+extern int	interpolate;
+extern int	skybox_interpolate;
+extern bool	camera_toggle;
+extern bool	mesh_spin;
+
 # define TERMINAL_CHAR_SIZE 15
+# define MAX_SHADER_EFFECT 3
 
 inline float   clamp(float val, float min, float max)
 {

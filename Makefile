@@ -29,7 +29,9 @@ CPP_FILES :=	main \
 				Button \
 				Slider \
 				Interface \
-				Font
+				Font \
+				Skybox \
+				InterfaceFunctions
 
 CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
 
