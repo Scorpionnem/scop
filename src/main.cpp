@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:33:29 by mbatty            #+#    #+#             */
-/*   Updated: 2025/06/01 17:39:11 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/01 17:53:51 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void	displayDebug(Font &font, Shader &textShader)
 
 }
 
-void	MyDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+void	glBugReport(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 {
 	(void)userParam;
 	
@@ -230,9 +230,8 @@ void	resume_render()
 	glfwSetTime(pause_time);
 }
 
-void	do_nothing()
-{
-}
+//Lol, just for my dummy buttons because I dont want to do a put image function
+void	do_nothing(){}
 
 int	main(int ac, char **av)
 {
@@ -271,7 +270,7 @@ int	main(int ac, char **av)
 		Light		light;
 
 		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(MyDebugCallback, NULL);
+		glDebugMessageCallback(glBugReport, NULL);
 
 		Font	font;
 
