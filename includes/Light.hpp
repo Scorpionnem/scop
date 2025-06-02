@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:41:21 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/24 13:30:09 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/02 10:11:41 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ class	Light
 {
 	public:
 		Light();
+		~Light();
 		vec3	pos;
 		vec3	color;
 		Mesh		mesh;

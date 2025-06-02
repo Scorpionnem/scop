@@ -6,11 +6,15 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 20:41:09 by mbatty            #+#    #+#             */
-/*   Updated: 2025/06/01 15:20:55 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/02 10:11:56 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Light.hpp"
+
+Light::~Light()
+{
+}
 
 Light::Light() : mesh("src/assets/models/sphere.obj", MISSING_TEXTURE)
 {
