@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:45:14 by mbatty            #+#    #+#             */
-/*   Updated: 2025/06/02 17:20:05 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/02 18:14:31 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,8 +295,6 @@ void	Mesh::parseFace(std::istringstream &iss, int &lineNumber, float &colorOffse
 		vec3 v2 = positions[fv2.posIndex];
 		vec3 v3 = positions[fv3.posIndex];
 		
-		if (fv1.texIndex < 0 || fv2.texIndex < 0 || fv3.texIndex < 0)
-			throw std::runtime_error("Invalid texture vertice on line " + toString(lineNumber));
 		if (fv1.texIndex > (int)texPositions.size() - 1 || fv2.texIndex > (int)texPositions.size() - 1 || fv3.texIndex > (int)texPositions.size() - 1)
 			throw std::runtime_error("Invalid texture vertice on line " + toString(lineNumber));
 		vec2 uv1 = (fv1.texIndex >= 0 && fv1.texIndex < (int)texPositions.size()) ? vec2(texPositions[fv1.texIndex].x, texPositions[fv1.texIndex].y) : vec2(-1);
