@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:49:15 by mbatty            #+#    #+#             */
-/*   Updated: 2025/05/28 16:56:09 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/02 10:50:00 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	Texture::cut(Texture &cpy)
 
 typedef struct s_bmp_header
 {
-	uint16_t	magic;
+	uint16_t	identifier;
 	uint32_t	size;
 	uint32_t	reserved;
 	uint32_t	data_offset;
@@ -44,28 +44,15 @@ typedef struct s_bmp_header
 	uint32_t	data_size;
 } __attribute__((packed))	bmp_header;
 
-# define BMP_MAGIC		0x4D42
+# define BMP_ID		0x4D42
 # define HEADER_SIZE	26
 # define MAX_SIZE		0x5F5E11A
-
-# define ERR_OPEN_FAILED		"Open failed."
-# define ERR_READ_FAILED		"Read failed."
-# define ERR_INVALID_MAGIC		"Invalid magic."
-# define ERR_BMP_TOO_SMALL		"Image too small"
-# define ERR_INVALID_SIZE		"Promised size vs actual size mismatch \
-or read error."
-# define ERR_INVALID_OFFSET		"Invalid data offset."
-# define ERR_INVALID_DIB		"Only BITMAPCOREHEADER DIB header is supported."
-# define ERR_INVALID_BPP		"Only 24 BPP is supported."
-# define ERR_SIZE_OOB			"Image size too big or too small"
-# define ERR_INVALID_RATIO		"Image size is invalid"
-# define ERR_INVALID_CP			"Color plane value must be 1."
 
 void	check_header(bmp_header *header)
 {
 	uint64_t	expected_size;
 
-	if (header->magic != BMP_MAGIC)
+	if (header->identifier != BMP_ID)
 		throw std::runtime_error(std::string("Invalid texture format"));
 	if (header->size <= HEADER_SIZE || header->size > MAX_SIZE)
 		throw std::runtime_error(std::string("Invalid texture format"));
