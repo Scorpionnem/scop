@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 13:49:15 by mbatty            #+#    #+#             */
-/*   Updated: 2025/06/02 10:50:00 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/05 15:41:06 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_bmp_header
 	uint32_t	data_size;
 } __attribute__((packed))	bmp_header;
 
-# define BMP_ID		0x4D42
+# define BMP_ID		0x4D42 // B M
 # define HEADER_SIZE	26
 # define MAX_SIZE		0x5F5E11A
 

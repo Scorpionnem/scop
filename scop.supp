@@ -102,16 +102,16 @@
    <insert_a_suppression_name_here>
    Memcheck:Leak
    match-leak-kinds: reachable
-   fun:realloc
-   fun:_dbus_string_compact
-   fun:_dbus_message_loader_queue_messages
+   fun:malloc
+   fun:_dbus_strdup
+   fun:dbus_bus_register
    obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
-   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
-   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
-   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
-   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
-   fun:dbus_pending_call_block
-   fun:dbus_connection_send_with_reply_and_block
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
    obj:*
    obj:*
 }
@@ -126,23 +126,6 @@
    fun:glfwInit
    fun:_ZN6WindowC1Ev
    fun:main
-}
-{
-   <insert_a_suppression_name_here>
-   Memcheck:Leak
-   match-leak-kinds: reachable
-   fun:malloc
-   fun:_dbus_strdup
-   fun:dbus_bus_register
-   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
 }
 {
    <insert_a_suppression_name_here>
@@ -1501,6 +1484,23 @@
    fun:realloc
    obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
    fun:_dbus_read
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
+   fun:dbus_pending_call_block
+   fun:dbus_connection_send_with_reply_and_block
+   fun:dbus_bus_register
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
    obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
    obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13
    obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 10:19:57 by mbatty            #+#    #+#             */
-/*   Updated: 2025/06/01 17:09:32 by mbatty           ###   ########.fr       */
+/*   Updated: 2025/06/05 15:38:53 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,6 @@ void	setTerminalReturn(std::string str)
 {
 	terminalReturn = str;
 	terminalReturnTime = glfwGetTime();
-}
-
-void	terminal_setting_command(std::istringstream	&iss)
-{
-	std::string	arg;
-
-	if (iss >> arg)
-	{
-	}
-	else
-		setTerminalReturn("setting: Not enough arguments.");
 }
 
 void	terminal_culling_command(std::istringstream	&iss)
@@ -113,9 +102,7 @@ void	terminal_execute_command(std::string str)
 	std::string	command;
 
 	iss >> command;
-	if (command == "setting")
-		terminal_setting_command(iss);
-	else if (command == "culling")
+	if (command == "culling")
 		terminal_culling_command(iss);
 	else if (command == "background")
 		terminal_background_command(iss);
@@ -124,9 +111,7 @@ void	terminal_execute_command(std::string str)
 	else if (command == "rainbow")
 		rainbow = !rainbow;
 	else if (command == "help")
-	{
 		setTerminalReturn("commands: background, culling, render, help");
-	}
 	else
 		setTerminalReturn("command not found.");
 }
