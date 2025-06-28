@@ -1,3 +1,5 @@
+42 Grade: 125/100
+
 A "simple" .obj loader and renderer.
 This project is part of the 42 curriculum, aiming to explore graphics programming using OpenGL.
 
