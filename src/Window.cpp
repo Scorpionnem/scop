@@ -13,6 +13,7 @@
 #include "Window.hpp"
 #include "Terminal.hpp"
 #include "Camera.hpp"
+#include <fontconfig/fontconfig.h>
 
 static void resize_hook(GLFWwindow* window, int width, int height)
 {
@@ -26,6 +27,8 @@ void	key_hook(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 Window::Window() : _lastFrame(0)
 {
+	FcInit();
+
 	if (DEBUG)
 		std::cout << "Creating window: " << WIN_NAME << std::endl;
 	//Inits GLFW settings

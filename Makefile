@@ -40,7 +40,7 @@ SOURCES := $(addprefix $(SOURCE_DIR), $(CPP_FILES))
 OBJECTS := $(addprefix $(OBJ_DIR), $(CPP_FILES:.cpp=.o))
 DEPS := $(addprefix $(OBJ_DIR), $(CPP_FILES:.cpp=.d))
 
-CFLAGS = -MP -MMD -Wall -Wextra -Werror -g
+CFLAGS = -MP -MMD
 
 GLAD_PATH = libs/glad
 
@@ -93,7 +93,7 @@ $(OBJ_DIR):
 	@(cd $(SOURCE_DIR) && find . -type d -exec mkdir -p -- $(shell pwd)/$(OBJ_DIR){} \;)
 
 $(NAME): $(OBJ_DIR) $(OBJECTS)
-	@c++ $(OBJECTS) $(GLFWARCHIVE) -o $(NAME)
+	@c++ $(OBJECTS) -lfontconfig $(GLFWARCHIVE) -o $(NAME)
 	@echo "\033[0;32mCompiled $(NAME)\033[0m"
 
 clean:
