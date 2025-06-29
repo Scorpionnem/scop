@@ -197,25 +197,6 @@ void	displayDebug(Font &font, Shader &textShader)
 
 }
 
-void	glBugReport(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
-{
-	(void)userParam;
-	
-	if (!DEBUG)
-		return ;
-	if (type == GL_DEBUG_TYPE_PERFORMANCE || severity == GL_DEBUG_SEVERITY_NOTIFICATION)
-		std::cout << "---WARNING---" << std::endl;
-	else
-		std::cout << "---ERROR---" << std::endl;
-	std::cout << "source: " << source << std::endl;
-	std::cout << "type: " << type << std::endl;
-	std::cout << "id: " << id << std::endl;
-	std::cout << "severity: " << severity << std::endl;
-	std::cout << "length: " << length << std::endl;
-	std::cout << "message: " << message << std::endl;
-	std::cout << "-----------" << std::endl;
-}
-
 Window	*g_window;
 
 void	close_window()
@@ -268,9 +249,6 @@ int	main(int ac, char **av)
 		else
 			mesh.loadOBJ(av[1], MISSING_TEXTURE);
 		Light		light;
-
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(glBugReport, NULL);
 
 		Font	font;
 
