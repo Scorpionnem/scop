@@ -1,119 +1,62 @@
-NAME := scop
+NAME :=	scop
 
-OBJ_DIR := ./obj/
-INCLUDE_DIRS := ./includes/ ./GLFW/include/GLFW/ ./includes/glad/. ./includes/render
+###
 
-GLFWARCHIVE = GLFW/build/src/libglfw3.a
+CXX :=	c++
+CXXFLAGS :=	-Wall -Wextra -Werror -g -MP -MMD
+LFLAGS :=	-lSDL2 -lGL
 
-INCLUDE_DIRS := $(addprefix -I, $(INCLUDE_DIRS))
+###
 
-MAKE := @make --no-print-directory
+INCLUDE_DIRS :=	includes/\
+				includes/Core\
+				external/glad
 
-SOURCE_DIR := ./src/
+SRCS :=	main\
+		Core/Window
 
-OBJ_DIR := ./obj/
+###
 
-OBJECTS = $(SOURCES:.cpp=.o)
+INCLUDE_DIRS :=	$(addprefix -I, $(INCLUDE_DIRS))
 
-CPP_FILES :=	main \
-				glad/glad \
-				Window \
-				vec3 \
-				mat4 \
-				Terminal \
-				Camera \
-				Shader \
-				Mesh \
-				Texture \
-				Light \
-				Button \
-				Slider \
-				Interface \
-				Font \
-				Skybox \
-				InterfaceFunctions
+SRCS :=	$(addprefix src/, $(SRCS))
+SRCS :=	$(addsuffix .cpp, $(SRCS))
 
-CPP_FILES := $(addsuffix .cpp, $(CPP_FILES))
+SRCS +=	external/glad/glad.cpp
 
-SOURCES := $(addprefix $(SOURCE_DIR), $(CPP_FILES))
+###
 
-OBJECTS := $(addprefix $(OBJ_DIR), $(CPP_FILES:.cpp=.o))
-DEPS := $(addprefix $(OBJ_DIR), $(CPP_FILES:.cpp=.d))
+OBJ_DIR :=	obj
 
-CFLAGS = -MP -MMD
+OBJS =	$(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+DEPS =	$(SRCS:%.cpp=$(OBJ_DIR)/%.d)
 
-GLAD_PATH = libs/glad
+###
 
-all: glfw glad glm $(NAME)
+compile:
+	@@make -j all --no-print-directory
 
-run: all
-	@./$(NAME) models/subject/teapot.obj textures/icon.bmp
+all: $(NAME)
 
-vrun: all
-	@valgrind ./$(NAME) models/subject/42.obj textures/cobblestone.bmp
+$(NAME): $(OBJS)
+	@echo Compiling $(NAME)
+	@$(CXX) $(CXXFLAGS) $(LFLAGS) $(INCLUDE_DIRS) -o $@ $^
 
-glfw:
-	@if ls | grep -q "GLFW"; then \
-		echo "\033[32;1;4mGLFW Found\033[0m"; \
-	else \
-		echo "\033[31;1;4mGLFW Not Found\033[0m"; \
-		echo "\033[31;1mDownloading GLFW from github \033[0m"; \
-		git clone https://github.com/glfw/glfw.git GLFW; \
-		echo "\033[31;1mCompiling GLFW\033[0m"; \
-		cmake -S GLFW -B GLFW/build; \
-		cmake --build GLFW/build; \
-	fi
-
-glad:
-	@if ls src | grep -q "glad"; then \
-		echo "\033[32;1;4mglad Found\033[0m"; \
-	else \
-		echo "\033[31;1;4mglad Not Found\033[0m"; \
-		echo "\033[31;1mDownloading glad from github \033[0m"; \
-		pip install glad; \
-		git clone https://github.com/Dav1dde/glad.git glad; \
-		python -m glad --out-path=glad/build --generator=c; \
-		mkdir -p glad2; \
-		cp glad/build/include/glad/glad.h glad2/.; \
-		cp glad/build/src/glad.c glad2/.; \
-		rm -rf glad; \
-		mv glad2 glad; \
-		mv glad/glad.c glad/glad.cpp; \
-		mkdir -p src/glad; \
-		mkdir -p includes/glad; \
-		mv glad/glad.cpp src/glad/; \
-		mv glad/glad.h includes/glad/; \
-		rm -rf glad; \
-	fi
-
-$(OBJECTS): $(OBJ_DIR)%.o : $(SOURCE_DIR)%.cpp
-	@c++ $(CFLAGS) $(INCLUDE_DIRS) -c $< -o $@
-
-$(OBJ_DIR):
-	@(cd $(SOURCE_DIR) && find . -type d -exec mkdir -p -- $(shell pwd)/$(OBJ_DIR){} \;)
-
-$(NAME): $(OBJ_DIR) $(OBJECTS)
-	@c++ $(OBJECTS) -lfontconfig $(GLFWARCHIVE) -o $(NAME)
-	@echo "\033[0;32mCompiled $(NAME)\033[0m"
-
-clean:
-	@rm -rf $(OBJ_DIR)
-	@echo "\033[0;32mCleaned objects\033[0m"
-
-fclean:
-	$(MAKE) clean
-	@rm -f $(NAME)
-	@echo "\033[0;32mCleaned $(NAME)\033[0m"
-
-dclean: fclean
-	@rm -rf src/glad
-	@rm -rf includes/glad
-	@rm -rf GLFW
-	@rm -rf glm
-	@echo "\033[0;32mCleaned external libraries\033[0m"
+$(OBJ_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@echo Compiling $@
+	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
 
 re: fclean all
 
-.PHONY: all clean fclean dclean re GLFW glad run glm
+fclean: clean
+	@echo Removed $(NAME)
+	@rm -rf $(NAME)
+
+clean:
+	@echo Removed $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR)
+
+.PHONY: all clean fclean re compile
 
 -include $(DEPS)
