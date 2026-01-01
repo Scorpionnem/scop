@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/01 23:30:48 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/01 23:42:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,7 @@ class	Mesh
 			std::string	res;
 
 			res = line.substr(0, line.find('#'));
+			res = res.substr(0, res.find('\r'));
 			return (res);
 		}
 
