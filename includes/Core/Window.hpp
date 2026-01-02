@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:44:54 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 13:59:52 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 16:26:33 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ class	Window
 		void	pollEvents();
 		void	display();
 		bool	running() {return (_running);}
+		float	aspectRatio()
+		{
+			return ((float)_width / (float)_height);
+		}
 	private:
 		SDL_Window		*_window = NULL;
 		SDL_GLContext	_GLContext;

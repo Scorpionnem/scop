@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:51:41 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 15:28:54 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 16:38:33 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	Window::open(uint32_t width, uint32_t height, const std::string &title)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
 	_window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height,
 				SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
@@ -53,9 +55,17 @@ void	Window::open(uint32_t width, uint32_t height, const std::string &title)
 
 	glViewport(0, 0, _width, _height);
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	glEnable(GL_MULTISAMPLE);
+
 	SDL_GL_SetSwapInterval(1);
 
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	int depth;
+	SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &depth);
+	std::cout << "Depth buffer bits: " << depth << std::endl;
 }
 
 void	Window::close()
@@ -80,7 +90,7 @@ void	Window::pollEvents()
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 				{
 					_width = event.window.data1;
-					_height = event.window.data1;
+					_height = event.window.data2;
 
 					glViewport(0, 0, _width, _height);
 				}
@@ -93,5 +103,5 @@ void	Window::display()
 {
 	SDL_GL_SwapWindow(_window);
 	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
