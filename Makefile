@@ -10,10 +10,13 @@ LFLAGS :=	-lSDL2 -lGL
 
 INCLUDE_DIRS :=	includes/\
 				includes/Core\
+				includes/Math\
 				external/glad
 
 SRCS :=	main\
-		Core/Window
+		Core/Window\
+		Math/Vec3\
+		Math/Math
 
 ###
 

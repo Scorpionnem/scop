@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/01 23:42:32 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 13:01:04 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,37 +19,7 @@
 #include <iostream>
 #include <vector>
 
-struct	Vec3
-{
-	Vec3()
-	{
-		this->x = 0;
-		this->y = 0;
-		this->z = 0;
-	}
-	Vec3(double x, double y, double z)
-	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
-	}
-	double	x, y, z;
-};
-
-struct	Vec2
-{
-	Vec2()
-	{
-		this->x = 0;
-		this->y = 0;
-	}
-	Vec2(double x, double y)
-	{
-		this->x = x;
-		this->y = y;
-	}
-	double	x, y;
-};
+#include "Math.hpp"
 
 class	Mesh
 {
@@ -89,8 +59,8 @@ class	Mesh
 					_textureVertices.push_back(_parseVec2(iss));
 				else if (identifier == "f")
 					_parseFace(iss);
-				else if (identifier == "o")
-				{}
+				else
+					{}
 			}
 
 			std::cout << "Loaded " << path << std::endl;
