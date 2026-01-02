@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 12:59:42 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 13:13:43 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 15:17:39 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ struct	Vec3
 		this->y = 0;
 		this->z = 0;
 	}
-	Vec3(double x, double y, double z)
+	Vec3(float x, float y, float z)
 	{
 		this->x = x;
 		this->y = y;
 		this->z = z;
 	}
-	Vec3(double xyz)
+	Vec3(float xyz)
 	{
 		this->x = xyz;
 		this->y = xyz;
@@ -36,5 +36,5 @@ struct	Vec3
 	Vec3 operator-(const Vec3 &v) const;
 	Vec3 operator*(const Vec3 &v) const;
 	Vec3 operator/(const Vec3 &v) const;
-	double	x, y, z;
+	float	x, y, z;
 };

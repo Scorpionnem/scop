@@ -16,6 +16,7 @@ INCLUDE_DIRS :=	includes/\
 SRCS :=	main\
 		Core/Window\
 		Math/Vec3\
+		Core/Shader\
 		Math/Math
 
 ###

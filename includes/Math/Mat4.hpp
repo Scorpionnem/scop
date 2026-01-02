@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 13:13:53 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 13:55:47 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 15:17:49 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 struct Mat4
 {
-	double	data[16];
+	float	data[16];
 
-	Mat4(double val)
+	Mat4(float val)
 	{
 		std::fill(data, data + 16, 0.0f);
 		this->data[0] = this->data[5] = this->data[10] = this->data[15] = val;
