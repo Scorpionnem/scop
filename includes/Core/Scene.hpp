@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Scene.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/01 21:38:48 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 17:49:25 by mbatty           ###   ########.fr       */
+/*   Created: 2026/01/02 17:43:28 by mbatty            #+#    #+#             */
+/*   Updated: 2026/01/02 17:49:10 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Engine.hpp"
-#include "RenderScene.hpp"
+#pragma once
 
-int	main(int ac, char **av)
+#include "Window.hpp"
+
+class	Scene
 {
-	if (ac != 2)
-		return (1);
-
-	Engine	engine;
-
-	engine.start(new RenderScene(av[1]));
-}
+	public:
+		virtual ~Scene() {}
+		virtual void build() = 0;
+		virtual void update(float delta, const Window::Events &events) = 0;
+		virtual void display() = 0;
+};

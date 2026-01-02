@@ -11,6 +11,7 @@ LFLAGS :=	-lSDL2 -lGL
 INCLUDE_DIRS :=	includes/\
 				includes/Core\
 				includes/Math\
+				includes/Scop\
 				external/glad
 
 SRCS :=	main\
