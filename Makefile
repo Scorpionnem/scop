@@ -19,6 +19,7 @@ SRCS :=	main\
 		Math/Vec3\
 		Core/Shader\
 		Core/Mesh\
+		Scop/RenderScene\
 		Math/Math
 
 ###
