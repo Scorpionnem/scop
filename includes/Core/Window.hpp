@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:44:54 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 17:32:56 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 20:27:40 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,38 @@ class	Window
 				Events() {}
 				~Events() {}
 
-				bool	getInput(int key) const
+				bool	getKey(int key) const
 				{
-					auto find = _inputs.find(key);
-					if (find == _inputs.end())
+					auto find = _keys.find(key);
+					if (find == _keys.end())
 						return (false);
 					return (find->second);
 				}
-				void	setInput(int key, bool state)
+				bool	getMouseBtn(int key) const
 				{
-					_inputs[key] = state;
+					auto find = _mouseBtn.find(key);
+					if (find == _mouseBtn.end())
+						return (false);
+					return (find->second);
+				}
+				bool	getKeyPressed(int key) const
+				{
+					auto find = _keysPressed.find(key);
+					if (find == _keysPressed.end())
+						return (false);
+					return (find->second);
+				}
+				void	setKey(int key, bool state)
+				{
+					_keys[key] = state;
+				}
+				void	setMouseBtn(int key, bool state)
+				{
+					_mouseBtn[key] = state;
+				}
+				void	setKeyPressed(int key)
+				{
+					_keysPressed[key] = true;
 				}
 				float	getMouseDeltaX() const {return (_mouseDeltaX);}
 				float	getMouseDeltaY() const {return (_mouseDeltaY);}
@@ -48,13 +70,16 @@ class	Window
 				{
 					_mouseDeltaX = 0;
 					_mouseDeltaY = 0;
+					_keysPressed.clear();
 				}
 			private:
 				float	_mouseDeltaX = 0;
 				float	_mouseDeltaY = 0;
-				std::map<int, bool>	_inputs;
+				std::map<int, bool>	_keys;
+				std::map<int, bool>	_keysPressed;
+				std::map<int, bool>	_mouseBtn;
 		};
-		void	setMousePos(int x, int y)
+		void	setMousePos(int x, int y) const
 		{
 			SDL_WarpMouseInWindow(_window, x, y);
 		}
@@ -67,9 +92,17 @@ class	Window
 		void	pollEvents();
 		void	display();
 		bool	running() {return (_running);}
-		float	aspectRatio()
+		float	aspectRatio() const
 		{
 			return ((float)_width / (float)_height);
+		}
+		uint32_t	width() const
+		{
+			return (_width);
+		}
+		uint32_t	height() const
+		{
+			return (_height);
 		}
 		const Events	&getEvents() {return (_events);}
 	private:

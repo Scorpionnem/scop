@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:32:26 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 16:07:58 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 21:31:26 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ void	Mesh::load(const std::string &path)
 	if (!file.is_open())
 		throw (std::runtime_error("Failed to open " + path));
 
-	std::cout << "Loading " << path << std::endl;
+	std::string	directory = path.substr(0, path.find_last_of("/"));
+	if (path.find_last_of("/") == path.npos)
+		directory = "";
+
+	MaterialGroup	*currentMtlGroup = &_materialGroups["default"];
 
 	std::string	line;
 	while (std::getline(file, line))
@@ -43,15 +47,50 @@ void	Mesh::load(const std::string &path)
 		else if (identifier == "vt")
 			_textureVertices.push_back(_parseVec2(iss));
 		else if (identifier == "f")
-			_parseFace(iss);
+			_parseFace(currentMtlGroup, iss);
+		else if (identifier == "mtllib")
+		{
+			std::string mtlLibPath = directory + (directory.size() ? "/" : "") + line.substr(identifier.size() + 1);
+			_parseMtlLib(mtlLibPath);
+		}
+		else if (identifier == "usemtl")
+		{
+			std::string mtlName = line.substr(identifier.size() + 1);
+			currentMtlGroup = &_materialGroups[mtlName];
+		}
 		else
 			{}
 	}
-
-	std::cout << "Loaded " << path << " (" << _triangleCount << " triangles)" << std::endl;
 }
 
-void	Mesh::_parseFace(std::istringstream &iss)
+void	Mesh::upload()
+{
+	for (auto &pair : _materialGroups)
+	{
+		MaterialGroup	&mtl = pair.second;
+
+		glGenVertexArrays(1, &mtl.VAO);
+		glGenBuffers(1, &mtl.VBO);
+
+		glBindVertexArray(mtl.VAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mtl.VBO);
+		glBufferData(GL_ARRAY_BUFFER, mtl.vertices.size() * sizeof(Vertex), mtl.vertices.data(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+		glEnableVertexAttribArray(2);
+
+		glBindVertexArray(0);
+	}
+}
+
+void	Mesh::_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss)
 {
 	std::string	token;
 	std::vector<FaceVertex>	faceVertices;
@@ -123,9 +162,9 @@ void	Mesh::_parseFace(std::istringstream &iss)
 			face.normal3 = _normalVertices[fv3.normal];
 		}
 
-		_vertices.push_back({face.pos1, face.normal1, face.uv1});
-		_vertices.push_back({face.pos2, face.normal2, face.uv2});
-		_vertices.push_back({face.pos3, face.normal3, face.uv3});
+		mtlGroup->vertices.push_back({face.pos1, face.normal1, face.uv1});
+		mtlGroup->vertices.push_back({face.pos2, face.normal2, face.uv2});
+		mtlGroup->vertices.push_back({face.pos3, face.normal3, face.uv3});
 	}
 }
 
@@ -134,7 +173,7 @@ Vec3	Mesh::_parseVec3(std::istringstream &iss)
 	double	x, y, z;
 
 	if (!(iss >> x >> y >> z))
-		throw std::runtime_error("Failed to get vertice at line " + std::to_string(_lineNumber));
+		throw std::runtime_error("Failed to get vec3 at line " + std::to_string(_lineNumber));
 
 	return (Vec3(x, y, z));
 }
@@ -144,9 +183,19 @@ Vec2	Mesh::_parseVec2(std::istringstream &iss)
 	double	x, y;
 
 	if (!(iss >> x >> y))
-		throw std::runtime_error("Failed to get vertice at line " + std::to_string(_lineNumber));
+		throw std::runtime_error("Failed to get vec2 at line " + std::to_string(_lineNumber));
 
 	return (Vec2(x, y));
+}
+
+float	Mesh::_parseFloat(std::istringstream &iss)
+{
+	double	val;
+
+	if (!(iss >> val))
+		throw std::runtime_error("Failed to get float at line " + std::to_string(_lineNumber));
+
+	return (val);
 }
 
 std::string	Mesh::_preprocessLine(const std::string &line)

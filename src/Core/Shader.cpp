@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:29:31 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 15:31:01 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 20:18:18 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	Shader::load(GLenum type, const std::string &path)
 {
 	if (_id == 0)
 		_id = glCreateProgram();
+
+	_files[type] = path;
 
 	std::string	file = _readShader(path);
 	const char	*rawFile = file.c_str();

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 15:57:54 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 21:31:10 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@
 #include <iostream>
 #include <vector>
 #include <cstdint>
+#include <map>
 #include "SDL2/SDL.h"
 #include <glad/glad.h>
 
 #include "Math.hpp"
+#include "Shader.hpp"
 
 class	Mesh
 {
@@ -31,32 +33,25 @@ class	Mesh
 		~Mesh() {}
 
 		void	load(const std::string &path);
-		void	upload()
+		void	upload();
+		void	draw(Shader &shader)
 		{
-			glGenVertexArrays(1, &_VAO);
-			glGenBuffers(1, &_VBO);
+			for (auto &pair : _materialGroups)
+			{
+				MaterialGroup	&mtl = pair.second;
 
-			glBindVertexArray(_VAO);
+				shader.setFloat("uMaterial.opacity", mtl.material.opacity);
+				shader.setFloat("uMaterial.shininess", mtl.material.shininess);
+				shader.setVec3("uMaterial.ambient", mtl.material.ambient);
+				shader.setVec3("uMaterial.diffuse", mtl.material.diffuse);
+				shader.setVec3("uMaterial.specular", mtl.material.specular);
 
-			glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-			glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), _vertices.data(), GL_STATIC_DRAW);
-
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
-			glEnableVertexAttribArray(0);
-
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-			glEnableVertexAttribArray(1);
-
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-			glEnableVertexAttribArray(2);
-
-			glBindVertexArray(0);
+				glBindVertexArray(mtl.VAO);
+				glDrawArrays(GL_TRIANGLES, 0, mtl.vertices.size());
+			}
 		}
-		void	draw()
-		{
-			glBindVertexArray(_VAO);
-			glDrawArrays(GL_TRIANGLES, 0, _vertices.size());
-		}
+
+		uint32_t	getTriangleCount() {return (_triangleCount);}
 	private:
 		struct	Face
 		{
@@ -89,9 +84,70 @@ class	Mesh
 			int	uv;
 			int	normal;
 		};
-		void		_parseFace(std::istringstream &iss);
+		struct	Material
+		{
+			Vec3	ambient = Vec3(1); // Ka
+			Vec3	diffuse = Vec3(1); // Kd
+			Vec3	specular = Vec3(0); // Ks
+
+			float	shininess = 0; // Ns
+			float	opacity = 1; // d / Tr
+		};
+		struct	MaterialGroup
+		{
+			Material			material;
+			std::vector<Vertex>	vertices;
+			uint32_t			VAO;
+			uint32_t			VBO;
+		};
+		void	_parseMtlLib(const std::string &path)
+		{
+			std::ifstream	file(path);
+			if (!file.is_open())
+				throw (std::runtime_error("Failed to open " + path));
+
+			Material	*currentMaterial = &_materialGroups["default"].material;
+
+			std::string	line;
+			uint32_t	lineNumber = 0;
+			while (std::getline(file, line))
+			{
+				_lineNumber++;
+
+				line = _preprocessLine(line);
+				if (line.empty())
+					continue ;
+
+				std::istringstream	iss(line);
+
+				std::string	identifier;
+
+				if (!(iss >> identifier))
+					throw std::runtime_error("Failed to get identifier at line " + std::to_string(lineNumber));
+
+				if (identifier == "Ka")
+					currentMaterial->ambient = _parseVec3(iss);
+				else if (identifier == "Kd")
+					currentMaterial->diffuse = _parseVec3(iss);
+				else if (identifier == "Ks")
+					currentMaterial->specular= _parseVec3(iss);
+				else if (identifier == "Ns")
+					currentMaterial->shininess = _parseFloat(iss);
+				else if (identifier == "d" || identifier == "Tr")
+					currentMaterial->opacity = _parseFloat(iss);
+				else if (identifier == "newmtl")
+				{
+					std::string mtlName = line.substr(identifier.size() + 1);
+					currentMaterial = &_materialGroups[mtlName].material;
+				}
+				else
+					{}
+			}
+		}
+		void		_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss);
 		Vec3		_parseVec3(std::istringstream &iss);
 		Vec2		_parseVec2(std::istringstream &iss);
+		float		_parseFloat(std::istringstream &iss);
 		std::string	_preprocessLine(const std::string &line);
 		uint32_t	_VAO;
 		uint32_t	_VBO;
@@ -100,6 +156,8 @@ class	Mesh
 		uint32_t	_triangleCount = 0;
 
 		std::vector<Vertex>	_vertices;
+
+		std::map<std::string, MaterialGroup>	_materialGroups;
 
 		std::vector<Vec3>	_positionVertices;
 		std::vector<Vec3>	_normalVertices;
