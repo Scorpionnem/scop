@@ -25,6 +25,11 @@ uniform vec3 uLightPos;
 uniform vec3 uLightColor;
 uniform vec3 uViewPos;
 
+uniform float uTime;
+
+uniform int uTriangleCount;
+// Use gl_PrimitiveID for triangle view mode
+
 uniform sampler2D tex;
 
 void main()
@@ -34,9 +39,9 @@ void main()
 	vec3 V = normalize(uViewPos - vPos);
 	vec3 H = normalize(L + V);
 
-	vec3 color = vec3(1);
+	vec4 materialColor = vec4(vec3(1), uMaterial.opacity);
 	if (uMaterial.hasDiffuseTex == 1)
-		color = texture(tex, vUV).rgb;
+		materialColor = texture(tex, vUV);
 
 	vec3 ambient = uMaterial.diffuse * 0.05 * uLightColor;
 
@@ -46,7 +51,11 @@ void main()
 	float spec = pow(max(dot(N, H), 0.0), uMaterial.shininess);
 	vec3 specular = uMaterial.specular * spec * uLightColor;
 
-	color = color * (ambient + diffuse + specular);
+	float triangleView = (float(gl_PrimitiveID) / float(uTriangleCount));
 
-	FragColor = vec4(color, uMaterial.opacity);
+	materialColor.rgb = materialColor.rgb * (ambient + diffuse + specular);
+
+	vec4 triangleViewColor = vec4(vec3(triangleView), 1);
+
+	FragColor = materialColor;
 }

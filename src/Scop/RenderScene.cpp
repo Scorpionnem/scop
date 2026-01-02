@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 23:02:49 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 23:59:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,10 @@ void	RenderScene::display()
 	_shader.setMat4("uModel", _model);
 	_shader.setMat4("uView", _camera.getViewMatrix());
 	_shader.setMat4("uProjection", projection);
+
+	_shader.setFloat("uTime", _engine.getTime());
+
+	_shader.setInt("uTriangleCount", _mesh.getTriangleCount());
 
 	_shader.setVec3("uLightPos", Vec3(3, 10, 3));
 	_shader.setVec3("uLightColor", Vec3(1, 1, 1));
