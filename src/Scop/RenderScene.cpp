@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 21:38:24 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 22:28:26 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,14 @@ void	RenderScene::_updateCamera(float delta, const Window::Events &events)
 		_camera.pos = _camera.pos - normalize(cross(_camera.front, _camera.up)) * speed;
 	if (events.getKey(SDLK_d))
 		_camera.pos = _camera.pos + normalize(cross(_camera.front, _camera.up)) * speed;
+	if (events.getKey(SDLK_UP))
+		_camera.pitch += speed * 2;
+	if (events.getKey(SDLK_DOWN))
+		_camera.pitch -= speed * 2;
+	if (events.getKey(SDLK_RIGHT))
+		_camera.yaw += speed * 2;
+	if (events.getKey(SDLK_LEFT))
+		_camera.yaw -= speed * 2;
 	if (events.getMouseBtn(SDL_BUTTON_LEFT))
 	{
 		_camera.pitch -= events.getMouseDeltaY() * 0.3;
