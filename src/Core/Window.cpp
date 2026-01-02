@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:51:41 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 16:38:33 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 17:26:34 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	Window::pollEvents()
 {
 	SDL_Event	event;
 
+	_events.reset();
 	while (SDL_PollEvent(&event))
 	{
 		switch (event.type)
@@ -94,6 +95,16 @@ void	Window::pollEvents()
 
 					glViewport(0, 0, _width, _height);
 				}
+				break ;
+			case SDL_KEYDOWN:
+				_events.setInput(event.key.keysym.sym, true);
+				break ;
+			case SDL_KEYUP:
+				_events.setInput(event.key.keysym.sym, false);
+				break ;
+			case SDL_MOUSEMOTION:
+				_events.setMouseDeltaX(event.motion.xrel);
+				_events.setMouseDeltaY(event.motion.yrel);
 				break ;
 		}
 	}
