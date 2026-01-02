@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 13:58:29 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 20:20:14 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 22:55:04 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class	Shader
 			glDeleteProgram(_id);
 			_id = 0;
 		}
+		void	setInt(const std::string &name, int val);
 		void	setFloat(const std::string &name, float val);
 		void	setVec3(const std::string &name, Vec3 val);
 		void	setMat4(const std::string &name, Mat4 val);

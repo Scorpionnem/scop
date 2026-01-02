@@ -12,7 +12,8 @@ INCLUDE_DIRS :=	includes/\
 				includes/Core\
 				includes/Math\
 				includes/Scop\
-				external/glad
+				external/glad\
+				external/stb_image
 
 SRCS :=	main\
 		Core/Window\
@@ -29,7 +30,8 @@ INCLUDE_DIRS :=	$(addprefix -I, $(INCLUDE_DIRS))
 SRCS :=	$(addprefix src/, $(SRCS))
 SRCS :=	$(addsuffix .cpp, $(SRCS))
 
-SRCS +=	external/glad/glad.cpp
+SRCS +=	external/glad/glad.cpp\
+		external/stb_image/stb_image.cpp
 
 ###
 
@@ -40,10 +42,24 @@ DEPS =	$(SRCS:%.cpp=$(OBJ_DIR)/%.d)
 
 ###
 
-compile:
-	@@make -j all --no-print-directory
+compile: stb_image
+	@make -j all --no-print-directory
 
 all: $(NAME)
+
+EXTERNAL_DIR := external
+$(EXTERNAL_DIR):
+	@mkdir -p external
+
+stb_image: $(EXTERNAL_DIR)
+	@if ls external/stb_image | grep -q "stb_image.h"; then \
+		printf ""; \
+	else\
+		echo "\033[31;1mDownloading stb_image.h\033[0m"; \
+		mkdir -p external/stb_image; \
+		curl --silent -o external/stb_image/stb_image.h https://raw.githubusercontent.com/nothings/stb/master/stb_image.h;\
+		echo "\033[31;1mDownloaded stb_image.h\033[0m"; \
+	fi
 
 $(NAME): $(OBJS)
 	@echo Compiling $(NAME)

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 22:34:11 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 23:06:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,55 @@
 #include "Math.hpp"
 #include "Shader.hpp"
 
+
+#include "stb_image.h"
+struct Texture
+{
+	int	_format;
+	int	_width;
+	int	_height;
+	std::vector<unsigned char>	_pixels;
+	uint	_id;
+
+	void	bind(int offset)
+	{
+		glActiveTexture(GL_TEXTURE0 + offset);
+		glBindTexture(GL_TEXTURE_2D, _id);
+	}
+	void	load(std::string path)
+	{
+		int	channels;
+		stbi_set_flip_vertically_on_load(true);
+		unsigned char *data = stbi_load(path.c_str(), &_width, &_height, &channels, 0);
+		if (!data) {
+			std::cerr << "Failed to load texture: " << path << "\n";
+		}
+
+		_format = GL_RGB;
+		if (channels == 1)
+			_format = GL_RED;
+		else if (channels == 3)
+			_format = GL_RGB;
+		else if (channels == 4)
+			_format = GL_RGBA;
+
+		_pixels = std::vector<unsigned char>(data, data + _width * _height * channels);
+
+		glGenTextures(1, &_id);
+
+		glBindTexture(GL_TEXTURE_2D, _id);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, _format, _width, _height, 0, _format, GL_UNSIGNED_BYTE, _pixels.data());
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+};
+
+
 class	Mesh
 {
 	public:
@@ -39,6 +88,14 @@ class	Mesh
 			for (auto &pair : _materialGroups)
 			{
 				MaterialGroup	&mtl = pair.second;
+
+				shader.setInt("tex", 0);
+				shader.setInt("uMaterial.hasDiffuseTex", 0);
+				if (mtl.material.texture)
+				{
+					shader.setInt("uMaterial.hasDiffuseTex", 1);
+					mtl.material.texture->bind(0);
+				}
 
 				shader.setFloat("uMaterial.opacity", mtl.material.opacity);
 				shader.setFloat("uMaterial.shininess", mtl.material.shininess);
@@ -92,6 +149,8 @@ class	Mesh
 
 			float	shininess = 0; // Ns
 			float	opacity = 1; // d / Tr
+
+			Texture	*texture = NULL;
 		};
 		struct	MaterialGroup
 		{
@@ -139,6 +198,17 @@ class	Mesh
 				{
 					std::string mtlName = line.substr(identifier.size() + 1);
 					currentMaterial = &_materialGroups[mtlName].material;
+				}
+				else if (identifier == "map_Kd")
+				{
+					std::string	directory = path.substr(0, path.find_last_of("/"));
+					if (path.find_last_of("/") == path.npos)
+						directory = "";
+
+					std::string texPath = directory + (directory.size() ? "/" : "") + line.substr(identifier.size() + 1);
+
+					currentMaterial->texture = new Texture();
+					currentMaterial->texture->load(texPath);
 				}
 				else
 					{}

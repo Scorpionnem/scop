@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:29:31 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 20:18:18 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/02 22:55:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,11 @@ void	Shader::link()
 		std::cout << infoLog << std::endl;
 		throw (std::runtime_error("Failed to link shader"));
 	}
+}
+
+void	Shader::setInt(const std::string &name, int val)
+{
+	glUniform1i(glGetUniformLocation(_id, name.c_str()), val);
 }
 
 void	Shader::setFloat(const std::string &name, float val)
