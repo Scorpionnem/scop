@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:17:16 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:22:41 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 14:03:10 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ void	Engine::_loop()
 {
 	while (_window.running())
 	{
+		if (_scene->requestedScene())
+		{
+			_scene = std::move(_scene->sceneRequest());
+			_scene->build();
+		}
 		if (_scene && _scene->requestedStop())
 			break ;
 

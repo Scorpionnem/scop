@@ -6,13 +6,14 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:43:28 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 20:10:20 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 14:01:48 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Window.hpp"
+#include <memory>
 
 class Engine;
 
@@ -29,12 +30,25 @@ class	Scene
 		{
 			return (_stopRequest);
 		}
+		bool	requestedScene()
+		{
+			return (_sceneRequest != nullptr);
+		}
+		std::unique_ptr<Scene>	sceneRequest()
+		{
+			return (std::move(_sceneRequest));
+		}
 	protected:
 		void	requestStop()
 		{
 			_stopRequest = true;
 		}
+		void	requestScene(std::unique_ptr<Scene> scene)
+		{
+			_sceneRequest = std::move(scene);
+		}
 		const Engine &_engine;
 	private:
-		bool	_stopRequest = false;
+		std::unique_ptr<Scene>	_sceneRequest = nullptr;
+		bool					_stopRequest = false;
 };
