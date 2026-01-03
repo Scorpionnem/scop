@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:14:02 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 16:56:05 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,16 @@
 void	RenderScene::build()
 {
 	_mesh = _engine.loadMesh(_modelPath);
+	_mesh->upload();
 	std::cout << _mesh->getTriangleCount() << " Triangles" << std::endl;
 
 	_camera.pos = Vec3(0, 2, 5);
 	_camera.pitch = -20;
 
-	_shader = _engine.loadShader("assets/shaders/mesh");
+	_engine.getLightCache().add(Vec3(2.5), Vec3(1));
+	_engine.getLightCache().add(Vec3(-3), Vec3(1, 0, 1));
+
+	_shader = _engine.loadShader("assets/shaders/core/mesh");
 
 	_model = Mat4(1);
 }
@@ -94,11 +98,12 @@ void	RenderScene::display()
 	_shader->setMat4("uProjection", projection);
 
 	_shader->setFloat("uTime", _engine.getTime());
-
 	_shader->setInt("uTriangleCount", _mesh->getTriangleCount());
-
-	_shader->setVec3("uLightPos", Vec3(3, 10, 3));
-	_shader->setVec3("uLightColor", Vec3(1, 1, 1));
 	_shader->setVec3("uViewPos", _camera.pos);
+
+	_engine.getLightCache().setUniforms(_shader);
+
+	_engine.getLightCache().draw(_camera.getViewMatrix(), projection);
+
 	_mesh->draw(_shader);
 }

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:48:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:12:40 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 16:26:07 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Engine.hpp"
+#include "LightCache.hpp"
 
 class	RenderScene : public Scene
 {

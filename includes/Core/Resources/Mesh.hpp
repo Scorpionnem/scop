@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:54:58 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 16:30:57 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ class	Mesh
 		}
 		void	draw(std::shared_ptr<Shader> shader)
 		{
+			shader->use();
+
 			for (auto &pair : _materialGroups)
 			{
 				MaterialGroup	&mtl = pair.second;

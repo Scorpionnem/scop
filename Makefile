@@ -14,6 +14,8 @@ INCLUDE_DIRS :=	includes/\
 				includes/Scop\
 				includes/Core/Resources\
 				includes/Core/Resources/Cache\
+				includes/Core/Rendering/Light\
+				includes/Core/Rendering/Light/Cache\
 				external/glad\
 				external/stb_image
 
@@ -25,6 +27,7 @@ SRCS :=	main\
 		Core/Resources/Mesh\
 		Core/Resources/Cache/MeshCache\
 		Core/Resources/Cache/ShaderCache\
+		Core/Rendering/Light/Cache/LightCache\
 		Scop/RenderScene\
 		Math/Math
 

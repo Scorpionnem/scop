@@ -1,0 +1,84 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Light.hpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/03 16:04:31 by mbatty            #+#    #+#             */
+/*   Updated: 2026/01/03 16:48:45 by mbatty           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#pragma once
+
+#include "ShaderCache.hpp"
+#include "MeshCache.hpp"
+
+class	Light
+{
+	public:
+		Light(MeshCache &mshc, ShaderCache &shdc) : _meshes(mshc), _shaders(shdc) {}
+		~Light() {}
+
+		void	create(Vec3 pos, Vec3 color)
+		{
+			_pos = pos;
+			_color = color;
+			_genMesh();
+		}
+		void	draw(Mat4 view, Mat4 proj)
+		{
+			_shader->use();
+			_shader->setMat4("uModel", Mat4(1));
+			_shader->setMat4("uView", view);
+			_shader->setMat4("uProjection", proj);
+			_shader->setVec3("uCenter", _pos);
+			_shader->setVec3("uColor", _color);
+
+			_mesh->draw(_shader);
+		}
+		void	setUniforms(int id, std::shared_ptr<Shader> shader)
+		{
+			shader->setVec3("uLight[" + std::to_string(id) + "].pos", _pos);
+			shader->setVec3("uLight[" + std::to_string(id) + "].color", _color);
+
+			shader->setFloat("uLight[" + std::to_string(id) + "].contant", _constant);
+			shader->setFloat("uLight[" + std::to_string(id) + "].linear", _linear);
+			shader->setFloat("uLight[" + std::to_string(id) + "].quadratic", _quadratic);
+		}
+	private:
+		void	_genMesh()
+		{
+			const Vec3	V1(-0.5, 0.5, 0.5);
+			const Vec3	V2(0.5, 0.5, 0.5);
+			const Vec3	V6(0.5, -0.5, 0.5);
+			const Vec3	V5(-0.5, -0.5, 0.5);
+			Mesh::Face	face1;
+			face1.pos1 = V5;
+			face1.pos2 = V2;
+			face1.pos3 = V1;
+			Mesh::Face	face2;
+			face2.pos1 = V5;
+			face2.pos2 = V6;
+			face2.pos3 = V2;
+
+			_mesh = _meshes.get("assets/models/empty.obj");
+			_shader = _shaders.get("assets/shaders/core/billboard");
+
+			_mesh->addFace(face1);
+			_mesh->addFace(face2);
+			_mesh->upload();
+		}
+		MeshCache				&_meshes;
+		ShaderCache				&_shaders;
+
+		Vec3					_pos;
+		Vec3					_color;
+		float					_constant = 1.0f;
+		float					_linear = 0.09f;
+		float					_quadratic = 0.032f;
+
+		std::shared_ptr<Shader>	_shader;
+		std::shared_ptr<Mesh>	_mesh;
+};
