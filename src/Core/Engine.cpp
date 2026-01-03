@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:17:16 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 14:03:10 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 20:19:31 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	Engine::_loop()
 	{
 		if (_scene->requestedScene())
 		{
+			_lights.unload();
 			_scene = std::move(_scene->sceneRequest());
 			_scene->build();
 		}

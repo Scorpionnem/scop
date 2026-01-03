@@ -6,11 +6,38 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:32:26 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:53:01 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 19:59:37 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Mesh.hpp"
+
+void	Mesh::draw(std::shared_ptr<Shader> shader)
+{
+	shader->use();
+
+	for (auto &pair : _materialGroups)
+	{
+		MaterialGroup	&mtl = pair.second;
+
+		shader->setInt("tex", 0);
+		shader->setInt("uMaterial.hasDiffuseTex", 0);
+		if (mtl.material.texture)
+		{
+			shader->setInt("uMaterial.hasDiffuseTex", 1);
+			mtl.material.texture->bind(0);
+		}
+
+		shader->setFloat("uMaterial.opacity", mtl.material.opacity);
+		shader->setFloat("uMaterial.shininess", mtl.material.shininess);
+		shader->setVec3("uMaterial.ambient", mtl.material.ambient);
+		shader->setVec3("uMaterial.diffuse", mtl.material.diffuse);
+		shader->setVec3("uMaterial.specular", mtl.material.specular);
+
+		glBindVertexArray(mtl.VAO);
+		glDrawArrays(GL_TRIANGLES, 0, mtl.vertices.size());
+	}
+}
 
 void	Mesh::load(const std::string &path)
 {

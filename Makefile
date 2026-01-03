@@ -12,6 +12,9 @@ INCLUDE_DIRS :=	includes/\
 				includes/Core\
 				includes/Math\
 				includes/Scop\
+				includes/Vox\
+				includes/Vox/World\
+				includes/Vox/World/Chunk\
 				includes/Core/Resources\
 				includes/Core/Resources/Cache\
 				includes/Core/Rendering/Light\
@@ -29,6 +32,7 @@ SRCS :=	main\
 		Core/Resources/Cache/ShaderCache\
 		Core/Rendering/Light/Cache/LightCache\
 		Scop/RenderScene\
+		Vox/VoxScene\
 		Math/Math
 
 ###

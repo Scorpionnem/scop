@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 13:13:53 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 16:30:52 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 21:11:04 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,13 @@ inline Mat4 operator*(const Mat4 &a, const Mat4 &b)
 		}
 	}
 	return (result);
+}
+
+inline Mat4 translate(const Vec3 &v)
+{
+	Mat4 m(1);
+	m(3, 0) = v.x;
+	m(3, 1) = v.y;
+	m(3, 2) = v.z;
+	return (m);
 }

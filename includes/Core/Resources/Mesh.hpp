@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:30:57 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 20:02:15 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,17 @@ class	Mesh
 			Vec3	normal2;
 			Vec3	normal3;
 		};
+		struct	Material
+		{
+			Vec3	ambient = Vec3(1); // Ka
+			Vec3	diffuse = Vec3(1); // Kd
+			Vec3	specular = Vec3(0); // Ks
+
+			float	shininess = 0; // Ns
+			float	opacity = 1; // d / Tr
+
+			std::shared_ptr<Texture>	texture;
+		};
 	public:
 		Mesh(TextureCache &txm) : _txm(txm) {}
 		~Mesh() {}
@@ -61,40 +72,19 @@ class	Mesh
 				mtl.VAO = 0;
 			}
 		}
-		void	draw(std::shared_ptr<Shader> shader)
-		{
-			shader->use();
-
-			for (auto &pair : _materialGroups)
-			{
-				MaterialGroup	&mtl = pair.second;
-
-				shader->setInt("tex", 0);
-				shader->setInt("uMaterial.hasDiffuseTex", 0);
-				if (mtl.material.texture)
-				{
-					shader->setInt("uMaterial.hasDiffuseTex", 1);
-					mtl.material.texture->bind(0);
-				}
-
-				shader->setFloat("uMaterial.opacity", mtl.material.opacity);
-				shader->setFloat("uMaterial.shininess", mtl.material.shininess);
-				shader->setVec3("uMaterial.ambient", mtl.material.ambient);
-				shader->setVec3("uMaterial.diffuse", mtl.material.diffuse);
-				shader->setVec3("uMaterial.specular", mtl.material.specular);
-
-				glBindVertexArray(mtl.VAO);
-				glDrawArrays(GL_TRIANGLES, 0, mtl.vertices.size());
-			}
-		}
+		void	draw(std::shared_ptr<Shader> shader);
 
 		uint32_t	getTriangleCount() {return (_triangleCount);}
-		void	addFace(Face face)
+		void	addFace(const std::string &material, Face face)
 		{
-			_materialGroups["default"].vertices.push_back({face.pos1, face.normal1, face.uv1});
-			_materialGroups["default"].vertices.push_back({face.pos2, face.normal2, face.uv2});
-			_materialGroups["default"].vertices.push_back({face.pos3, face.normal3, face.uv3});
+			_materialGroups[material].vertices.push_back({face.pos1, face.normal1, face.uv1});
+			_materialGroups[material].vertices.push_back({face.pos2, face.normal2, face.uv2});
+			_materialGroups[material].vertices.push_back({face.pos3, face.normal3, face.uv3});
 			_triangleCount++;
+		}
+		void	addMaterial(const std::string &id, Material material)
+		{
+			_materialGroups[id].material = material;
 		}
 	private:
 		struct Vertex
@@ -114,17 +104,6 @@ class	Mesh
 			int	pos;
 			int	uv;
 			int	normal;
-		};
-		struct	Material
-		{
-			Vec3	ambient = Vec3(1); // Ka
-			Vec3	diffuse = Vec3(1); // Kd
-			Vec3	specular = Vec3(0); // Ks
-
-			float	shininess = 0; // Ns
-			float	opacity = 1; // d / Tr
-
-			std::shared_ptr<Texture>	texture;
 		};
 		struct	MaterialGroup
 		{

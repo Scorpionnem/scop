@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:20:07 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:51:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 20:18:58 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ class	LightCache
 		{
 			for (auto light : _lights)
 				light->draw(view, proj);
+		}
+		void	unload()
+		{
+			_lights.clear();
 		}
 	private:
 		Engine	*_engine;

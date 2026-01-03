@@ -3,6 +3,7 @@
 in vec3 vPos;
 in vec3 vNormal;
 in vec2 vUV;
+in vec3 vWorldPos;
 
 out vec4 FragColor;
 
@@ -47,7 +48,7 @@ uniform sampler2D tex;
 vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
 	vec3 N = normalize(vNormal);
-	vec3 L = normalize(light.pos - vPos);
+	vec3 L = normalize(light.pos - fragPos);
 	vec3 H = normalize(L + viewDir);
 
 	vec3 ambient = uMaterial.diffuse * 0.05 * light.color;
@@ -58,7 +59,7 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 	float spec = pow(max(dot(N, H), 0.0), uMaterial.shininess);
 	vec3 specular = uMaterial.specular * spec * light.color;
 
-	float	distance = length(light.pos - vPos);
+	float	distance = length(light.pos - fragPos);
 	float	attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
 	ambient *= attenuation;
@@ -69,15 +70,15 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 void main()
 {
-	vec3 viewDir = normalize(uViewPos - vPos);
+	vec3 viewDir = normalize(uViewPos - vWorldPos);
 
 	vec4 materialColor = vec4(vec3(1), uMaterial.opacity);
 	if (uMaterial.hasDiffuseTex == 1)
 		materialColor = texture(tex, vUV);
 
-	vec3 result = vec3(0);
+	vec3 result = vec3(0.0);
 	for (int i = 0; i < NR_POINT_LIGHTS; i++)
-		result += CalcPointLight(uLight[i], vNormal, vPos, viewDir);
+		result += CalcPointLight(uLight[i], vNormal, vWorldPos, viewDir);
 
 	materialColor.rgb = materialColor.rgb * result;
 

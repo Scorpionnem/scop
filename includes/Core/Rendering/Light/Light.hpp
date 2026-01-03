@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:04:31 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 17:39:18 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 21:00:49 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ class	Light
 			shader->setFloat("uLight[" + std::to_string(id) + "].linear", _linear);
 			shader->setFloat("uLight[" + std::to_string(id) + "].quadratic", _quadratic);
 		}
+		void	setPos(Vec3 pos)
+		{
+			_pos = pos;
+		}
 	private:
 		void	_genMesh()
 		{
@@ -66,8 +70,8 @@ class	Light
 			_mesh = _meshes.gen();
 			_shader = _shaders.get("assets/shaders/core/billboard");
 
-			_mesh->addFace(face1);
-			_mesh->addFace(face2);
+			_mesh->addFace("default", face1);
+			_mesh->addFace("default", face2);
 			_mesh->upload();
 		}
 		MeshCache				&_meshes;
