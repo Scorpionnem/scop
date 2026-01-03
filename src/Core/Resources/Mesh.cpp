@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:32:26 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 21:31:26 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:37:42 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,11 +198,30 @@ float	Mesh::_parseFloat(std::istringstream &iss)
 	return (val);
 }
 
+int	is_whitespace(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
+}
+
 std::string	Mesh::_preprocessLine(const std::string &line)
 {
+	std::string	process;
 	std::string	res;
 
-	res = line.substr(0, line.find('#'));
-	res = res.substr(0, res.find('\r'));
+	process = line.substr(0, line.find('#'));
+	process = process.substr(0, process.find('\r'));
+	int i = 0;
+	while (process[i])
+	{
+		if (is_whitespace(process[i]))
+		{
+			if (i != 0)
+				res += ' ';
+			while (is_whitespace(process[i]) && process[i])
+				i++;
+		}
+		res += process[i];
+		i++;
+	}
 	return (res);
 }

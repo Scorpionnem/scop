@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:42:51 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:12:27 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:22:00 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,60 +23,22 @@ class	Engine
 	public:
 		Engine() : _textures(this), _meshes(this), _shaders(this) {}
 		~Engine() {}
-		void	start(Scene *scene)
-		{
-			clock_gettime(CLOCK_MONOTONIC, &_lastFrame);
-			_time = 0;
-
-			_window.open(800, 800, "scop");
-
-			_scene = scene;
-			_scene->build();
-			_loop();
-		}
+		void	start(std::unique_ptr<Scene> scene);
 
 		TextureCache	&getTextureCache() const {return (_textures);}
-		MeshCache	&getMeshCache() const {return (_meshes);}
-		ShaderCache	&getShaderCache() const {return (_shaders);}
+		MeshCache		&getMeshCache() const {return (_meshes);}
+		ShaderCache		&getShaderCache() const {return (_shaders);}
+
 		std::shared_ptr<Mesh>	loadMesh(const std::string &path) const {return (_meshes.get(path));}
 		std::shared_ptr<Shader>	loadShader(const std::string &path) const {return (_shaders.get(path));}
-		const Window	&getWindow() const
-		{
-			return (_window);
-		}
+
+		const Window	&getWindow() const {return (_window);}
+
 		// Time since engine.start was called
-		double getTime() const
-		{
-			return (_time);
-		}
+		double getTime() const {return (_time);}
 	private:
-		void	_loop()
-		{
-			while (_window.running())
-			{
-				if (_scene && _scene->requestedStop())
-					break ;
-
-				struct timespec	currentFrame;
-				double			deltaTime;
-
-				clock_gettime(CLOCK_MONOTONIC, &currentFrame);
-				deltaTime = (currentFrame.tv_sec - _lastFrame.tv_sec) + (currentFrame.tv_nsec - _lastFrame.tv_nsec) * 1e-9;
-				_time += deltaTime;
-				_lastFrame = currentFrame;
-
-				_window.pollEvents();
-
-				if (_scene)
-				{
-					_scene->update(deltaTime, _window.getEvents());
-					_scene->display();
-				}
-
-				_window.display();
-			}
-		}
-		Scene	*_scene;
+		void	_loop();
+		std::unique_ptr<Scene>	_scene;
 		Window	_window;
 		double	_time;
 		mutable TextureCache	_textures;

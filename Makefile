@@ -20,6 +20,7 @@ INCLUDE_DIRS :=	includes/\
 SRCS :=	main\
 		Core/Window\
 		Math/Vec3\
+		Core/Engine\
 		Core/Resources/Shader\
 		Core/Resources/Mesh\
 		Core/Resources/Cache/MeshCache\

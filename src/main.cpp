@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:38:48 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 19:53:08 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:23:06 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,5 @@ int	main(int ac, char **av)
 
 	Engine	engine;
 
-	engine.start(new RenderScene(engine, av[1]));
+	engine.start(std::make_unique<RenderScene>(engine, av[1]));
 }
