@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:47 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 00:24:27 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 00:41:40 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,16 @@ class	Chunk
 			_blocks.resize(CHUNK_VOLUME);
 
 			for (int x = 0; x < CHUNK_SIZE; x++)
-				for (int y = 0; y < CHUNK_SIZE; y++)
-					for (int z = 0; z < CHUNK_SIZE; z++)
-						if (worldPos(Vec3(x, y, z)).y < 10)
+				for (int z = 0; z < CHUNK_SIZE; z++)
+				{
+					for (int y = 0; y < CHUNK_SIZE; y++)
+					{
+						Vec3	wp = worldPos(Vec3(x, y, z));
+						int	sinmax = (std::sin(wp.x / 10.0) + std::cos(wp.z / 10.0)) * 10;
+						if (worldPos(Vec3(x, y, z)).y < sinmax)
 							setBlock(Vec3(x, y, z), true);
+					}
+				}
 			_mesh = meshCache.gen();
 			genMesh();
 		}
