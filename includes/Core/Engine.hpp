@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:42:51 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 23:51:55 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:12:27 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,15 @@
 
 #include <ctime>
 #include "Scene.hpp"
+#include "MeshCache.hpp"
+#include "TextureCache.hpp"
+#include "ShaderCache.hpp"
 
 class	Engine
 {
 	public:
+		Engine() : _textures(this), _meshes(this), _shaders(this) {}
+		~Engine() {}
 		void	start(Scene *scene)
 		{
 			clock_gettime(CLOCK_MONOTONIC, &_lastFrame);
@@ -29,6 +34,12 @@ class	Engine
 			_scene->build();
 			_loop();
 		}
+
+		TextureCache	&getTextureCache() const {return (_textures);}
+		MeshCache	&getMeshCache() const {return (_meshes);}
+		ShaderCache	&getShaderCache() const {return (_shaders);}
+		std::shared_ptr<Mesh>	loadMesh(const std::string &path) const {return (_meshes.get(path));}
+		std::shared_ptr<Shader>	loadShader(const std::string &path) const {return (_shaders.get(path));}
 		const Window	&getWindow() const
 		{
 			return (_window);
@@ -68,6 +79,9 @@ class	Engine
 		Scene	*_scene;
 		Window	_window;
 		double	_time;
+		mutable TextureCache	_textures;
+		mutable MeshCache		_meshes;
+		mutable ShaderCache		_shaders;
 
 		struct timespec	_lastFrame = {0, 0};
 };

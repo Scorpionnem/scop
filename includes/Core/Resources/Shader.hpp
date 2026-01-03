@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 13:58:29 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 22:55:04 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:11:36 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,8 @@
 class	Shader
 {
 	public:
-		Shader()
-		{
-
-		}
+		Shader() {}
+		~Shader() {}
 
 		void	use();
 		void	load(GLenum type, const std::string &path);

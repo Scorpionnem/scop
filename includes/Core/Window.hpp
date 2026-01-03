@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:44:54 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 01:36:30 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 11:16:19 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,20 @@ class	Window
 						return (false);
 					return (find->second);
 				}
+				bool	getMouseBtnPressed(int key) const
+				{
+					auto find = _mouseBtnPressed.find(key);
+					if (find == _mouseBtnPressed.end())
+						return (false);
+					return (find->second);
+				}
+				bool	getMouseBtnLifted(int key) const
+				{
+					auto find = _mouseBtnLifted.find(key);
+					if (find == _mouseBtnLifted.end())
+						return (false);
+					return (find->second);
+				}
 				bool	getKeyPressed(int key) const
 				{
 					auto find = _keysPressed.find(key);
@@ -59,6 +73,14 @@ class	Window
 				{
 					_mouseBtn[key] = state;
 				}
+				void	setMouseBtnPressed(int key)
+				{
+					_mouseBtnPressed[key] = true;
+				}
+				void	setMouseBtnLifted(int key)
+				{
+					_mouseBtnLifted[key] = true;
+				}
 				void	setKeyPressed(int key)
 				{
 					_keysPressed[key] = true;
@@ -74,6 +96,8 @@ class	Window
 					_mouseDeltaY = 0;
 					_mouseScroll = 0;
 					_keysPressed.clear();
+					_mouseBtnPressed.clear();
+					_mouseBtnLifted.clear();
 				}
 			private:
 				float	_mouseDeltaX = 0;
@@ -82,6 +106,8 @@ class	Window
 				std::map<int, bool>	_keys;
 				std::map<int, bool>	_keysPressed;
 				std::map<int, bool>	_mouseBtn;
+				std::map<int, bool>	_mouseBtnPressed;
+				std::map<int, bool>	_mouseBtnLifted;
 		};
 		void	setMousePos(int x, int y) const
 		{

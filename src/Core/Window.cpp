@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:51:41 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 01:35:25 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 11:16:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,11 @@ void	Window::pollEvents()
 				break ;
 			case SDL_MOUSEBUTTONDOWN:
 				_events.setMouseBtn(event.button.button, true);
+				_events.setMouseBtnPressed(event.button.button);
 				break ;
 			case SDL_MOUSEBUTTONUP:
 				_events.setMouseBtn(event.button.button, false);
+				_events.setMouseBtnLifted(event.button.button);
 				break ;
 			case SDL_MOUSEWHEEL:
 				_events.setMouseScroll(event.wheel.y);

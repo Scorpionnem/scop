@@ -1,0 +1,27 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MeshCache.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/03 12:02:29 by mbatty            #+#    #+#             */
+/*   Updated: 2026/01/03 12:02:30 by mbatty           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Engine.hpp"
+
+std::shared_ptr<Mesh>	MeshCache::get(const std::string &path)
+{
+	auto	[it, inserted] = _meshes.try_emplace(path);
+
+	if (inserted)
+	{
+		it->second = std::make_shared<Mesh>(_engine->getTextureCache());
+		it->second->load(path);
+		it->second->upload();
+	}
+
+	return (it->second);
+}

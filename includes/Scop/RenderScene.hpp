@@ -6,14 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:48:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 23:02:52 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:12:40 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Scene.hpp"
-#include "Mesh.hpp"
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Engine.hpp"
@@ -33,7 +32,7 @@ class	RenderScene : public Scene
 
 		Mat4	_model;
 
-		Shader	_shader;
-		Mesh	_mesh;
+		std::shared_ptr<Shader>	_shader;
+		std::shared_ptr<Mesh>	_mesh;
 		Camera	_camera;
 };

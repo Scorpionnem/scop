@@ -12,14 +12,18 @@ INCLUDE_DIRS :=	includes/\
 				includes/Core\
 				includes/Math\
 				includes/Scop\
+				includes/Core/Resources\
+				includes/Core/Resources/Cache\
 				external/glad\
 				external/stb_image
 
 SRCS :=	main\
 		Core/Window\
 		Math/Vec3\
-		Core/Shader\
-		Core/Mesh\
+		Core/Resources/Shader\
+		Core/Resources/Mesh\
+		Core/Resources/Cache/MeshCache\
+		Core/Resources/Cache/ShaderCache\
 		Scop/RenderScene\
 		Math/Math
 

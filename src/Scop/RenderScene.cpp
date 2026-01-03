@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 23:59:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:14:02 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,13 @@
 
 void	RenderScene::build()
 {
-	_mesh.load(_modelPath);
-	_mesh.upload();
-	std::cout << _mesh.getTriangleCount() << " Triangles" << std::endl;
+	_mesh = _engine.loadMesh(_modelPath);
+	std::cout << _mesh->getTriangleCount() << " Triangles" << std::endl;
 
 	_camera.pos = Vec3(0, 2, 5);
 	_camera.pitch = -20;
 
-	_shader.load(GL_VERTEX_SHADER, "assets/shaders/mesh.vs");
-	_shader.load(GL_FRAGMENT_SHADER, "assets/shaders/mesh.fs");
-	_shader.link();
+	_shader = _engine.loadShader("assets/shaders/mesh");
 
 	_model = Mat4(1);
 }
@@ -42,7 +39,7 @@ void	RenderScene::update(float delta, const Window::Events &events)
 	if (events.getKeyPressed(SDLK_r) && events.getKey(SDLK_LCTRL))
 	{
 		std::cout << "Reloading shader" << std::endl;
-		_shader.reload();
+		_shader->reload();
 	}
 
 	_updateCamera(delta, events);
@@ -51,6 +48,7 @@ void	RenderScene::update(float delta, const Window::Events &events)
 void	RenderScene::_updateCamera(float delta, const Window::Events &events)
 {
 	float	speed = 10 * delta;
+	float	sensitivity = 0.3;
 
 	if (events.getKey(SDLK_w))
 		_camera.pos = _camera.pos + _camera.front * speed;
@@ -72,11 +70,17 @@ void	RenderScene::_updateCamera(float delta, const Window::Events &events)
 		_camera.yaw += speed * 2;
 	if (events.getKey(SDLK_LEFT))
 		_camera.yaw -= speed * 2;
+
+	if (events.getMouseBtnPressed(SDL_BUTTON_LEFT))
+		SDL_ShowCursor(SDL_DISABLE);
+	if (events.getMouseBtnLifted(SDL_BUTTON_LEFT))
+		SDL_ShowCursor(SDL_ENABLE);
 	if (events.getMouseBtn(SDL_BUTTON_LEFT))
 	{
-		_camera.pitch -= events.getMouseDeltaY() * 0.3;
-		_camera.yaw += events.getMouseDeltaX() * 0.3;
+		_camera.pitch -= events.getMouseDeltaY() * sensitivity;
+		_camera.yaw += events.getMouseDeltaX() * sensitivity;
 	}
+
 	_camera.update();
 }
 
@@ -84,18 +88,17 @@ void	RenderScene::display()
 {
 	Mat4	projection = perspective(70, _engine.getWindow().aspectRatio(), 0.01, 1000);
 
-	_shader.use();
-	_shader.setMat4("uModel", _model);
-	_shader.setMat4("uView", _camera.getViewMatrix());
-	_shader.setMat4("uProjection", projection);
+	_shader->use();
+	_shader->setMat4("uModel", _model);
+	_shader->setMat4("uView", _camera.getViewMatrix());
+	_shader->setMat4("uProjection", projection);
 
-	_shader.setFloat("uTime", _engine.getTime());
+	_shader->setFloat("uTime", _engine.getTime());
 
-	_shader.setInt("uTriangleCount", _mesh.getTriangleCount());
+	_shader->setInt("uTriangleCount", _mesh->getTriangleCount());
 
-	_shader.setVec3("uLightPos", Vec3(3, 10, 3));
-	_shader.setVec3("uLightColor", Vec3(1, 1, 1));
-	_shader.setVec3("uViewPos", _camera.pos);
-
-	_mesh.draw(_shader);
+	_shader->setVec3("uLightPos", Vec3(3, 10, 3));
+	_shader->setVec3("uLightColor", Vec3(1, 1, 1));
+	_shader->setVec3("uViewPos", _camera.pos);
+	_mesh->draw(_shader);
 }
