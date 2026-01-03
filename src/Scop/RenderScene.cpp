@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:56:05 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 17:40:07 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	RenderScene::build()
 	_camera.pos = Vec3(0, 2, 5);
 	_camera.pitch = -20;
 
-	_engine.getLightCache().add(Vec3(2.5), Vec3(1));
-	_engine.getLightCache().add(Vec3(-3), Vec3(1, 0, 1));
+	_engine.getLightCache().add(Vec3(4.5, 3, -1.7), Vec3(0, 0.5, 0.8));
+	_engine.getLightCache().add(Vec3(-0.4, 3, 1), Vec3(0.9, 0, 0.15));
 
 	_shader = _engine.loadShader("assets/shaders/core/mesh");
 

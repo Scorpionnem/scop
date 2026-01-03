@@ -6,11 +6,16 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:02:29 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:02:30 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 17:38:27 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Engine.hpp"
+
+std::shared_ptr<Mesh>	MeshCache::gen()
+{
+	return (std::make_shared<Mesh>(_engine->getTextureCache()));
+}
 
 std::shared_ptr<Mesh>	MeshCache::get(const std::string &path)
 {

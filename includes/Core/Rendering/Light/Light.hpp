@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:04:31 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:48:45 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 17:39:18 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class	Light
 			face2.pos2 = V6;
 			face2.pos3 = V2;
 
-			_mesh = _meshes.get("assets/models/empty.obj");
+			_mesh = _meshes.gen();
 			_shader = _shaders.get("assets/shaders/core/billboard");
 
 			_mesh->addFace(face1);
