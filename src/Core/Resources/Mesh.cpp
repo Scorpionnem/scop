@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:32:26 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:37:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:53:01 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ void	Mesh::load(const std::string &path)
 
 void	Mesh::upload()
 {
+	if (uploaded)
+		unlink();
+	uploaded = true;
 	for (auto &pair : _materialGroups)
 	{
 		MaterialGroup	&mtl = pair.second;
@@ -168,6 +171,61 @@ void	Mesh::_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss)
 	}
 }
 
+void	Mesh::_parseMtlLib(const std::string &path)
+{
+	std::ifstream	file(path);
+	if (!file.is_open())
+		throw (std::runtime_error("Failed to open " + path));
+
+	Material	*currentMaterial = &_materialGroups["default"].material;
+
+	std::string	line;
+	uint32_t	lineNumber = 0;
+	while (std::getline(file, line))
+	{
+		_lineNumber++;
+
+		line = _preprocessLine(line);
+		if (line.empty())
+			continue ;
+
+		std::istringstream	iss(line);
+
+		std::string	identifier;
+
+		if (!(iss >> identifier))
+			throw std::runtime_error("Failed to get identifier at line " + std::to_string(lineNumber));
+
+		if (identifier == "Ka")
+			currentMaterial->ambient = _parseVec3(iss);
+		else if (identifier == "Kd")
+			currentMaterial->diffuse = _parseVec3(iss);
+		else if (identifier == "Ks")
+			currentMaterial->specular= _parseVec3(iss);
+		else if (identifier == "Ns")
+			currentMaterial->shininess = _parseFloat(iss);
+		else if (identifier == "d" || identifier == "Tr")
+			currentMaterial->opacity = _parseFloat(iss);
+		else if (identifier == "newmtl")
+		{
+			std::string mtlName = line.substr(identifier.size() + 1);
+			currentMaterial = &_materialGroups[mtlName].material;
+		}
+		else if (identifier == "map_Kd")
+		{
+			std::string	directory = path.substr(0, path.find_last_of("/"));
+			if (path.find_last_of("/") == path.npos)
+				directory = "";
+
+			std::string texPath = directory + (directory.size() ? "/" : "") + line.substr(identifier.size() + 1);
+
+			currentMaterial->texture = _txm.get(texPath);
+		}
+		else
+			{}
+	}
+}
+
 Vec3	Mesh::_parseVec3(std::istringstream &iss)
 {
 	double	x, y, z;
@@ -205,23 +263,9 @@ int	is_whitespace(char c)
 
 std::string	Mesh::_preprocessLine(const std::string &line)
 {
-	std::string	process;
 	std::string	res;
 
-	process = line.substr(0, line.find('#'));
-	process = process.substr(0, process.find('\r'));
-	int i = 0;
-	while (process[i])
-	{
-		if (is_whitespace(process[i]))
-		{
-			if (i != 0)
-				res += ' ';
-			while (is_whitespace(process[i]) && process[i])
-				i++;
-		}
-		res += process[i];
-		i++;
-	}
+	res = line.substr(0, line.find('#'));
+	res = res.substr(0, res.find('\r'));
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:37:45 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 12:54:58 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,37 @@
 class	Mesh
 {
 	public:
+		struct	Face
+		{
+			Face() {}
+			Vec3	pos1;
+			Vec3	pos2;
+			Vec3	pos3;
+			Vec2	uv1;
+			Vec2	uv2;
+			Vec2	uv3;
+			Vec3	normal1;
+			Vec3	normal2;
+			Vec3	normal3;
+		};
+	public:
 		Mesh(TextureCache &txm) : _txm(txm) {}
 		~Mesh() {}
 
 		void	load(const std::string &path);
 		void	upload();
+		void	unlink()
+		{
+			for (auto &pair : _materialGroups)
+			{
+				MaterialGroup	&mtl = pair.second;
+
+				glDeleteBuffers(1, &mtl.VBO);
+				glDeleteVertexArrays(1, &mtl.VAO);
+				mtl.VBO = 0;
+				mtl.VAO = 0;
+			}
+		}
 		void	draw(std::shared_ptr<Shader> shader)
 		{
 			for (auto &pair : _materialGroups)
@@ -61,20 +87,14 @@ class	Mesh
 		}
 
 		uint32_t	getTriangleCount() {return (_triangleCount);}
-	private:
-		struct	Face
+		void	addFace(Face face)
 		{
-			Face() {}
-			Vec3	pos1;
-			Vec3	pos2;
-			Vec3	pos3;
-			Vec2	uv1;
-			Vec2	uv2;
-			Vec2	uv3;
-			Vec3	normal1;
-			Vec3	normal2;
-			Vec3	normal3;
-		};
+			_materialGroups["default"].vertices.push_back({face.pos1, face.normal1, face.uv1});
+			_materialGroups["default"].vertices.push_back({face.pos2, face.normal2, face.uv2});
+			_materialGroups["default"].vertices.push_back({face.pos3, face.normal3, face.uv3});
+			_triangleCount++;
+		}
+	private:
 		struct Vertex
 		{
 			Vec3 pos;
@@ -111,60 +131,7 @@ class	Mesh
 			uint32_t			VAO;
 			uint32_t			VBO;
 		};
-		void	_parseMtlLib(const std::string &path)
-		{
-			std::ifstream	file(path);
-			if (!file.is_open())
-				throw (std::runtime_error("Failed to open " + path));
-
-			Material	*currentMaterial = &_materialGroups["default"].material;
-
-			std::string	line;
-			uint32_t	lineNumber = 0;
-			while (std::getline(file, line))
-			{
-				_lineNumber++;
-
-				line = _preprocessLine(line);
-				if (line.empty())
-					continue ;
-
-				std::istringstream	iss(line);
-
-				std::string	identifier;
-
-				if (!(iss >> identifier))
-					throw std::runtime_error("Failed to get identifier at line " + std::to_string(lineNumber));
-
-				if (identifier == "Ka")
-					currentMaterial->ambient = _parseVec3(iss);
-				else if (identifier == "Kd")
-					currentMaterial->diffuse = _parseVec3(iss);
-				else if (identifier == "Ks")
-					currentMaterial->specular= _parseVec3(iss);
-				else if (identifier == "Ns")
-					currentMaterial->shininess = _parseFloat(iss);
-				else if (identifier == "d" || identifier == "Tr")
-					currentMaterial->opacity = _parseFloat(iss);
-				else if (identifier == "newmtl")
-				{
-					std::string mtlName = line.substr(identifier.size() + 1);
-					currentMaterial = &_materialGroups[mtlName].material;
-				}
-				else if (identifier == "map_Kd")
-				{
-					std::string	directory = path.substr(0, path.find_last_of("/"));
-					if (path.find_last_of("/") == path.npos)
-						directory = "";
-
-					std::string texPath = directory + (directory.size() ? "/" : "") + line.substr(identifier.size() + 1);
-
-					currentMaterial->texture = _txm.get(texPath);
-				}
-				else
-					{}
-			}
-		}
+		void		_parseMtlLib(const std::string &path);
 		void		_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss);
 		Vec3		_parseVec3(std::istringstream &iss);
 		Vec2		_parseVec2(std::istringstream &iss);
@@ -175,6 +142,7 @@ class	Mesh
 
 		uint32_t	_lineNumber = 0;
 		uint32_t	_triangleCount = 0;
+		bool		uploaded = false;
 
 		std::vector<Vertex>	_vertices;
 

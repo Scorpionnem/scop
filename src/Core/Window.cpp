@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:51:41 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 11:16:43 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 13:04:33 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	Window::open(uint32_t width, uint32_t height, const std::string &title)
 	glDepthFunc(GL_LESS);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_CW);
 
 	glEnable(GL_MULTISAMPLE);
 
