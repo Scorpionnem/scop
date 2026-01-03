@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:44:54 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 20:27:40 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 01:36:30 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class	Window
 						return (false);
 					return (find->second);
 				}
+				float	getMouseScroll() const {return (_mouseScroll);}
 				void	setKey(int key, bool state)
 				{
 					_keys[key] = state;
@@ -66,15 +67,18 @@ class	Window
 				float	getMouseDeltaY() const {return (_mouseDeltaY);}
 				void	setMouseDeltaX(float val) {_mouseDeltaX = val;}
 				void	setMouseDeltaY(float val) {_mouseDeltaY = val;}
+				void	setMouseScroll(float val) {_mouseScroll = val;}
 				void	reset()
 				{
 					_mouseDeltaX = 0;
 					_mouseDeltaY = 0;
+					_mouseScroll = 0;
 					_keysPressed.clear();
 				}
 			private:
 				float	_mouseDeltaX = 0;
 				float	_mouseDeltaY = 0;
+				float	_mouseScroll = 0;
 				std::map<int, bool>	_keys;
 				std::map<int, bool>	_keysPressed;
 				std::map<int, bool>	_mouseBtn;

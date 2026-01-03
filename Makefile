@@ -70,7 +70,7 @@ $(OBJ_DIR)/%.o: %.cpp
 	@echo Compiling $@
 	@$(CXX) $(CXXFLAGS) $(INCLUDE_DIRS) -c $< -o $@
 
-re: fclean all
+re: fclean compile
 
 fclean: clean
 	@echo Removed $(NAME)

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 21:51:41 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 21:38:13 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/03 01:35:25 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,9 @@ void	Window::pollEvents()
 				break ;
 			case SDL_MOUSEBUTTONUP:
 				_events.setMouseBtn(event.button.button, false);
+				break ;
+			case SDL_MOUSEWHEEL:
+				_events.setMouseScroll(event.wheel.y);
 				break ;
 		}
 	}
