@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:52 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 13:59:39 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 15:37:46 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,51 @@
 #include <memory>
 #include <ChunkGenerator.hpp>
 
+#define RENDER_DISTANCE 5
+
 struct World
 {
 	World(MeshCache &cache) : _generator(16, cache) {}
 	~World() {}
 	ChunkGenerator	_generator;
 
+	void	update(Camera &camera)
+	{
+		Vec3	camChunkPos = Vec3((int)(camera.pos.x / CHUNK_SIZE), (int)(camera.pos.y / CHUNK_SIZE), (int)(camera.pos.z / CHUNK_SIZE));
+
+		int	startX = camChunkPos.x - RENDER_DISTANCE;
+		int	startZ = camChunkPos.z - RENDER_DISTANCE;
+		int	startY = camChunkPos.y - RENDER_DISTANCE;
+		int	endX = camChunkPos.x + RENDER_DISTANCE;
+		int	endZ = camChunkPos.z + RENDER_DISTANCE;
+		int	endY = camChunkPos.y + RENDER_DISTANCE;
+
+		_loadedChunks.clear();
+		for (int x = startX; x < endX; x++)
+			for (int z = startZ; z < endZ; z++)
+				for (int y = startY; y < endY; y++)
+				{
+					std::shared_ptr<Chunk> chunk = getChunk(Vec3i(x, y, z));
+					if (!chunk)
+					{
+						genChunk(Vec3i(x, y, z));
+						continue ;
+					}
+					_loadedChunks.push_back(chunk);
+				}
+		for (auto it = _chunks.begin(); it != _chunks.end(); )
+		{
+			if (it->second->_meshed)
+				it = _chunks.erase(it);
+			else
+				++it;
+		}
+		for (auto chunk : _loadedChunks)
+		{
+			_chunks.insert(std::make_pair(chunk->_pos.hash(), chunk));
+		}
+	}
+	std::vector<std::shared_ptr<Chunk>>	&getLoadedChunks() {return (_loadedChunks);}
 	std::shared_ptr<Chunk>	getChunk(Vec3i pos)
 	{
 		auto find = _chunks.find(pos.hash());
@@ -39,4 +78,5 @@ struct World
 		_chunks.insert(std::make_pair(pos.hash(), chunk));
 	}
 	std::unordered_map<uint64_t, std::shared_ptr<Chunk>>	_chunks;
+	std::vector<std::shared_ptr<Chunk>>						_loadedChunks;
 };

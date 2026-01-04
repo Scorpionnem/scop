@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:15:34 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 14:40:54 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 15:24:47 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ void	VoxScene::_updateCamera(float delta, const Window::Events &events)
 	}
 
 	_camera.update();
+	_world.update(_camera);
 }
 
 void	VoxScene::display()
@@ -207,36 +208,15 @@ void	VoxScene::display()
 
 	_light->setPos(_camera.pos);
 
-	Vec3	camChunkPos = Vec3((int)(_camera.pos.x / CHUNK_SIZE), (int)(_camera.pos.y / CHUNK_SIZE), (int)(_camera.pos.z / CHUNK_SIZE));
+	auto chunks = _world.getLoadedChunks();
+	for (auto chunk : chunks)
+	{
+		if (!chunk->_meshed)
+			continue ;
 
-	#define RENDER_DISTANCE 5
-
-	int	startX = camChunkPos.x - RENDER_DISTANCE;
-	int	startZ = camChunkPos.z - RENDER_DISTANCE;
-	int	startY = camChunkPos.y - RENDER_DISTANCE;
-	int	endX = camChunkPos.x + RENDER_DISTANCE;
-	int	endZ = camChunkPos.z + RENDER_DISTANCE;
-	int	endY = camChunkPos.y + RENDER_DISTANCE;
-
-	for (int x = startX; x < endX; x++)
-		for (int z = startZ; z < endZ; z++)
-			for (int y = startY; y < endY; y++)
-			{
-
-				std::shared_ptr<Chunk> chunk = _world.getChunk(Vec3i(x, y, z));
-				if (!chunk)
-				{
-					_world.genChunk(Vec3i(x, y, z));
-					continue ;
-				}
-
-				if (!chunk->_meshed)
-					continue ;
-
-				chunk->upload();
-
-				_shader->use();
-				_shader->setMat4("uModel", translate(chunk->_pos * CHUNK_SIZE));
-				chunk->draw(_shader);
-			}
+		chunk->upload();
+		_shader->use();
+		_shader->setMat4("uModel", translate(chunk->_pos * CHUNK_SIZE));
+		chunk->draw(_shader);
+	}
 }
