@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:42:51 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:27:51 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 13:54:25 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,20 @@ class	Engine
 		const Window	&getWindow() const {return (_window);}
 
 		// Time since engine.start was called
-		double getTime() const {return (_time);}
+		double getTime() const
+		{
+			double	res;
+
+			struct timespec	current;
+
+			clock_gettime(CLOCK_MONOTONIC, &current);
+			res = (current.tv_sec) + (current.tv_nsec) * 1e-9;
+			return (res);
+		}
 	private:
 		void	_loop();
 		std::unique_ptr<Scene>	_scene;
 		Window	_window;
-		double	_time;
 		mutable TextureCache	_textures;
 		mutable MeshCache		_meshes;
 		mutable ShaderCache		_shaders;

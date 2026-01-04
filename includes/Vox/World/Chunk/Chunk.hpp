@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:47 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 00:41:40 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 14:50:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,85 @@
 #include <Math.hpp>
 #include <Shader.hpp>
 #include <MeshCache.hpp>
+#include <atomic>
 
-# define CHUNK_SIZE 16
+# define CHUNK_SIZE 32
 # define CHUNK_VOLUME CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE
 # define BLOCK bool
+
+#define seed 123123432984128974
+
+inline Vec2 randomGradient(int ix, int iy)
+{
+	const unsigned w = 8 * sizeof(unsigned);
+	const unsigned s = w / 2;
+	unsigned a = ix, b = iy;
+	a *= 3284157443 + (seed + 1);
+
+	b ^= a << s | a >> (w - s);
+	b *= 1911520717;
+
+	a ^= b << s | b >> (w - s);
+	a *= 2048419325;
+	float random = (a / (float)UINT_MAX) * 2.0f * M_PI;
+
+	Vec2 v;
+	v.x = sin(random);
+	v.y = cos(random);
+
+	return v;
+}
+
+inline float dotGridGradient(int ix, int iy, float x, float y)
+{
+	Vec2 gradient = randomGradient(ix, iy);
+
+	float dx = x - (float)ix;
+	float dy = y - (float)iy;
+
+	return (dx * gradient.x + dy * gradient.y);
+}
+
+inline float interpolate(float a0, float a1, float w)
+{
+	return (a1 - a0) * (3.0 - w * 2.0) * w * w + a0;
+}
+
+inline float perlin(float x, float y)
+{
+	int x0 = (int)x;
+	int y0 = (int)y;
+	int x1 = x0 + 1;
+	int y1 = y0 + 1;
+
+	float sx = x - (float)x0;
+	float sy = y - (float)y0;
+
+	float n0 = dotGridGradient(x0, y0, x, y);
+	float n1 = dotGridGradient(x1, y0, x, y);
+	float ix0 = interpolate(n0, n1, sx);
+
+	n0 = dotGridGradient(x0, y1, x, y);
+	n1 = dotGridGradient(x1, y1, x, y);
+	float ix1 = interpolate(n0, n1, sx);
+
+	float value = interpolate(ix0, ix1, sy);
+
+	return (value);
+}
+
+inline float	perlin(float x, float y, float z)
+{
+	float ab = perlin(x, y);
+	float bc = perlin(y, z);
+	float ac = perlin(x, z);
+
+	float ba = perlin(y, x);
+	float cb = perlin(z, y);
+	float ca = perlin(z, x);
+
+	return (ab + bc + ac + ba + cb + ca) / 6.0;
+}
 
 namespace Cube
 {
@@ -42,20 +117,39 @@ namespace Cube
 		BOTTOM
 	};
 
-	void	addFace(std::shared_ptr<Mesh> mesh, Vec3 pos, Direction dir);
+	void	addFace(std::shared_ptr<Mesh> mesh, Vec3i pos, Direction dir);
+}
+
+inline float	calcNoise(const Vec3i &pos, float freq, float amp, int noisiness)
+{
+	float	res = 0;
+	for (int i = 0; i < noisiness; i++)
+	{
+		res += perlin(pos.x * freq, pos.y * freq, pos.z * freq) * amp;
+
+		freq *= 2;
+		amp /= 2;
+	}
+
+	if (res > 1.0f)
+		res = 1.0f;
+	else if (res < -1.0f)
+		res = -1.0f;
+
+	return (res);
 }
 
 class	Chunk
 {
 	public:
-		Chunk(Vec3 pos) : _pos(pos) {}
+		Chunk(Vec3i pos) : _pos(pos) {}
 		~Chunk() {}
 
-		Vec3	worldPos(Vec3 pos)
+		Vec3i	worldPos(Vec3i pos)
 		{
 			return (pos + _pos * CHUNK_SIZE);
 		}
-		void	generate(MeshCache &meshCache)
+		void	generate()
 		{
 			_blocks.resize(CHUNK_VOLUME);
 
@@ -64,51 +158,57 @@ class	Chunk
 				{
 					for (int y = 0; y < CHUNK_SIZE; y++)
 					{
-						Vec3	wp = worldPos(Vec3(x, y, z));
-						int	sinmax = (std::sin(wp.x / 10.0) + std::cos(wp.z / 10.0)) * 10;
-						if (worldPos(Vec3(x, y, z)).y < sinmax)
-							setBlock(Vec3(x, y, z), true);
+						Vec3i	wp = worldPos(Vec3i(x, y, z));
+						if (calcNoise(wp, 0.025, 1, 1) > 0.1)
+							setBlock(Vec3i(x, y, z), true);
 					}
 				}
-			_mesh = meshCache.gen();
-			genMesh();
+			_generated = true;
 		}
-		void	genMesh()
+		void	upload()
 		{
+			if (!_uploaded)
+				_mesh->upload();
+			_uploaded = true;
+		}
+		void	genMesh(MeshCache &meshCache)
+		{
+			_mesh = meshCache.gen();
+
 			for (int x = 0; x < CHUNK_SIZE; x++)
 				for (int y = 0; y < CHUNK_SIZE; y++)
 					for (int z = 0; z < CHUNK_SIZE; z++)
 					{
-						if (getBlock(Vec3(x, y, z)))
+						if (getBlock(Vec3i(x, y, z)))
 						{
-							if (!getBlock(Vec3(x, y + 1, z)))
-								Cube::addFace(_mesh, Vec3(x, y, z), Cube::Direction::TOP);
-							if (!getBlock(Vec3(x, y - 1, z)))
-								Cube::addFace(_mesh, Vec3(x, y, z), Cube::Direction::BOTTOM);
-							if (!getBlock(Vec3(x + 1, y, z)))
-								Cube::addFace(_mesh, Vec3(x, y, z), Cube::Direction::EAST);
-							if (!getBlock(Vec3(x - 1, y, z)))
-								Cube::addFace(_mesh, Vec3(x, y, z), Cube::Direction::WEST);
-							if (!getBlock(Vec3(x, y, z + 1)))
-								Cube::addFace(_mesh, Vec3(x, y, z), Cube::Direction::NORTH);
-							if (!getBlock(Vec3(x, y, z - 1)))
-								Cube::addFace(_mesh, Vec3(x, y, z), Cube::Direction::SOUTH);
+							if (!getBlock(Vec3i(x, y + 1, z)))
+								Cube::addFace(_mesh, Vec3i(x, y, z), Cube::Direction::TOP);
+							if (!getBlock(Vec3i(x, y - 1, z)))
+								Cube::addFace(_mesh, Vec3i(x, y, z), Cube::Direction::BOTTOM);
+							if (!getBlock(Vec3i(x + 1, y, z)))
+								Cube::addFace(_mesh, Vec3i(x, y, z), Cube::Direction::EAST);
+							if (!getBlock(Vec3i(x - 1, y, z)))
+								Cube::addFace(_mesh, Vec3i(x, y, z), Cube::Direction::WEST);
+							if (!getBlock(Vec3i(x, y, z + 1)))
+								Cube::addFace(_mesh, Vec3i(x, y, z), Cube::Direction::NORTH);
+							if (!getBlock(Vec3i(x, y, z - 1)))
+								Cube::addFace(_mesh, Vec3i(x, y, z), Cube::Direction::SOUTH);
 						}
 					}
-			_mesh->upload();
+			_meshed = true;
 		}
 		void	draw(std::shared_ptr<Shader> shader)
 		{
 			_mesh->draw(shader);
 		}
-		BLOCK	getBlock(Vec3 pos)
+		BLOCK	getBlock(Vec3i pos)
 		{
 			if (!isInBounds(pos))
 				return (false);
 			int index = pos.x + pos.y * CHUNK_SIZE + pos.z * CHUNK_SIZE * CHUNK_SIZE;
 			return (_blocks[index]);
 		}
-		void	setBlock(Vec3 pos, BLOCK block)
+		void	setBlock(Vec3i pos, BLOCK block)
 		{
 			if (!isInBounds(pos))
 				return ;
@@ -116,7 +216,7 @@ class	Chunk
 			_blocks[index] = block;
 		}
 
-		bool	isInBounds(Vec3 pos)
+		bool	isInBounds(Vec3i pos)
 		{
 			if (pos.x < 0 || pos.y < 0 || pos.z < 0 || pos.x >= CHUNK_SIZE || pos.y >= CHUNK_SIZE || pos.z >= CHUNK_SIZE)
 				return (false);
@@ -124,6 +224,9 @@ class	Chunk
 		}
 	// private:
 		std::vector<BLOCK>	_blocks;
-		Vec3				_pos;
+		Vec3i				_pos;
 		std::shared_ptr<Mesh>	_mesh;
+		bool					_uploaded = false;
+		std::atomic_bool		_generated = false;
+		std::atomic_bool		_meshed = false;
 };

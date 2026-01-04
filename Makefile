@@ -15,6 +15,7 @@ INCLUDE_DIRS :=	includes/\
 				includes/Vox\
 				includes/Vox/World\
 				includes/Vox/World/Chunk\
+				includes/Vox/World/Generation\
 				includes/Core/Resources\
 				includes/Core/Resources/Cache\
 				includes/Core/Rendering/Light\
@@ -25,6 +26,7 @@ INCLUDE_DIRS :=	includes/\
 SRCS :=	main\
 		Core/Window\
 		Math/Vec3\
+		Math/Vec3i\
 		Core/Engine\
 		Core/Resources/Shader\
 		Core/Resources/Mesh\

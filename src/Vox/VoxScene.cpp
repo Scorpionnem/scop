@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:15:34 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 00:19:37 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 14:40:54 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "RenderScene.hpp"
 #include "Math.hpp"
 
-void	Cube::addFace(std::shared_ptr<Mesh> mesh, Vec3 pos, Direction dir)
+void	Cube::addFace(std::shared_ptr<Mesh> mesh, Vec3i pos, Direction dir)
 	{
 		Mesh::Face	Triangle1;
 		Mesh::Face	Triangle2;
@@ -152,7 +152,7 @@ void	VoxScene::update(float delta, const Window::Events &events)
 
 void	VoxScene::_updateCamera(float delta, const Window::Events &events)
 {
-	float	speed = 10 * delta;
+	float	speed = 50 * delta;
 	float	sensitivity = 0.3;
 
 	if (events.getKey(SDLK_w))
@@ -209,18 +209,31 @@ void	VoxScene::display()
 
 	Vec3	camChunkPos = Vec3((int)(_camera.pos.x / CHUNK_SIZE), (int)(_camera.pos.y / CHUNK_SIZE), (int)(_camera.pos.z / CHUNK_SIZE));
 
-	int	startX = camChunkPos.x - 5;
-	int	startZ = camChunkPos.z - 5;
-	int	startY = camChunkPos.y - 5;
-	int	endX = camChunkPos.x + 5;
-	int	endZ = camChunkPos.z + 5;
-	int	endY = camChunkPos.y + 5;
+	#define RENDER_DISTANCE 5
+
+	int	startX = camChunkPos.x - RENDER_DISTANCE;
+	int	startZ = camChunkPos.z - RENDER_DISTANCE;
+	int	startY = camChunkPos.y - RENDER_DISTANCE;
+	int	endX = camChunkPos.x + RENDER_DISTANCE;
+	int	endZ = camChunkPos.z + RENDER_DISTANCE;
+	int	endY = camChunkPos.y + RENDER_DISTANCE;
 
 	for (int x = startX; x < endX; x++)
-		for (int y = startY; y < endY; y++)
-			for (int z = startZ; z < endZ; z++)
+		for (int z = startZ; z < endZ; z++)
+			for (int y = startY; y < endY; y++)
 			{
-				std::shared_ptr<Chunk> chunk = _world.getChunk(Vec3(x, y, z), _engine.getMeshCache());
+
+				std::shared_ptr<Chunk> chunk = _world.getChunk(Vec3i(x, y, z));
+				if (!chunk)
+				{
+					_world.genChunk(Vec3i(x, y, z));
+					continue ;
+				}
+
+				if (!chunk->_meshed)
+					continue ;
+
+				chunk->upload();
 
 				_shader->use();
 				_shader->setMat4("uModel", translate(chunk->_pos * CHUNK_SIZE));

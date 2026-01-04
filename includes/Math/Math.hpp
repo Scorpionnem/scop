@@ -6,13 +6,14 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 13:00:48 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/02 16:32:16 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 12:57:01 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Vec3.hpp"
+#include "Vec3i.hpp"
 #include "Vec2.hpp"
 #include "Mat4.hpp"
 #include <cmath>

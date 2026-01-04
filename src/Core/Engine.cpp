@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:17:16 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 20:19:31 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 13:54:38 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ void	Engine::start(std::unique_ptr<Scene> scene)
 {
 	try {
 		clock_gettime(CLOCK_MONOTONIC, &_lastFrame);
-		_time = 0;
-
 		_window.open(800, 800, "scop");
 
 		_scene = std::move(scene);
@@ -47,7 +45,6 @@ void	Engine::_loop()
 
 		clock_gettime(CLOCK_MONOTONIC, &currentFrame);
 		deltaTime = (currentFrame.tv_sec - _lastFrame.tv_sec) + (currentFrame.tv_nsec - _lastFrame.tv_nsec) * 1e-9;
-		_time += deltaTime;
 		_lastFrame = currentFrame;
 
 		_window.pollEvents();

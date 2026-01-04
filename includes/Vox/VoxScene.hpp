@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:13:58 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 21:00:00 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 14:01:38 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 class	VoxScene : public Scene
 {
 	public:
-		VoxScene(const Engine &engine) : Scene(engine) {}
+		VoxScene(const Engine &engine) : Scene(engine), _world(engine.getMeshCache()) {}
 		~VoxScene() {}
 		void	build();
 		void	update(float delta, const Window::Events &events);

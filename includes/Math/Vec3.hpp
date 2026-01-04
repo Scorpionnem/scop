@@ -6,13 +6,13 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 12:59:42 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 20:37:29 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/04 13:01:22 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <cstdint>
+#include "Vec3i.hpp"
 
 struct	Vec3
 {
@@ -34,22 +34,11 @@ struct	Vec3
 		this->y = xyz;
 		this->z = xyz;
 	}
-
-	uint64_t	hash()
+	Vec3(const Vec3i &vi)
 	{
-		const uint64_t BITS = 21;
-		const uint64_t MASK = (1ULL << BITS) - 1;
-		const int64_t  BIAS = 1LL << (BITS - 1);
-
-		int	x = this->x;
-		int	y = this->y;
-		int	z = this->z;
-
-		uint64_t ux = uint64_t(int64_t(x) + BIAS) & MASK;
-		uint64_t uy = uint64_t(int64_t(y) + BIAS) & MASK;
-		uint64_t uz = uint64_t(int64_t(z) + BIAS) & MASK;
-
-		return (ux << (BITS * 2)) | (uy << (BITS * 1)) | (uz << (BITS * 0));
+		this->x = vi.x;
+		this->y = vi.y;
+		this->z = vi.z;
 	}
 
 	Vec3 operator+(const Vec3 &v) const;

@@ -51,8 +51,6 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 	vec3 L = normalize(light.pos - fragPos);
 	vec3 H = normalize(L + viewDir);
 
-	vec3 ambient = uMaterial.diffuse * 0.05 * light.color;
-
 	float diff = max(dot(N, L), 0.0);
 	vec3 diffuse = uMaterial.diffuse * diff * light.color;
 
@@ -62,10 +60,9 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 	float	distance = length(light.pos - fragPos);
 	float	attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
-	ambient *= attenuation;
 	diffuse *= attenuation;
 	specular *= attenuation;
-	return (ambient + diffuse + specular);
+	return (diffuse + specular);
 }
 
 void main()
@@ -76,7 +73,7 @@ void main()
 	if (uMaterial.hasDiffuseTex == 1)
 		materialColor = texture(tex, vUV);
 
-	vec3 result = vec3(0.0);
+	vec3 result = vec3(0);
 	for (int i = 0; i < NR_POINT_LIGHTS; i++)
 		result += CalcPointLight(uLight[i], vNormal, vWorldPos, viewDir);
 

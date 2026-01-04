@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Vec3i.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/01 21:38:48 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 12:53:20 by mbatty           ###   ########.fr       */
+/*   Created: 2026/01/04 12:57:27 by mbatty            #+#    #+#             */
+/*   Updated: 2026/01/04 12:57:41 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Engine.hpp"
-#include "RenderScene.hpp"
-#include "VoxScene.hpp"
+#include "Vec3i.hpp"
 
-int	main(int ac, char **av)
+Vec3i Vec3i::operator+(const Vec3i &v) const
 {
-	(void)ac;(void)av;
-	// if (ac != 2)
-	// 	return (1);
+	return (Vec3i(x + v.x, y + v.y, z + v.z));
+}
 
-	Engine	engine;
+Vec3i Vec3i::operator-(const Vec3i &v) const
+{
+	return (Vec3i(x - v.x, y - v.y, z - v.z));
+}
 
-	engine.start(std::make_unique<VoxScene>(engine));
+Vec3i Vec3i::operator*(const Vec3i &v) const
+{
+	return (Vec3i(x * v.x, y * v.y, z * v.z));
+}
+
+Vec3i Vec3i::operator/(const Vec3i &v) const
+{
+	return (Vec3i(x / v.x, y / v.y, z / v.z));
 }
