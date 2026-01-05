@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:47 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 17:33:25 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 20:21:43 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,7 +288,7 @@ class	Chunk
 		BLOCK	getBlock(Vec3i pos)
 		{
 			if (!isInBounds(pos))
-				return (true);
+				return (getGenerationBlock(pos));
 			int index = pos.x + pos.y * CHUNK_SIZE + pos.z * CHUNK_SIZE * CHUNK_SIZE;
 			return (_blocks[index]);
 		}
