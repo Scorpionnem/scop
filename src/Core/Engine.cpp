@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:17:16 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 17:11:34 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 20:32:14 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	Engine::start(std::unique_ptr<Scene> scene)
 {
 	try {
 		clock_gettime(CLOCK_MONOTONIC, &_lastFrame);
+		_startTime = getTime();
 		_window.open(800, 800, "scop");
 
 		_scene = std::move(scene);

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:52 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 17:31:58 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 21:39:06 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <memory>
 #include <ChunkGenerator.hpp>
 
-#define RENDER_DISTANCE 10
+#define RENDER_DISTANCE 5
 
 struct World
 {
@@ -57,6 +57,8 @@ struct World
 						genChunk(Vec3i(x, y, z));
 						continue ;
 					}
+					if (!chunk->_meshed)
+						continue ;
 					_loadedChunks.push_back(chunk);
 				}
 		// for (auto it = _chunks.begin(); it != _chunks.end(); )

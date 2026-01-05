@@ -13,6 +13,7 @@ INCLUDE_DIRS :=	includes/\
 				includes/Math\
 				includes/Scop\
 				includes/Vox\
+				includes/Utils\
 				includes/Vox/World\
 				includes/Vox/World/Chunk\
 				includes/Vox/World/Generation\

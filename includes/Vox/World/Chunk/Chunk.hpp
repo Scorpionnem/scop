@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:47 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 20:21:43 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 20:52:17 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <atomic>
 #include <limits.h>
 
-# define CHUNK_SIZE 16
+# define CHUNK_SIZE 32
 # define CHUNK_VOLUME CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE
 # define BLOCK bool
 
@@ -228,6 +228,7 @@ class	Chunk
 		}
 		BLOCK	getGenerationBlock(Vec3i pos)
 		{
+			// return ((pos.x == 16 && pos.y == 16 && pos.z == 16) ? true : false);
 			Vec3i	wp = worldPos(pos);
 
 			if (std::abs(calcNoise(wp, 0.0125, 10, 1)) > 0.1)

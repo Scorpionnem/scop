@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:42:51 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 13:54:25 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 20:32:00 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class	Engine
 
 			clock_gettime(CLOCK_MONOTONIC, &current);
 			res = (current.tv_sec) + (current.tv_nsec) * 1e-9;
-			return (res);
+			return (res - _startTime);
 		}
 	private:
 		void	_loop();
@@ -57,4 +57,5 @@ class	Engine
 		mutable LightCache		_lights;
 
 		struct timespec	_lastFrame = {0, 0};
+		double	_startTime = 0;
 };

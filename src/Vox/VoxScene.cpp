@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:15:34 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 17:47:34 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 20:44:50 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,9 +148,6 @@ void	VoxScene::display()
 	auto chunks = _world.getLoadedChunks();
 	for (auto chunk : chunks)
 	{
-		if (!chunk->_meshed)
-			continue ;
-
 		chunk->upload();
 		_shader->use();
 		_shader->setMat4("uModel", translate(chunk->_pos * CHUNK_SIZE));
