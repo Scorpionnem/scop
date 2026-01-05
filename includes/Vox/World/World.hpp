@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:52 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 14:23:00 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 17:31:58 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,16 @@
 #include <ChunkGenerator.hpp>
 
 #define RENDER_DISTANCE 10
-#define THREAD_COUNT 8
 
 struct World
 {
 	World(MeshCache &cache) : _generator(cache)
 	{
-		_generator.start(THREAD_COUNT);
+		uint32_t	threadCount = std::thread::hardware_concurrency() / 2;
+
+		std::cout << "Starting " << threadCount << " generation thread" << std::endl;
+
+		_generator.start(threadCount);
 	}
 	~World()
 	{

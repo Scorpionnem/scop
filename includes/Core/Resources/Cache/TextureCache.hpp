@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   TextureManager.hpp                                 :+:      :+:    :+:   */
+/*   TextureCache.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:01:13 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:01:14 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 17:09:47 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ class	Engine;
 class	TextureCache
 {
 	public:
-		TextureCache(Engine *engine) : _engine(engine) {}
+		TextureCache(Engine *engine) : _engine(engine)
+		{
+			(void)_engine;
+		}
 		~TextureCache() {}
 
 		std::shared_ptr<Texture>	get(const std::string &path)

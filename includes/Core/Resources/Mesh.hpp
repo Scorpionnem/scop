@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 15:26:06 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 17:11:02 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,6 @@ class	Mesh
 		Vec2		_parseVec2(std::istringstream &iss);
 		float		_parseFloat(std::istringstream &iss);
 		std::string	_preprocessLine(const std::string &line);
-		uint32_t	_VAO;
-		uint32_t	_VBO;
 
 		uint32_t	_lineNumber = 0;
 		uint32_t	_triangleCount = 0;

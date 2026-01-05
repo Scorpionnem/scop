@@ -3,7 +3,7 @@ NAME :=	scop
 ###
 
 CXX :=	c++
-CXXFLAGS :=	-Wall -Wextra -Werror -g -MP -MMD
+CXXFLAGS :=	-Wall -Wextra -Werror -g -MP -MMD -std=c++17
 LFLAGS :=	-lSDL2 -lGL
 
 ###

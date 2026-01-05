@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:15:34 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 15:29:33 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 17:47:34 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	VoxScene::update(float delta, const Window::Events &events)
 	int	windowHeight = _engine.getWindow().height();
 
 	if (events.getKeyPressed(SDLK_1))
-		requestScene(std::move(std::make_unique<RenderScene>(_engine, "assets/models/miata/miata.obj")));
+		requestScene(std::make_unique<RenderScene>(_engine, "assets/models/miata/miata.obj"));
 
 	if (events.getMouseBtn(SDL_BUTTON_LEFT))
 		_engine.getWindow().setMousePos(windowWidth / 2, windowHeight / 2);

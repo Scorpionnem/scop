@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:47 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 15:27:45 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 17:33:25 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <Shader.hpp>
 #include <MeshCache.hpp>
 #include <atomic>
+#include <limits.h>
 
 # define CHUNK_SIZE 16
 # define CHUNK_VOLUME CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE
@@ -201,7 +202,7 @@ inline float	calcNoise(const Vec3i &pos, float freq, float amp, int noisiness)
 	float	res = 0;
 	for (int i = 0; i < noisiness; i++)
 	{
-		res += perlin(pos.x * freq, pos.z * freq) * amp;
+		res += perlin(pos.x * freq, pos.y * freq, pos.z * freq) * amp;
 
 		freq *= 2;
 		amp /= 2;
@@ -225,6 +226,14 @@ class	Chunk
 		{
 			return (pos + _pos * CHUNK_SIZE);
 		}
+		BLOCK	getGenerationBlock(Vec3i pos)
+		{
+			Vec3i	wp = worldPos(pos);
+
+			if (std::abs(calcNoise(wp, 0.0125, 10, 1)) > 0.1)
+				return (true);
+			return (false);
+		}
 		void	generate()
 		{
 			_blocks.resize(CHUNK_VOLUME);
@@ -232,14 +241,10 @@ class	Chunk
 			for (int x = 0; x < CHUNK_SIZE; x++)
 				for (int z = 0; z < CHUNK_SIZE; z++)
 				{
-					Vec3i	wp = worldPos(Vec3i(x, 0, z));
-					float localMaxHeight = calcNoise(wp, 0.0125, 1, 1) * 100;
-
 					for (int y = 0; y < CHUNK_SIZE; y++)
 					{
-						Vec3i	wp2 = worldPos(Vec3i(x, y, z));
-						if (wp2.y < localMaxHeight)
-							setBlock(Vec3i(x, y, z), true);
+						Vec3i	pos = Vec3i(x, y, z);
+						setBlock(pos, getGenerationBlock(pos));
 					}
 				}
 			_generated = true;
