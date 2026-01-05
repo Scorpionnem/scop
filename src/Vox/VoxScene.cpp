@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:15:34 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 15:24:47 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 14:46:01 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,6 @@ void	VoxScene::build()
 	_camera.pos = Vec3(-1, 0, -1);
 	_camera.pitch = -20;
 
-	_light = _engine.getLightCache().add(Vec3(0), Vec3(1));
-
 	_shader = _engine.loadShader("assets/shaders/core/mesh");
 }
 
@@ -205,8 +203,6 @@ void	VoxScene::display()
 
 	_shader->setFloat("uTime", _engine.getTime());
 	_shader->setVec3("uViewPos", _camera.pos);
-
-	_light->setPos(_camera.pos);
 
 	auto chunks = _world.getLoadedChunks();
 	for (auto chunk : chunks)

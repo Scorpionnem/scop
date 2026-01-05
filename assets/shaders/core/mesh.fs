@@ -65,6 +65,14 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 	return (diffuse + specular);
 }
 
+vec3 CalcSunLight(vec3 normal, vec3 fragPos, vec3 sunDir, vec3 sunColor)
+{
+	vec3 sunLightDir = normalize(-sunDir);
+
+	float diff = max(dot(normalize(normal), sunLightDir), 0.0);
+	return (diff * sunColor);
+}
+
 void main()
 {
 	vec3 viewDir = normalize(uViewPos - vWorldPos);
@@ -77,7 +85,9 @@ void main()
 	for (int i = 0; i < NR_POINT_LIGHTS; i++)
 		result += CalcPointLight(uLight[i], vNormal, vWorldPos, viewDir);
 
-	materialColor.rgb = materialColor.rgb * result;
+	result += CalcSunLight(vNormal, vWorldPos, vec3(-0.5, -1, -0.25), vec3(1));
+
+	materialColor.rgb = materialColor.rgb * clamp(result, 0.0, 1.0);
 
 	FragColor = materialColor;
 }
