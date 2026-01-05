@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/04 13:31:04 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 14:09:49 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 13:58:23 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,16 @@
 class	ChunkGenerator
 {
 	public:
-		ChunkGenerator(uint32_t workers, MeshCache &cache) : _cache(cache)
+		ChunkGenerator(MeshCache &cache) : _cache(cache) {}
+		~ChunkGenerator() {}
+
+		void	start(uint32_t workers)
 		{
 			for (uint32_t i = 0; i < workers; ++i)
 				_workers.emplace_back(std::bind(&ChunkGenerator::_generatorWorker, this));
+			std::cout << "Started generation threads" << std::endl;
 		}
-		~ChunkGenerator()
+		void	stop()
 		{
 			std::unique_lock<std::mutex> latch(_queue_mutex);
 			_stop = true;
@@ -40,8 +44,8 @@ class	ChunkGenerator
 
 			for (auto& thread : _workers)
 				thread.join();
+			std::cout << "Stopped generation threads" << std::endl;
 		}
-
 		void	gen(std::shared_ptr<Chunk> chunk)
 		{
 			std::unique_lock<std::mutex> lock(_queue_mutex);
@@ -55,7 +59,7 @@ class	ChunkGenerator
 			{
 				std::unique_lock<std::mutex> latch(_queue_mutex);
 				_cv_task.wait(latch, [this](){ return _stop || !_tasks.empty(); });
-				if (!_tasks.empty())
+				if (!_stop && !_tasks.empty())
 				{
 					std::shared_ptr<Chunk>	chunk = _tasks.front();
 					_tasks.pop_front();
@@ -68,9 +72,7 @@ class	ChunkGenerator
 					latch.lock();
 				}
 				else if (_stop)
-				{
 					break ;
-				}
 			}
 		}
 
@@ -78,6 +80,6 @@ class	ChunkGenerator
 		std::deque<std::shared_ptr<Chunk>>	_tasks;
 		std::mutex							_queue_mutex;
 		std::condition_variable 			_cv_task;
-		bool								_stop = false;
+		std::atomic_bool					_stop = false;
 		MeshCache 							&_cache;
 };

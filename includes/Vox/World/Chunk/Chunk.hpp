@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:47 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/04 14:50:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 14:24:53 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <MeshCache.hpp>
 #include <atomic>
 
-# define CHUNK_SIZE 32
+# define CHUNK_SIZE 16
 # define CHUNK_VOLUME CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE
 # define BLOCK bool
 
@@ -62,8 +62,8 @@ inline float interpolate(float a0, float a1, float w)
 
 inline float perlin(float x, float y)
 {
-	int x0 = (int)x;
-	int y0 = (int)y;
+	int x0 = (int)std::floor(x);
+	int y0 = (int)std::floor(y);
 	int x1 = x0 + 1;
 	int y1 = y0 + 1;
 
@@ -125,7 +125,7 @@ inline float	calcNoise(const Vec3i &pos, float freq, float amp, int noisiness)
 	float	res = 0;
 	for (int i = 0; i < noisiness; i++)
 	{
-		res += perlin(pos.x * freq, pos.y * freq, pos.z * freq) * amp;
+		res += perlin(pos.x * freq, pos.z * freq) * amp;
 
 		freq *= 2;
 		amp /= 2;
@@ -156,10 +156,13 @@ class	Chunk
 			for (int x = 0; x < CHUNK_SIZE; x++)
 				for (int z = 0; z < CHUNK_SIZE; z++)
 				{
+					Vec3i	wp = worldPos(Vec3i(x, 0, z));
+					float localMaxHeight = calcNoise(wp, 0.0125, 1, 1) * 100;
+
 					for (int y = 0; y < CHUNK_SIZE; y++)
 					{
-						Vec3i	wp = worldPos(Vec3i(x, y, z));
-						if (calcNoise(wp, 0.025, 1, 1) > 0.1)
+						Vec3i	wp2 = worldPos(Vec3i(x, y, z));
+						if (wp2.y < localMaxHeight)
 							setBlock(Vec3i(x, y, z), true);
 					}
 				}
@@ -204,7 +207,7 @@ class	Chunk
 		BLOCK	getBlock(Vec3i pos)
 		{
 			if (!isInBounds(pos))
-				return (false);
+				return (true);
 			int index = pos.x + pos.y * CHUNK_SIZE + pos.z * CHUNK_SIZE * CHUNK_SIZE;
 			return (_blocks[index]);
 		}
