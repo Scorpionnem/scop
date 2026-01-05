@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:15:34 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 14:46:01 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/05 15:29:33 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,105 +16,45 @@
 
 void	Cube::addFace(std::shared_ptr<Mesh> mesh, Vec3i pos, Direction dir)
 	{
-		Mesh::Face	Triangle1;
-		Mesh::Face	Triangle2;
+		Mesh::Face	Face1;
+		Mesh::Face	Face2;
 
 		switch (dir)
 		{
 			case Direction::NORTH:
-				Triangle1.pos1 = V5;
-				Triangle1.pos2 = V2;
-				Triangle1.pos3 = V1;
-				Triangle1.normal1 = Vec3(0, 0, 1);
-				Triangle1.normal2 = Vec3(0, 0, 1);
-				Triangle1.normal3 = Vec3(0, 0, 1);
-				Triangle2.pos1 = V5;
-				Triangle2.pos2 = V6;
-				Triangle2.pos3 = V2;
-				Triangle2.normal1 = Vec3(0, 0, 1);
-				Triangle2.normal2 = Vec3(0, 0, 1);
-				Triangle2.normal3 = Vec3(0, 0, 1);
+				Face1 = NORTH_FACE1;
+				Face2 = NORTH_FACE2;
 				break ;
 			case Direction::SOUTH:
-				Triangle1.pos1 = V8;
-				Triangle1.pos2 = V4;
-				Triangle1.pos3 = V3;
-				Triangle1.normal1 = Vec3(0, 0, -1);
-				Triangle1.normal2 = Vec3(0, 0, -1);
-				Triangle1.normal3 = Vec3(0, 0, -1);
-				Triangle2.pos1 = V8;
-				Triangle2.pos2 = V3;
-				Triangle2.pos3 = V7;
-				Triangle2.normal1 = Vec3(0, 0, -1);
-				Triangle2.normal2 = Vec3(0, 0, -1);
-				Triangle2.normal3 = Vec3(0, 0, -1);
+				Face1 = SOUTH_FACE1;
+				Face2 = SOUTH_FACE2;
 				break ;
 			case Direction::EAST:
-				Triangle1.pos1 = V3;
-				Triangle1.pos2 = V2;
-				Triangle1.pos3 = V6;
-				Triangle1.normal1 = Vec3(1, 0, 0);
-				Triangle1.normal2 = Vec3(1, 0, 0);
-				Triangle1.normal3 = Vec3(1, 0, 0);
-				Triangle2.pos1 = V3;
-				Triangle2.pos2 = V6;
-				Triangle2.pos3 = V7;
-				Triangle2.normal1 = Vec3(1, 0, 0);
-				Triangle2.normal2 = Vec3(1, 0, 0);
-				Triangle2.normal3 = Vec3(1, 0, 0);
+				Face1 = EAST_FACE1;
+				Face2 = EAST_FACE2;
 				break ;
 			case Direction::WEST:
-				Triangle1.pos1 = V5;
-				Triangle1.pos2 = V1;
-				Triangle1.pos3 = V4;
-				Triangle1.normal1 = Vec3(-1, 0, 0);
-				Triangle1.normal2 = Vec3(-1, 0, 0);
-				Triangle1.normal3 = Vec3(-1, 0, 0);
-				Triangle2.pos1 = V5;
-				Triangle2.pos2 = V4;
-				Triangle2.pos3 = V8;
-				Triangle2.normal1 = Vec3(-1, 0, 0);
-				Triangle2.normal2 = Vec3(-1, 0, 0);
-				Triangle2.normal3 = Vec3(-1, 0, 0);
+				Face1 = WEST_FACE1;
+				Face2 = WEST_FACE2;
 				break ;
 			case Direction::TOP:
-				Triangle1.pos1 = V1;
-				Triangle1.pos2 = V2;
-				Triangle1.pos3 = V4;
-				Triangle1.normal1 = Vec3(0, 1, 0);
-				Triangle1.normal2 = Vec3(0, 1, 0);
-				Triangle1.normal3 = Vec3(0, 1, 0);
-				Triangle2.pos1 = V2;
-				Triangle2.pos2 = V3;
-				Triangle2.pos3 = V4;
-				Triangle2.normal1 = Vec3(0, 1, 0);
-				Triangle2.normal2 = Vec3(0, 1, 0);
-				Triangle2.normal3 = Vec3(0, 1, 0);
+				Face1 = TOP_FACE1;
+				Face2 = TOP_FACE2;
 				break ;
 			case Direction::BOTTOM:
-				Triangle1.pos1 = V8;
-				Triangle1.pos2 = V6;
-				Triangle1.pos3 = V5;
-				Triangle1.normal1 = Vec3(0, -1, 0);
-				Triangle1.normal2 = Vec3(0, -1, 0);
-				Triangle1.normal3 = Vec3(0, -1, 0);
-				Triangle2.pos1 = V8;
-				Triangle2.pos2 = V7;
-				Triangle2.pos3 = V6;
-				Triangle2.normal1 = Vec3(0, -1, 0);
-				Triangle2.normal2 = Vec3(0, -1, 0);
-				Triangle2.normal3 = Vec3(0, -1, 0);
+				Face1 = BOTTOM_FACE1;
+				Face2 = BOTTOM_FACE2;
 				break ;
 		}
-		Triangle1.pos1 = Triangle1.pos1 + pos;
-		Triangle1.pos2 = Triangle1.pos2 + pos;
-		Triangle1.pos3 = Triangle1.pos3 + pos;
+		Face1.v1.pos = Face1.v1.pos + pos;
+		Face1.v2.pos = Face1.v2.pos + pos;
+		Face1.v3.pos = Face1.v3.pos + pos;
 
-		Triangle2.pos1 = Triangle2.pos1 + pos;
-		Triangle2.pos2 = Triangle2.pos2 + pos;
-		Triangle2.pos3 = Triangle2.pos3 + pos;
-		mesh->addFace("default", Triangle1);
-		mesh->addFace("default", Triangle2);
+		Face2.v1.pos = Face2.v1.pos + pos;
+		Face2.v2.pos = Face2.v2.pos + pos;
+		Face2.v3.pos = Face2.v3.pos + pos;
+		mesh->addFace("default", Face1);
+		mesh->addFace("default", Face2);
 	}
 
 void	VoxScene::build()
@@ -186,6 +126,7 @@ void	VoxScene::_updateCamera(float delta, const Window::Events &events)
 
 	_camera.update();
 	_world.update(_camera);
+	std::cout << 1.0 / delta << std::endl;
 }
 
 void	VoxScene::display()
