@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 17:10:20 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/06 15:37:08 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	RenderScene::_updateCamera(float delta, const Window::Events &events)
 		_camera.yaw += events.getMouseDeltaX() * sensitivity;
 	}
 
-	_camera.update();
+	_camera.update(_engine.getWindow().aspectRatio());
 }
 
 void	RenderScene::display()

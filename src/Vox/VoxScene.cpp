@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:15:34 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/05 20:44:50 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/06 15:37:32 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	Cube::addFace(std::shared_ptr<Mesh> mesh, Vec3i pos, Direction dir)
 
 void	VoxScene::build()
 {
-	_camera.pos = Vec3(-1, 0, -1);
+	_camera.pos = Vec3(0, 0, 0);
 	_camera.pitch = -20;
 
 	_shader = _engine.loadShader("assets/shaders/core/mesh");
@@ -124,7 +124,7 @@ void	VoxScene::_updateCamera(float delta, const Window::Events &events)
 		_camera.yaw += events.getMouseDeltaX() * sensitivity;
 	}
 
-	_camera.update();
+	_camera.update(_engine.getWindow().aspectRatio());
 	_world.update(_camera);
 	std::cout << 1.0 / delta << std::endl;
 }
@@ -145,7 +145,7 @@ void	VoxScene::display()
 	_shader->setFloat("uTime", _engine.getTime());
 	_shader->setVec3("uViewPos", _camera.pos);
 
-	auto chunks = _world.getLoadedChunks();
+	auto chunks = _world.getVisibleChunks();
 	for (auto chunk : chunks)
 	{
 		chunk->upload();
