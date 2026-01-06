@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 20:22:47 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/06 15:17:27 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/01/06 16:23:09 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # define CHUNK_VOLUME CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE
 # define BLOCK bool
 
-#define seed 123123432984128974
+#define seed 12312343298412897
 
 inline Vec2 randomGradient(int ix, int iy)
 {
@@ -202,7 +202,7 @@ inline float	calcNoise(const Vec3i &pos, float freq, float amp, int noisiness)
 	float	res = 0;
 	for (int i = 0; i < noisiness; i++)
 	{
-		res += perlin(pos.x * freq, pos.y * freq, pos.z * freq) * amp;
+		res += perlin(pos.x * freq, pos.z * freq) * amp;
 
 		freq *= 2;
 		amp /= 2;
@@ -231,7 +231,7 @@ class	Chunk
 			// return ((pos.x == 0 && pos.y == 0 && pos.z == 0) ? true : false);
 			Vec3i	wp = worldPos(pos);
 
-			if (std::abs(calcNoise(wp, 0.0125, 10, 1)) > 0.1)
+			if (wp.y < calcNoise(wp, 0.0125, 1, 1) * 100)
 				return (true);
 			return (false);
 		}
