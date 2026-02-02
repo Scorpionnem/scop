@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:32:26 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 12:53:01 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 12:15:42 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void	Mesh::_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss)
 
 		if (fv1.pos < 0 || fv2.pos < 0 || fv3.pos < 0)
 			throw std::runtime_error("Invalid pos index in face at line " + std::to_string(_lineNumber));
-		if (fv1.pos > (int)_positionVertices.size() - 1 || fv2.pos > (int)_positionVertices.size() - 1, fv3.pos > (int)_positionVertices.size() - 1)
+		if (fv1.pos > (int)_positionVertices.size() - 1 || fv2.pos > (int)_positionVertices.size() - 1 || fv3.pos > (int)_positionVertices.size() - 1)
 			throw std::runtime_error("Invalid pos index in face at line " + std::to_string(_lineNumber));
 		face.pos1 = _positionVertices[fv1.pos];
 		face.pos2 = _positionVertices[fv2.pos];
@@ -149,7 +149,7 @@ void	Mesh::_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss)
 
 		if (fv1.uv >= 0 || fv2.uv >= 0 || fv3.uv >= 0)
 		{
-			if (fv1.uv > (int)_textureVertices.size() - 1 || fv2.uv > (int)_textureVertices.size() - 1, fv3.uv > (int)_textureVertices.size() - 1)
+			if (fv1.uv > (int)_textureVertices.size() - 1 || fv2.uv > (int)_textureVertices.size() - 1 || fv3.uv > (int)_textureVertices.size() - 1)
 				throw std::runtime_error("Invalid uv index in face at line " + std::to_string(_lineNumber));
 			face.uv1 = _textureVertices[fv1.uv];
 			face.uv2 = _textureVertices[fv2.uv];
@@ -158,7 +158,7 @@ void	Mesh::_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss)
 
 		if (fv1.normal >= 0 || fv2.normal >= 0 || fv3.normal >= 0)
 		{
-			if (fv1.normal > (int)_normalVertices.size() - 1 || fv2.normal > (int)_normalVertices.size() - 1, fv3.normal > (int)_normalVertices.size() - 1)
+			if (fv1.normal > (int)_normalVertices.size() - 1 || fv2.normal > (int)_normalVertices.size() - 1 || fv3.normal > (int)_normalVertices.size() - 1)
 				throw std::runtime_error("Invalid normal index in face at line " + std::to_string(_lineNumber));
 			face.normal1 = _normalVertices[fv1.normal];
 			face.normal2 = _normalVertices[fv2.normal];

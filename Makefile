@@ -3,7 +3,7 @@ NAME :=	scop
 ###
 
 CXX :=	c++
-CXXFLAGS :=	-Wall -Wextra -Werror -g -MP -MMD
+CXXFLAGS :=	-g -MP -MMD -std=c++17# -Wall -Wextra -Werror
 LFLAGS :=	-lSDL2 -lGL
 
 ###
@@ -17,7 +17,8 @@ INCLUDE_DIRS :=	includes/\
 				includes/Core/Rendering/Light\
 				includes/Core/Rendering/Light/Cache\
 				external/glad\
-				external/stb_image
+				external/stb_image\
+				/usr/include/SDL2/
 
 SRCS :=	main\
 		Core/Window\
