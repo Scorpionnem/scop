@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 13:07:20 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 14:08:51 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:32:05 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ Vec3 Vec3::operator*(const Vec3 &v) const
 Vec3 Vec3::operator/(const Vec3 &v) const
 {
 	return (Vec3(x / v.x, y / v.y, z / v.z));
+}
+
+bool Vec3::operator>(const Vec3 &v) const
+{
+	return (x > v.x && y > v.y && z > v.z);
+}
+
+bool Vec3::operator<(const Vec3 &v) const
+{
+	return (x < v.x && y < v.y && z < v.z);
 }
 
 float	dot(const Vec3 &v1, const Vec3 &v2)

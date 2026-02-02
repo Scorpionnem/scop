@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 17:40:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 15:12:29 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@ void	RenderScene::build()
 	_mesh->upload();
 	std::cout << _mesh->getTriangleCount() << " Triangles" << std::endl;
 
-	_camera.pos = Vec3(0, 2, 5);
-	_camera.pitch = -20;
+	_camera.pos = Vec3(0, 0, 0);
 
-	_engine.getLightCache().add(Vec3(4.5, 3, -1.7), Vec3(0, 0.5, 0.8));
+	_engine.getLightCache().add(Vec3(0), Vec3(0, 0.5, 0.8));
 	_engine.getLightCache().add(Vec3(-0.4, 3, 1), Vec3(0.9, 0, 0.15));
 
 	_shader = _engine.loadShader("assets/shaders/core/mesh");
@@ -88,6 +87,22 @@ void	RenderScene::_updateCamera(float delta, const Window::Events &events)
 	_camera.update();
 }
 
+void	RenderScene::createBVH(Vec3 min, Vec3 max, int layer)
+{
+	if (layer <= 0)
+		return ;
+
+	Mat4	projection = perspective(70, _engine.getWindow().aspectRatio(), 0.01, 1000);
+	_engine.renderBoundingBox(_camera, projection, min, max, 1);
+
+	Vec3 size = max - min;
+	size.x /= 2;
+
+	Vec3 newMax = min + size;
+
+	createBVH(min, newMax, --layer);
+}
+
 void	RenderScene::display()
 {
 	Mat4	projection = perspective(70, _engine.getWindow().aspectRatio(), 0.01, 1000);
@@ -106,4 +121,11 @@ void	RenderScene::display()
 	_engine.getLightCache().draw(_camera.getViewMatrix(), projection);
 
 	_mesh->draw(_shader);
+
+
+	Vec3	minh = _mesh->_smallestPoint;
+	Vec3	maxh = _mesh->_biggestPoint;
+	
+	createBVH(minh, maxh, 10);
+	// _engine.renderBoundingBox(_camera, projection, _mesh->_smallestPoint, _mesh->_biggestPoint, 1);
 }

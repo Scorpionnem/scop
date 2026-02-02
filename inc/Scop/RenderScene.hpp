@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:48:09 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:26:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 15:02:09 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class	RenderScene : public Scene
 		void	build();
 		void	update(float delta, const Window::Events &events);
 		void	display();
+		void	createBVH(Vec3 min, Vec3 max, int layer);
 	private:
 		void	_updateCamera(float delta, const Window::Events &events);
 

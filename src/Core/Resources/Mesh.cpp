@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:32:26 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 14:13:21 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:40:50 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,10 +165,44 @@ void	Mesh::_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss)
 			face.v3.normal = _normalVertices[fv3.normal];
 		}
 
+		_addVertex(face.v1);
+		_addVertex(face.v2);
+		_addVertex(face.v3);
 		mtlGroup->vertices.push_back(face.v1);
 		mtlGroup->vertices.push_back(face.v2);
 		mtlGroup->vertices.push_back(face.v3);
 	}
+}
+
+Vec3 minVec3(const Vec3 &a, const Vec3 &b)
+{
+	return Vec3(
+		(a.x < b.x) ? a.x : b.x,
+		(a.y < b.y) ? a.y : b.y,
+		(a.z < b.z) ? a.z : b.z
+	);
+}
+
+Vec3 maxVec3(const Vec3 &a, const Vec3 &b)
+{
+	return Vec3(
+		(a.x > b.x) ? a.x : b.x,
+		(a.y > b.y) ? a.y : b.y,
+		(a.z > b.z) ? a.z : b.z
+	);
+}
+
+void	Mesh::_addVertex(Mesh::Vertex &v)
+{
+	if (_bigSmallUnset)
+	{
+		_smallestPoint = v.pos;
+		_biggestPoint = v.pos;
+		_bigSmallUnset = false;
+	}
+	_biggestPoint = maxVec3(_biggestPoint, v.pos);
+	_smallestPoint = minVec3(_smallestPoint, v.pos);
+	_centerPoint = (_smallestPoint + _biggestPoint) / 2;
 }
 
 void	Mesh::_parseMtlLib(const std::string &path)

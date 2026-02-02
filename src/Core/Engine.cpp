@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:17:16 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 14:03:10 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:52:45 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void	Engine::start(std::unique_ptr<Scene> scene)
 		_time = 0;
 
 		_window.open(800, 800, "scop");
+
+		_boundingBoxMesh = _meshes.get("assets/models/cube.obj");
+		_boundingBoxShader = _shaders.get("assets/shaders/core/bounding");
 
 		_scene = std::move(scene);
 		_scene->build();
@@ -59,4 +62,25 @@ void	Engine::_loop()
 
 		_window.display();
 	}
+}
+
+void	Engine::renderBoundingBox(Camera &cam, Mat4 &proj, Vec3 min, Vec3 max, Vec3 color = Vec3(1)) const
+{
+	Vec3	center = (min + max) / 2;
+	Vec3	size   = (max - min);
+
+	Mat4	model(1.0f);
+	model = model * translate(center);
+	model = model * scale(size / 2);
+
+	_boundingBoxShader->use();
+	_boundingBoxShader->setMat4("uModel", model);
+	_boundingBoxShader->setMat4("uView", cam.getViewMatrix());
+	_boundingBoxShader->setMat4("uProjection", proj);
+	
+	_boundingBoxShader->setVec3("color", color);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	_boundingBoxMesh->draw(_boundingBoxShader);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

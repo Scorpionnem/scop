@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 12:59:42 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 14:09:20 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:32:14 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ struct	Vec3
 	Vec3 operator-(const Vec3 &v) const;
 	Vec3 operator*(const Vec3 &v) const;
 	Vec3 operator/(const Vec3 &v) const;
+	bool operator>(const Vec3 &v) const;
+	bool operator<(const Vec3 &v) const;
 	float	x, y, z;
 };
 

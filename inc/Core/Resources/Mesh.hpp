@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 14:12:38 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:40:35 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,10 @@ class	Mesh
 		{
 			_materialGroups[id].material = material;
 		}
+		Vec3	_biggestPoint;
+		Vec3	_smallestPoint;
+		Vec3	_centerPoint;
+		bool	_bigSmallUnset = true;
 	private:
 		struct	FaceVertex
 		{
@@ -150,6 +154,7 @@ class	Mesh
 		Vec2		_parseVec2(std::istringstream &iss);
 		float		_parseFloat(std::istringstream &iss);
 		std::string	_preprocessLine(const std::string &line);
+		void		_addVertex(Mesh::Vertex &v);
 		uint32_t	_VAO;
 		uint32_t	_VBO;
 

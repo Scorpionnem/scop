@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:42:51 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:27:51 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:49:07 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "MeshCache.hpp"
 #include "TextureCache.hpp"
 #include "ShaderCache.hpp"
+#include "Camera.hpp"
 #include "LightCache.hpp"
 
 class	Engine
@@ -38,6 +39,7 @@ class	Engine
 
 		// Time since engine.start was called
 		double getTime() const {return (_time);}
+		void	renderBoundingBox(Camera &cam, Mat4 &proj, Vec3 min, Vec3 max, Vec3 color) const;
 	private:
 		void	_loop();
 		std::unique_ptr<Scene>	_scene;
@@ -47,6 +49,9 @@ class	Engine
 		mutable MeshCache		_meshes;
 		mutable ShaderCache		_shaders;
 		mutable LightCache		_lights;
+
+		mutable std::shared_ptr<Mesh>	_boundingBoxMesh;
+		mutable std::shared_ptr<Shader>	_boundingBoxShader;
 
 		struct timespec	_lastFrame = {0, 0};
 };
