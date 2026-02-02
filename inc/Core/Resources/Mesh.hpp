@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:30:57 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:12:38 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,42 @@
 class	Mesh
 {
 	public:
+		struct Vertex
+		{
+			Vertex(){}
+			Vertex(Vec3 pos, Vec3 normal, Vec2 uv)
+			{
+				this->pos = pos;
+				this->normal = normal;
+				this->uv = uv;
+			}
+			Vec3 pos;
+			Vec3 normal;
+			Vec2 uv;
+		};
 		struct	Face
 		{
-			Face() {}
-			Vec3	pos1;
-			Vec3	pos2;
-			Vec3	pos3;
-			Vec2	uv1;
-			Vec2	uv2;
-			Vec2	uv3;
-			Vec3	normal1;
-			Vec3	normal2;
-			Vec3	normal3;
+			Face(){}
+			Face(Vertex v1, Vertex v2, Vertex v3)
+			{
+				this->v1 = v1;
+				this->v2 = v2;
+				this->v3 = v3;
+			}
+			Vertex	v1;
+			Vertex	v2;
+			Vertex	v3;
+		};
+		struct	Material
+		{
+			Vec3	ambient = Vec3(1); // Ka
+			Vec3	diffuse = Vec3(1); // Kd
+			Vec3	specular = Vec3(0); // Ks
+
+			float	shininess = 0; // Ns
+			float	opacity = 1; // d / Tr
+
+			std::shared_ptr<Texture>	texture;
 		};
 	public:
 		Mesh(TextureCache &txm) : _txm(txm) {}
@@ -89,20 +113,18 @@ class	Mesh
 		}
 
 		uint32_t	getTriangleCount() {return (_triangleCount);}
-		void	addFace(Face face)
+		void	addFace(const std::string &material, Face face)
 		{
-			_materialGroups["default"].vertices.push_back({face.pos1, face.normal1, face.uv1});
-			_materialGroups["default"].vertices.push_back({face.pos2, face.normal2, face.uv2});
-			_materialGroups["default"].vertices.push_back({face.pos3, face.normal3, face.uv3});
+			_materialGroups[material].vertices.push_back(face.v1);
+			_materialGroups[material].vertices.push_back(face.v2);
+			_materialGroups[material].vertices.push_back(face.v3);
 			_triangleCount++;
 		}
-	private:
-		struct Vertex
+		void	addMaterial(const std::string &id, Material material)
 		{
-			Vec3 pos;
-			Vec3 normal;
-			Vec2 uv;
-		};
+			_materialGroups[id].material = material;
+		}
+	private:
 		struct	FaceVertex
 		{
 			FaceVertex(int pos, int uv, int normal)
@@ -114,17 +136,6 @@ class	Mesh
 			int	pos;
 			int	uv;
 			int	normal;
-		};
-		struct	Material
-		{
-			Vec3	ambient = Vec3(1); // Ka
-			Vec3	diffuse = Vec3(1); // Kd
-			Vec3	specular = Vec3(0); // Ks
-
-			float	shininess = 0; // Ns
-			float	opacity = 1; // d / Tr
-
-			std::shared_ptr<Texture>	texture;
 		};
 		struct	MaterialGroup
 		{

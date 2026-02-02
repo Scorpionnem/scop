@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:04:31 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 17:39:18 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:13:40 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,24 @@ class	Light
 	private:
 		void	_genMesh()
 		{
-			const Vec3	V1(-0.5, 0.5, 0.5);
-			const Vec3	V2(0.5, 0.5, 0.5);
-			const Vec3	V6(0.5, -0.5, 0.5);
-			const Vec3	V5(-0.5, -0.5, 0.5);
+			const Mesh::Vertex	V1(Vec3(-0.5, 0.5, 0.5), Vec3(), Vec2());
+			const Mesh::Vertex	V2(Vec3(0.5, 0.5, 0.5), Vec3(), Vec2());
+			const Mesh::Vertex	V6(Vec3(0.5, -0.5, 0.5), Vec3(), Vec2());
+			const Mesh::Vertex	V5(Vec3(-0.5, -0.5, 0.5), Vec3(), Vec2());
 			Mesh::Face	face1;
-			face1.pos1 = V5;
-			face1.pos2 = V2;
-			face1.pos3 = V1;
+			face1.v1 = V5;
+			face1.v2 = V2;
+			face1.v3 = V1;
 			Mesh::Face	face2;
-			face2.pos1 = V5;
-			face2.pos2 = V6;
-			face2.pos3 = V2;
+			face2.v1 = V5;
+			face2.v2 = V6;
+			face2.v3 = V2;
 
 			_mesh = _meshes.gen();
 			_shader = _shaders.get("assets/shaders/core/billboard");
 
-			_mesh->addFace(face1);
-			_mesh->addFace(face2);
+			_mesh->addFace("default", face1);
+			_mesh->addFace("default", face2);
 			_mesh->upload();
 		}
 		MeshCache				&_meshes;

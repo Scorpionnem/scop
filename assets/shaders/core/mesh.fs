@@ -46,7 +46,7 @@ uniform sampler2D tex;
 
 vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-	vec3 N = normalize(vNormal);
+	vec3 N = normalize(normal);
 	vec3 L = normalize(light.pos - vPos);
 	vec3 H = normalize(L + viewDir);
 
@@ -64,7 +64,7 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
 	ambient *= attenuation;
 	diffuse *= attenuation;
 	specular *= attenuation;
-	return (ambient + diffuse + specular);
+	return (ambient + diffuse);
 }
 
 void main()

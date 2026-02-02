@@ -3,19 +3,20 @@ NAME :=	scop
 ###
 
 CXX :=	c++
-CXXFLAGS :=	-g -MP -MMD -std=c++17# -Wall -Wextra -Werror
+CXXFLAGS :=	-g -MP -MMD -std=c++17 # -Wall -Wextra -Werror
 LFLAGS :=	-lSDL2 -lGL
 
 ###
 
-INCLUDE_DIRS :=	includes/\
-				includes/Core\
-				includes/Math\
-				includes/Scop\
-				includes/Core/Resources\
-				includes/Core/Resources/Cache\
-				includes/Core/Rendering/Light\
-				includes/Core/Rendering/Light/Cache\
+INCLUDE_DIRS :=	inc/\
+				inc/Core\
+				inc/Utils\
+				inc/Math\
+				inc/Scop\
+				inc/Core/Resources\
+				inc/Core/Resources/Cache\
+				inc/Core/Rendering/Light\
+				inc/Core/Rendering/Light/Cache\
 				external/glad\
 				external/stb_image\
 				/usr/include/SDL2/

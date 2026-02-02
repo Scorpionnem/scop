@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:32:26 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 12:15:42 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/02 14:13:21 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,31 +143,31 @@ void	Mesh::_parseFace(MaterialGroup *mtlGroup, std::istringstream &iss)
 			throw std::runtime_error("Invalid pos index in face at line " + std::to_string(_lineNumber));
 		if (fv1.pos > (int)_positionVertices.size() - 1 || fv2.pos > (int)_positionVertices.size() - 1 || fv3.pos > (int)_positionVertices.size() - 1)
 			throw std::runtime_error("Invalid pos index in face at line " + std::to_string(_lineNumber));
-		face.pos1 = _positionVertices[fv1.pos];
-		face.pos2 = _positionVertices[fv2.pos];
-		face.pos3 = _positionVertices[fv3.pos];
+		face.v1.pos = _positionVertices[fv1.pos];
+		face.v2.pos = _positionVertices[fv2.pos];
+		face.v3.pos = _positionVertices[fv3.pos];
 
 		if (fv1.uv >= 0 || fv2.uv >= 0 || fv3.uv >= 0)
 		{
 			if (fv1.uv > (int)_textureVertices.size() - 1 || fv2.uv > (int)_textureVertices.size() - 1 || fv3.uv > (int)_textureVertices.size() - 1)
 				throw std::runtime_error("Invalid uv index in face at line " + std::to_string(_lineNumber));
-			face.uv1 = _textureVertices[fv1.uv];
-			face.uv2 = _textureVertices[fv2.uv];
-			face.uv3 = _textureVertices[fv3.uv];
+			face.v1.uv = _textureVertices[fv1.uv];
+			face.v2.uv = _textureVertices[fv2.uv];
+			face.v3.uv = _textureVertices[fv3.uv];
 		}
 
 		if (fv1.normal >= 0 || fv2.normal >= 0 || fv3.normal >= 0)
 		{
 			if (fv1.normal > (int)_normalVertices.size() - 1 || fv2.normal > (int)_normalVertices.size() - 1 || fv3.normal > (int)_normalVertices.size() - 1)
 				throw std::runtime_error("Invalid normal index in face at line " + std::to_string(_lineNumber));
-			face.normal1 = _normalVertices[fv1.normal];
-			face.normal2 = _normalVertices[fv2.normal];
-			face.normal3 = _normalVertices[fv3.normal];
+			face.v1.normal = _normalVertices[fv1.normal];
+			face.v2.normal = _normalVertices[fv2.normal];
+			face.v3.normal = _normalVertices[fv3.normal];
 		}
 
-		mtlGroup->vertices.push_back({face.pos1, face.normal1, face.uv1});
-		mtlGroup->vertices.push_back({face.pos2, face.normal2, face.uv2});
-		mtlGroup->vertices.push_back({face.pos3, face.normal3, face.uv3});
+		mtlGroup->vertices.push_back(face.v1);
+		mtlGroup->vertices.push_back(face.v2);
+		mtlGroup->vertices.push_back(face.v3);
 	}
 }
 
