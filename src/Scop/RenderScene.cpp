@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:59:56 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 15:12:29 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/03 11:44:52 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,45 +87,20 @@ void	RenderScene::_updateCamera(float delta, const Window::Events &events)
 	_camera.update();
 }
 
-void	RenderScene::createBVH(Vec3 min, Vec3 max, int layer)
-{
-	if (layer <= 0)
-		return ;
-
-	Mat4	projection = perspective(70, _engine.getWindow().aspectRatio(), 0.01, 1000);
-	_engine.renderBoundingBox(_camera, projection, min, max, 1);
-
-	Vec3 size = max - min;
-	size.x /= 2;
-
-	Vec3 newMax = min + size;
-
-	createBVH(min, newMax, --layer);
-}
-
 void	RenderScene::display()
 {
 	Mat4	projection = perspective(70, _engine.getWindow().aspectRatio(), 0.01, 1000);
 
 	_shader->use();
-	_shader->setMat4("uModel", _model);
-	_shader->setMat4("uView", _camera.getViewMatrix());
-	_shader->setMat4("uProjection", projection);
 
 	_shader->setFloat("uTime", _engine.getTime());
 	_shader->setInt("uTriangleCount", _mesh->getTriangleCount());
-	_shader->setVec3("uViewPos", _camera.pos);
 
 	_engine.getLightCache().setUniforms(_shader);
 
-	_engine.getLightCache().draw(_camera.getViewMatrix(), projection);
+	_engine.getLightCache().draw(_camera, projection);
 
-	_mesh->draw(_shader);
+	_mesh->draw(_camera, projection, _shader);
 
-
-	Vec3	minh = _mesh->_smallestPoint;
-	Vec3	maxh = _mesh->_biggestPoint;
-	
-	createBVH(minh, maxh, 10);
-	// _engine.renderBoundingBox(_camera, projection, _mesh->_smallestPoint, _mesh->_biggestPoint, 1);
+	_engine.renderBoundingBox(_camera, projection, _mesh->getSmallestPoint(), _mesh->getBiggestPoint(), 1);
 }

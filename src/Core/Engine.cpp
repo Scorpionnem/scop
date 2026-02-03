@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 12:17:16 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 14:52:45 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/03 11:37:37 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,13 @@ void	Engine::renderBoundingBox(Camera &cam, Mat4 &proj, Vec3 min, Vec3 max, Vec3
 	model = model * translate(center);
 	model = model * scale(size / 2);
 
+	_boundingBoxMesh->setScale(size / 2);
+	_boundingBoxMesh->setPos(center);
+
 	_boundingBoxShader->use();
-	_boundingBoxShader->setMat4("uModel", model);
-	_boundingBoxShader->setMat4("uView", cam.getViewMatrix());
-	_boundingBoxShader->setMat4("uProjection", proj);
-	
 	_boundingBoxShader->setVec3("color", color);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	_boundingBoxMesh->draw(_boundingBoxShader);
+	_boundingBoxMesh->draw(cam, proj, _boundingBoxShader);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 22:22:50 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 14:40:35 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/03 11:43:33 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <glad/glad.h>
 
 #include "Math.hpp"
+#include "Camera.hpp"
 #include "Shader.hpp"
 #include "TextureCache.hpp"
 
@@ -85,10 +86,18 @@ class	Mesh
 				mtl.VAO = 0;
 			}
 		}
-		void	draw(std::shared_ptr<Shader> shader)
+		void	draw(Camera &camera, Mat4 &proj, std::shared_ptr<Shader> shader)
 		{
-			shader->use();
+			Mat4	model = translate(_pos);
+			model = model * translate(_centerPoint);
+			model = model * scale(_scale);
+			model = model * translate(_centerPoint * -1);
 
+			shader->use();
+			shader->setMat4("uModel", model);
+			shader->setMat4("uView", camera.getViewMatrix());
+			shader->setMat4("uProjection", proj);
+			shader->setVec3("uViewPos", camera.pos);
 			for (auto &pair : _materialGroups)
 			{
 				MaterialGroup	&mtl = pair.second;
@@ -124,11 +133,19 @@ class	Mesh
 		{
 			_materialGroups[id].material = material;
 		}
+		void	setPos(Vec3 pos) {_pos = pos;}
+		void	setScale(Vec3 scale) {_scale = scale;}
+		Vec3	getBiggestPoint() {return (_biggestPoint);}
+		Vec3	getSmallestPoint() {return (_smallestPoint);}
+		Vec3	getCenterPoint() {return (_centerPoint);}
+	private:
+		bool	_bigSmallUnset = true;
 		Vec3	_biggestPoint;
 		Vec3	_smallestPoint;
 		Vec3	_centerPoint;
-		bool	_bigSmallUnset = true;
-	private:
+		Vec3	_pos = Vec3(0);
+		Vec3	_scale = Vec3(1);
+
 		struct	FaceVertex
 		{
 			FaceVertex(int pos, int uv, int normal)

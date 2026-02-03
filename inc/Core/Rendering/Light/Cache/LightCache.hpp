@@ -6,13 +6,14 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:20:07 by mbatty            #+#    #+#             */
-/*   Updated: 2026/01/03 16:51:07 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/03 11:38:08 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Light.hpp"
+#include "Camera.hpp"
 #include <vector>
 
 class	Engine;
@@ -32,10 +33,10 @@ class	LightCache
 			for (auto light : _lights)
 				light->setUniforms(i++, shader);
 		}
-		void	draw(Mat4 view, Mat4 proj)
+		void	draw(Camera &cam, Mat4 proj)
 		{
 			for (auto light : _lights)
-				light->draw(view, proj);
+				light->draw(cam, proj);
 		}
 	private:
 		Engine	*_engine;

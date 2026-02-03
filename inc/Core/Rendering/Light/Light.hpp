@@ -6,7 +6,7 @@
 /*   By: mbatty <mbatty@student.42angouleme.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:04:31 by mbatty            #+#    #+#             */
-/*   Updated: 2026/02/02 14:13:40 by mbatty           ###   ########.fr       */
+/*   Updated: 2026/02/03 11:38:42 by mbatty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include "ShaderCache.hpp"
 #include "MeshCache.hpp"
+#include "Camera.hpp"
 
 class	Light
 {
@@ -27,16 +28,16 @@ class	Light
 			_color = color;
 			_genMesh();
 		}
-		void	draw(Mat4 view, Mat4 proj)
+		void	draw(Camera &cam, Mat4 proj)
 		{
 			_shader->use();
 			_shader->setMat4("uModel", Mat4(1));
-			_shader->setMat4("uView", view);
+			_shader->setMat4("uView", cam.getViewMatrix());
 			_shader->setMat4("uProjection", proj);
 			_shader->setVec3("uCenter", _pos);
 			_shader->setVec3("uColor", _color);
 
-			_mesh->draw(_shader);
+			_mesh->draw(cam, proj, _shader);
 		}
 		void	setUniforms(int id, std::shared_ptr<Shader> shader)
 		{
